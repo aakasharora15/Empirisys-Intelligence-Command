@@ -8,7 +8,6 @@ import {
   SFShield as Shield, 
   SFEye as Eye, 
   SFDesktopcomputer as Bot, 
-  SFPencil as PenTool, 
   SFCylinderSplit1x2 as Database, 
   SFMagnifyingglass as Search, 
   SFBell as Bell, 
@@ -19,8 +18,6 @@ import {
   SFFolder as FolderBadge,
   SFPencil as DocText,
   SFCreditcard as CreditCard,
-  SFBriefcase as Briefcase,
-  SFExclamationmarkTriangle as ExclamationTriangle,
   SFRadio as Radio
 } from 'sf-symbols-lib/monochrome';
 import { useTheme } from 'next-themes';

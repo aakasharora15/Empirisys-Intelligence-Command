@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { SFMagnifyingglass as Search, SFBell as Bell, SFChevronDown as ChevronDown, SFPerson as User, SFGearshape as Settings, SFArrowRightToLine as LogOut, SFMoon as Moon, SFSunMax as Sun, SFLine3Horizontal as Menu } from 'sf-symbols-lib/monochrome';
+import { SFMagnifyingglass as Search, SFBell as Bell, SFMoon as Moon, SFSunMax as Sun, SFLine3Horizontal as Menu } from 'sf-symbols-lib/monochrome';
 
 export interface Notification {
   id: string;

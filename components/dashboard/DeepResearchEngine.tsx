@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { FiTerminal, FiShield, FiUsers, FiServer, FiMessageSquare } from 'react-icons/fi';
+import { FiTerminal, FiUsers, FiServer, FiMessageSquare } from 'react-icons/fi';
 
 export default function DeepResearchEngine() {
   const techVulnerabilities = [

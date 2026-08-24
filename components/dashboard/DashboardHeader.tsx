@@ -5,13 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   SFShield as Shield,
-  SFWaveform as Radar,
-  SFMagnifyingglass as FileSearch,
   SFExclamationmarkTriangle as AlertTriangle,
   SFXmark as X,
   SFChartLineUptrendXyaxis as Activity,
   SFDesktopcomputer as Bot,
-  SFArrowUpRight as ArrowUpRight,
   SFBolt as Zap,
   SFEye as Eye,
 } from 'sf-symbols-lib/monochrome';

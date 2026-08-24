@@ -116,7 +116,6 @@ Output format must be:
     ]
   });
 
-  // @ts-ignore
   const textContent = completion.content.find(c => c.type === 'text')?.text || '{"threats": []}';
   const parsed = JSON.parse(textContent);
   return parsed.threats as VerifiedThreat[];

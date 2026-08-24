@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from 'react';
-import { SFShield as Shield, SFExclamationmarkTriangle as AlertTriangle, SFMagnifyingglass as Search, SFInfoCircle as Info, SFGlobe as Globe, SFPaperplane as Send, SFPlusCircle as PlusCircle, SFTablecells as Table, SFSquareGrid2x2 as Grid, SFDesktopcomputer as Bot, SFArrowUpRight as ArrowUpRight } from 'sf-symbols-lib/monochrome';
+import { SFShield as Shield, SFExclamationmarkTriangle as AlertTriangle, SFMagnifyingglass as Search, SFInfoCircle as Info, SFGlobe as Globe, SFPaperplane as Send, SFTablecells as Table, SFSquareGrid2x2 as Grid, SFDesktopcomputer as Bot, SFArrowUpRight as ArrowUpRight } from 'sf-symbols-lib/monochrome';
 import HeroSection from '@/components/ui/HeroSection';
 import PdfExportButton from '@/components/ui/PdfExportButton';
 import CompetitorMatrixTable from '@/components/competitors/CompetitorMatrixTable';
 import dynamic from 'next/dynamic';
 const CompetitorCharts = dynamic(() => import('@/components/competitors/CompetitorCharts').then(mod => mod.CompetitorCharts), { ssr: false });
-import { 
-  getDiscoveryLogs, addManualWatchlist,
+import {
   Competitor, CompetitorContent, DiscoveryLog 
 } from '@/lib/db';
 import { useStore } from '@/lib/store';

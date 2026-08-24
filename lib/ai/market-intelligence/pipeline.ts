@@ -224,7 +224,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     ],
   });
 
-  // @ts-ignore
   const extractionText = extractionResponse.content.find(c => c.type === 'text')?.text;
   if (!extractionText) {
     throw new Error('LLM returned empty extraction response');
@@ -307,7 +306,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     ],
   });
 
-  // @ts-ignore
   const aggregationText = aggregationResponse.content.find(c => c.type === 'text')?.text;
   if (!aggregationText) {
     throw new Error('LLM returned empty aggregation response');
@@ -417,7 +415,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
       ],
     });
 
-    // @ts-ignore
     const landscapeText = landscapeResponse.content.find(c => c.type === 'text')?.text;
     if (landscapeText) {
       const parsedLandscape = JSON.parse(landscapeText);

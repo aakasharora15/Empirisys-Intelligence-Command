@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import { useStore } from "@/lib/store";
@@ -9,7 +9,6 @@ import {
   SFShield as Shield, 
   SFEye as Eye, 
   SFDesktopcomputer as Bot, 
-  SFCylinderSplit1x2 as Database, 
   SFChartBar as ChartBar,
   SFFolder as FolderBadge,
   SFPencil as DocText,

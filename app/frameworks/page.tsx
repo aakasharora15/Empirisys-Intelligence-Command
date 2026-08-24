@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SFShield as Shield, SFExclamationmarkTriangle as Alert, SFCross as Crosshair, SFArrowUpRight as ArrowUpRight } from 'sf-symbols-lib/monochrome';
+import { SFShield as Shield, SFExclamationmarkTriangle as Alert } from 'sf-symbols-lib/monochrome';
 
 export default function StrategicFrameworksPage() {
   const [activeTab, setActiveTab] = useState<'porters' | 'vrio'>('porters');

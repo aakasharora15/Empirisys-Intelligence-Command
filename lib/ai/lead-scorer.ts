@@ -66,7 +66,6 @@ Output ONLY JSON, with no markdown formatting.`,
       ]
     });
 
-    // @ts-ignore
     const textContent = response.content.find(c => c.type === 'text')?.text || '{"isValid": false}';
     const parsed = JSON.parse(textContent);
     
@@ -161,7 +160,6 @@ Output ONLY JSON, with no markdown formatting.`,
       ]
     });
 
-    // @ts-ignore
     const textContent = response.content.find(c => c.type === 'text')?.text || '{}';
     const parsed = JSON.parse(textContent);
     return parsed as ExecutiveOutput;

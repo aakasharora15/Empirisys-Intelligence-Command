@@ -147,7 +147,6 @@ Note: The incident block is optional if no real incident applies.
     ]
   });
 
-  // @ts-ignore
   const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
   const profile: LeadScoreProfile = JSON.parse(textContent);
   return profile;

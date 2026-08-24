@@ -3,14 +3,11 @@
 import { motion } from "framer-motion";
 
 import React, { useState } from "react";
-import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { FunFactLoader } from "@/components/ui/fun-fact-loader";
 import {
   Loader2,
   Zap,
-  Copy,
   CheckCircle2,
   XCircle,
   Shield,
@@ -18,12 +15,10 @@ import {
   Network,
   ChevronDown,
   ChevronUp,
-  ExternalLink,
   AlertTriangle,
   Map,
   Clock,
   Target,
-  TrendingUp,
 } from "lucide-react";
 import { toast } from "@/components/ui/toaster";
 import {

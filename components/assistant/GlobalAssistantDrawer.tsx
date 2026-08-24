@@ -12,7 +12,7 @@ const renderMarkdown = (text: string) => {
     if (!line.trim()) return <br key={i} />;
     
     const boldRegex = /\*\*(.*?)\*\*/g;
-    let htmlLine = line.replace(boldRegex, '<strong class="text-[var(--color-text-primary)]">$1</strong>');
+    const htmlLine = line.replace(boldRegex, '<strong class="text-[var(--color-text-primary)]">$1</strong>');
     
     if (htmlLine.startsWith('### ')) {
       return <h4 key={i} className="text-sm font-bold text-[var(--color-text-primary)] mt-3 mb-1" dangerouslySetInnerHTML={{ __html: htmlLine.substring(4) }} />;
@@ -71,7 +71,7 @@ export function GlobalAssistantDrawer() {
       
       const data = await response.json();
       
-      let fullContent = data.response || "I couldn't process that request.";
+      const fullContent = data.response || "I couldn't process that request.";
       let currentLen = 0;
       
       const typeInterval = setInterval(() => {
