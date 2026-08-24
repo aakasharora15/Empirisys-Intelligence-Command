@@ -243,13 +243,7 @@ export default function MarketAnalystPage() {
   ) ?? [];
 
   return (
-    <div className="w-full flex flex-col pb-20 -mt-[116px]">
-<motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="space-y-8 max-w-[1400px] w-full mx-auto pb-20 px-6 relative z-20"
-    >
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
       <HeroSection 
         title="Market Analyst"
         subtitle="Event-driven intelligence pipeline: Source Ingestion → Entity Extraction → Deterministic Scoring → Theme Aggregation → Strategic Interpretation"
@@ -276,6 +270,14 @@ export default function MarketAnalystPage() {
           </div>
         }
       />
+
+      {/* Main Content Container */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20"
+      >
 
       {/* Loading State */}
       {isLoading && (

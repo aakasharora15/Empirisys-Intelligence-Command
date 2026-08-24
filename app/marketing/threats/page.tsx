@@ -37,8 +37,7 @@ export default function ThreatsPage() {
   const criticalThreatsCount = threats.filter(t => t.level === "critical").length;
 
   return (
-    <div className="w-full flex flex-col pb-20 -mt-[116px]">
-<div className="space-y-6 animate-in fade-in duration-500 w-full px-6 md:px-10 max-w-[1600px] mx-auto relative z-20">
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
       <HeroSection 
         title="Threat Monitor"
         subtitle="Live AI tracking of high-priority competitor moves and regulatory risks."
@@ -56,6 +55,8 @@ export default function ThreatsPage() {
           </div>
         }
       />
+
+      <div className="space-y-6 animate-in fade-in duration-500 w-full px-6 md:px-10 max-w-[1600px] mx-auto relative z-20">
 
       <FilterBar
         filters={[

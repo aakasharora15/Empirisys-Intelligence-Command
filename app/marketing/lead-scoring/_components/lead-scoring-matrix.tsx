@@ -71,9 +71,7 @@ export function LeadScoringMatrix() {
   };
 
   return (
-    <div className="w-full flex flex-col pb-20 -mt-[116px]">
-<div className="space-y-8 max-w-[1600px] w-full mx-auto pb-10 px-6 md:px-10 relative z-20">
-      
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
       <HeroSection 
         title="Client Acquisition Intelligence (CAI)"
         subtitle="Search for a prospective client to instantly generate an AI-driven profile covering HSE compliance, strategic entry points, and competitive intelligence."
@@ -124,6 +122,8 @@ export function LeadScoringMatrix() {
           </div>
         }
       />
+
+      <div className="space-y-8 max-w-[1600px] w-full mx-auto pb-10 px-6 md:px-10 relative z-20">
 
       {/* Loading Skeleton */}
       {isLoading && (
