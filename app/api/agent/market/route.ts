@@ -1,0 +1,68 @@
+import { NextResponse } from 'next/server';
+import OpenAI from 'openai';
+import { AggregatedTheme } from '@/lib/ai/market-intelligence/types';
+import { checkRateLimit } from '@/lib/security/rate-limiter';
+
+export const maxDuration = 60; // Prevent Vercel timeouts for LLM calls
+export const dynamic = 'force-dynamic';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export async function GET(req: Request) {
+  try {
+    const rateLimit = checkRateLimit(req, 20);
+    if (!rateLimit.allowed && rateLimit.errorResponse) {
+      return rateLimit.errorResponse;
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY is not configured.");
+    }
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
+Your task is to analyze current European (UK/Netherlands) process safety trends and generate 4 highly relevant "AggregatedThemes" based on current events.
+Output strictly in JSON format as an object with a "themes" array containing exactly 4 objects.
+Ensure exactly 2 of the themes have the status "approved", and 2 of the themes have the status "pending_validation".
+Each object must perfectly match this interface:
+{
+  id: string; (e.g. "theme-ai-1")
+  title: string;
+  description: string;
+  signals: []; (leave this empty for now)
+  interpretation: {
+    impact: string;
+    relevantProduct: 'Sense' | 'Boost' | 'Insight360' | 'Leadership360' | 'Both';
+    suggestedAction: string;
+  };
+  status: 'pending_validation' | 'approved';
+  deltaStatus: 'new' | 'intensified' | 'faded' | 'stable';
+  timestamp: string; (Realistic ISO 8601 string representing when this theme was aggregated, e.g. some 30 mins ago, some 12 hours ago, some 3 days ago)
+}`
+        },
+        {
+          role: "user",
+          content: "Generate the latest 2 aggregated market themes."
+        }
+      ]
+    });
+
+    const parsedContent = JSON.parse(completion.choices[0].message.content || '{"themes": []}');
+    const themes: AggregatedTheme[] = parsedContent.themes;
+
+    return NextResponse.json({
+      themes: themes
+    });
+
+  } catch (error) {
+    console.error('[MARKET_AGENT_ERROR]', error);
+    return new NextResponse('Internal Error', { status: 500 });
+  }
+}

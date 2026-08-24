@@ -28,6 +28,8 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
 import { IconLogo } from '@/components/ui/IconLogo';
+import { GlobalAssistantDrawer } from '@/components/assistant/GlobalAssistantDrawer';
+import { CommandPalette } from '@/components/layout/CommandPalette';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -42,6 +44,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [isCommandOpen, setIsCommandOpen] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();
 
   useEffect(() => {
@@ -90,6 +93,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
         { label: 'Sales Battlecards', href: '/competitors/battlecards', icon: DocText },
         { label: 'Pricing & Packaging', href: '/competitors/pricing', icon: CreditCard },
         { label: 'Tech Stack Vulnerabilities', href: '/product/tech-stack', icon: Database },
+      ]
+    },
+    {
+      group: 'MARKETING INTELLIGENCE',
+      items: [
+        { label: 'Lead Scoring', href: '/marketing/lead-scoring', icon: Shield },
+        { label: 'Market Analyst', href: '/marketing/market-analyst', icon: Eye },
+        { label: 'Threat Monitor', href: '/marketing/threats', icon: Radio },
       ]
     },
     {
@@ -221,23 +232,22 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </h2>
           </div>
 
-          {/* Centre: Search */}
-          <form onSubmit={handleSearchSubmit} className="hidden lg:flex items-center relative w-[360px] max-w-full mx-4">
-            <Search className="absolute left-4 h-4 w-4 text-text-secondary/40 pointer-events-none" />
-            <input
-              type="text"
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-              placeholder="Search..."
-              className="w-full bg-panel border border-card-border rounded-full pl-11 pr-14 py-2 text-footnote text-text-primary focus:outline-none focus:border-accent/30 focus:ring-2 focus:ring-accent/10 transition-all font-sans placeholder:text-text-secondary/40"
-            />
+          {/* Centre: Search Trigger */}
+          <div className="hidden lg:flex items-center relative w-[360px] max-w-full mx-4">
             <button
-              type="submit"
-              className="absolute right-1.5 px-3 py-1 bg-accent text-white rounded-full text-micro font-bold hover:bg-accent-hover transition-colors shadow-sm"
+              onClick={() => setIsCommandOpen(true)}
+              className="w-full bg-panel border border-card-border hover:border-accent/30 rounded-full pl-11 pr-4 py-2 text-footnote text-text-secondary/60 hover:text-text-primary transition-all flex items-center justify-between shadow-inner cursor-pointer"
             >
-              Ask
+              <div className="flex items-center">
+                <Search className="absolute left-4 h-4 w-4 text-text-secondary/40" />
+                <span>Press ⌘K to search or ask...</span>
+              </div>
+              <div className="flex gap-1">
+                <kbd className="bg-background border border-card-border rounded px-1.5 py-0.5 text-[10px] font-sans font-bold text-text-secondary">⌘</kbd>
+                <kbd className="bg-background border border-card-border rounded px-1.5 py-0.5 text-[10px] font-sans font-bold text-text-secondary">K</kbd>
+              </div>
             </button>
-          </form>
+          </div>
 
           {/* Right: Actions */}
           <div className="flex items-center gap-1">
@@ -363,6 +373,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
           );
         })}
       </nav>
+      
+      <CommandPalette open={isCommandOpen} setOpen={setIsCommandOpen} />
+      <GlobalAssistantDrawer />
     </div>
   );
 }

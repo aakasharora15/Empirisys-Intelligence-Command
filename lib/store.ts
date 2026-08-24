@@ -18,6 +18,9 @@ interface AppState {
   updateUser: (updates: Partial<User>) => void;
   colorTheme: string;
   setColorTheme: (theme: string) => void;
+  isAssistantOpen: boolean;
+  toggleAssistant: () => void;
+  setAssistantOpen: (open: boolean) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -37,6 +40,9 @@ export const useStore = create<AppState>()(
       setSidebarOpen: (open) => set({ isSidebarOpen: open }),
       colorTheme: 'green',
       setColorTheme: (theme) => set({ colorTheme: theme }),
+      isAssistantOpen: false,
+      toggleAssistant: () => set((state) => ({ isAssistantOpen: !state.isAssistantOpen })),
+      setAssistantOpen: (open) => set({ isAssistantOpen: open }),
     }),
     {
       name: 'empirisys-storage', // unique name
