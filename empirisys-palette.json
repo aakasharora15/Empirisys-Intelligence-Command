@@ -1,0 +1,37 @@
+{
+  "name": "Empirisys Intelligence Hub — Dark Mode",
+  "colors": {
+    "background": "#0C110F",
+    "foreground": "#F3F4F6",
+    "card": "#151C19",
+    "cardBorder": "rgba(255, 255, 255, 0.04)",
+    "panel": "#1B2420",
+    "panelSecondary": "#111815",
+    "accent": "#7AE03B",
+    "accentHover": "#8FF54F",
+    "textPrimary": "#F9FAFB",
+    "textSecondary": "#9CA3AF",
+    "highlight": "#7AE03B",
+    "danger": "#F87171",
+    "warning": "#FBBF24",
+    "heroGradientFrom": "#0D1611",
+    "heroGradientVia": "#0F1C15"
+  },
+  "charts": {
+    "chart1": "#16A34A",
+    "chart2": "#22C55E",
+    "chart3": "#7AE03B",
+    "chart4": "#A3E635",
+    "chart5": "#D9F99D"
+  },
+  "accents": {
+    "blue": "#3B82F6",
+    "emerald": "#10B981",
+    "purple": "#8B5CF6",
+    "amber": "#F59E0B"
+  },
+  "fonts": {
+    "sans": "Inter",
+    "serif": "Playfair Display"
+  }
+}

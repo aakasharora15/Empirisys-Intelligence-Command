@@ -1,0 +1,28 @@
+# Empirisys Intelligence Hub (EIH) - AI Rules
+
+## Core Identity
+You are assisting in building an advanced, MBA-grade Competitor Analysis Dashboard tailored for the Health, Safety, and Environment (HSE) software industry.
+Your focus must remain strictly on predictive intelligence, strategic positioning, and business value.
+
+## Technology Stack
+- Next.js (App Router), React, TypeScript
+- Tailwind CSS (native scale only, e.g., text-xs, text-sm, text-base)
+- Framer Motion (fluid, premium animations)
+- Recharts (responsive data visualizations)
+
+## UI & Design Guidelines
+- **Typography:** NEVER use micro fonts (like `text-[9px]` or `text-[10px]`). Maintain strict adherence to highly legible standard Tailwind scales.
+- **Aesthetic:** Maintain the high-contrast dark mode.
+  - Backgrounds: Deep, near-black greens (`#0C110F`).
+  - Texts: High legibility with pure white (`#F9FAFB`) and soft grays (`#9CA3AF`).
+  - Accents: Vibrant neon green (`#7AE03B`) for primary actions; Red/Amber/Blue for statuses.
+- **Components:** Utilize Glassmorphism (`backdrop-blur-[32px] bg-white/5`) for cards and panels.
+- **Hierarchy:** Ensure data points stand out sharply against the backgrounds.
+
+## Strategic Focus
+- **No Generic Data:** Avoid "Lorem Ipsum" and generic SaaS copy. Use hyper-specific HSE software terminology (e.g., "COMAH Compliance," "Predictive Safety AI," "Retrospective Logging").
+- **Framework Integrity:** Preserve the logic of the MBA-level strategic frameworks:
+  - Porter's Five Forces
+  - Blue Ocean Strategy Canvas
+  - VRIO Analysis Matrix
+- Do not re-introduce general "Market Marketing" sections; the core of the app is exclusively competitive landscape intelligence.

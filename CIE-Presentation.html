@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Empirisys Competitive Intelligence Engine (CIE)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --emerald: #10b981;
+    --emerald-dim: #059669;
+    --emerald-glow: rgba(16,185,129,0.15);
+    --emerald-border: rgba(16,185,129,0.3);
+    --bg: #0a0f1a;
+    --bg2: #0f172a;
+    --bg3: #1e293b;
+    --bg4: #263346;
+    --text: #f8fafc;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --blue: #3b82f6;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  /* ── SLIDE ENGINE ─────────────────────────────────── */
+  .deck { width:100vw; height:100vh; position:relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: none;
+    padding: 0;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; flex-direction: column; }
+
+  /* ── NAV ────────────────────────────────────────── */
+  .nav {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px; z-index: 100;
+    background: rgba(15,23,42,0.9); border: 1px solid var(--border);
+    backdrop-filter: blur(12px); border-radius: 40px; padding: 10px 20px;
+  }
+  .nav button {
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text-dim);
+    width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; transition: all .2s;
+  }
+  .nav button:hover { background: var(--emerald); color: white; border-color: var(--emerald); }
+  .nav .dots { display: flex; gap: 6px; }
+  .nav .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bg4); cursor: pointer; transition: all .2s; }
+  .nav .dot.active { background: var(--emerald); transform: scale(1.3); }
+  .nav .counter { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+  /* ── SHARED LAYOUT HELPERS ─────────────────────── */
+  .slide-inner {
+    flex: 1;
+    display: grid;
+    padding: 48px 60px 80px;
+    gap: 0;
+  }
+  .slide-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+    color: var(--emerald); text-transform: uppercase; margin-bottom: 10px;
+  }
+  .slide-title {
+    font-size: 36px; font-weight: 800; line-height: 1.15;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .slide-title span { color: var(--emerald); }
+  .slide-sub {
+    font-size: 15px; color: var(--text-dim); line-height: 1.6; margin-bottom: 32px;
+    max-width: 600px;
+  }
+
+  /* EMERALD CHIP */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--emerald-glow); border: 1px solid var(--emerald-border);
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+    color: var(--emerald);
+  }
+  .chip::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--emerald); animation: pulse-dot 2s infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.8)} }
+
+  /* CARD */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px 24px;
+  }
+  .card.emerald-top { border-top: 2px solid var(--emerald); }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 1 — COVER
+  ══════════════════════════════════════════════════ */
+  #s1 {
+    background: radial-gradient(ellipse 70% 80% at 100% 50%, rgba(16,185,129,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 60% at 0% 0%, rgba(59,130,246,0.05) 0%, transparent 60%),
+                var(--bg);
+  }
+  #s1 .slide-inner { grid-template-columns: 1fr 1fr; align-items: center; }
+
+  .cover-left { display: flex; flex-direction: column; justify-content: center; }
+  .cover-eyebrow {
+    font-size: 11px; letter-spacing: 3px; font-weight: 600; color: var(--emerald);
+    text-transform: uppercase; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cover-eyebrow::before { content:''; flex: 0 0 30px; height: 1px; background: var(--emerald); }
+  .cover-h1 {
+    font-size: 48px; font-weight: 900; line-height: 1.08; color: var(--text);
+    margin-bottom: 8px; letter-spacing: -1px;
+  }
+  .cover-h1 em { color: var(--emerald); font-style: normal; }
+  .cover-cie {
+    font-size: 18px; font-weight: 700; color: var(--emerald);
+    font-family: 'JetBrains Mono', monospace; margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+  .cover-tagline {
+    font-size: 16px; color: var(--text-dim); line-height: 1.65;
+    border-left: 2px solid var(--emerald-border); padding-left: 16px;
+    max-width: 440px; margin-bottom: 36px;
+  }
+  .cover-stats { display: flex; gap: 28px; }
+  .cover-stat { text-align: center; }
+  .cover-stat .num { font-size: 26px; font-weight: 800; color: var(--emerald); font-variant-numeric: tabular-nums; }
+  .cover-stat .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; }
+
+  /* Dashboard mockup */
+  .dashboard-mock {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    position: relative;
+  }
+  .dash-bar {
+    background: var(--bg3); padding: 10px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dash-bar .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dash-bar .dot.r { background: #ef4444; }
+  .dash-bar .dot.a { background: #f59e0b; }
+  .dash-bar .dot.g { background: var(--emerald); }
+  .dash-bar .title { font-size: 11px; color: var(--text-muted); margin-left: 8px; font-family: 'JetBrains Mono', monospace; }
+  .dash-body { display: grid; grid-template-columns: 140px 1fr; height: 300px; }
+  .dash-nav { background: rgba(0,0,0,0.2); border-right: 1px solid var(--border); padding: 12px 10px; display: flex; flex-direction: column; gap: 4px; }
+  .dash-nav-item { padding: 8px 10px; border-radius: 8px; font-size: 10px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .dash-nav-item.active { background: var(--emerald-glow); color: var(--emerald); border: 1px solid var(--emerald-border); }
+  .dash-nav-item::before { content:''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .dash-content { padding: 16px; overflow: hidden; }
+  .dash-heading { font-size: 11px; font-weight: 700; color: var(--text); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .threat-badge { background: var(--emerald-glow); border: 1px solid var(--emerald-border); border-radius: 6px; padding: 2px 8px; font-size: 9px; color: var(--emerald); font-weight: 700; }
+  .competitor-row { display: grid; grid-template-columns: 90px 1fr 40px; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .comp-name { font-size: 10px; color: var(--text-dim); }
+  .threat-bar-bg { background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; }
+  .threat-bar { height: 100%; border-radius: 4px; }
+  .score-label { font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ai-console-box {
+    margin-top: 14px; background: var(--bg3); border: 1px solid var(--emerald-border);
+    border-radius: 8px; padding: 10px 12px;
+  }
+  .ai-prompt { font-size: 9px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); }
+  .ai-response { font-size: 9px; color: var(--emerald); margin-top: 6px; line-height: 1.5; }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+  ══════════════════════════════════════════════════ */
+  #s2 { background: var(--bg); }
+  #s2 .slide-inner { grid-template-rows: auto 1fr auto; }
+  .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
+  .problem-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+    padding: 28px 24px; position: relative; overflow: hidden;
+  }
+  .problem-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .problem-card.red::before { background: var(--red); }
+  .problem-card.amber::before { background: var(--amber); }
+  .problem-card.blue::before { background: var(--blue); }
+  .problem-icon { font-size: 32px; margin-bottom: 14px; display: block; }
+  .problem-name { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+  .problem-card.red .problem-name { color: var(--red); }
+  .problem-card.amber .problem-name { color: var(--amber); }
+  .problem-card.blue .problem-name { color: var(--blue); }
+  .problem-desc { font-size: 13px; color: var(--text-dim); line-height: 1.65; }
+  .problem-evidence {
+    background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px; padding: 16px 24px; text-align: center;
+  }
+  .problem-evidence p { font-size: 14px; color: #fca5a5; line-height: 1.6; }
+  .problem-evidence strong { color: var(--text); font-size: 16px; }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 3 — WHAT IS THE CIE
+  ══════════════════════════════════════════════════ */
+  #s3 .slide-inner { grid-template-columns: 1fr 1.4fr; gap: 40px; align-items: center; }
+  .arch-left { display: flex; flex-direction: column; gap: 16px; }
+  .stat-pill {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; border-left: 3px solid var(--emerald);
+  }
+  .stat-pill .num { font-size: 28px; font-weight: 900; color: var(--emerald); font-variant-numeric: tabular-nums; min-width: 80px; }
+  .stat-pill .desc { font-size: 13px; color: var(--text-dim); line-height: 1.4; }
+  .arch-diagram { display: flex; flex-direction: column; gap: 0; }
+  .arch-layer {
+    display: grid; grid-template-columns: 28px 1fr;
+    gap: 0; position: relative;
+  }
+  .arch-layer-line {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .arch-layer-dot {
+    width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--emerald); background: var(--bg); flex-shrink: 0; margin-top: 20px;
+  }
+  .arch-layer-connector { flex: 1; width: 2px; background: var(--emerald-border); }
+  .arch-layer:last-child .arch-layer-connector { display: none; }
+  .arch-layer-box {
+    margin-left: 12px; margin-bottom: 4px;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .arch-layer-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .arch-layer-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+  .arch-layer-tag {
+    display: inline-block; font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    color: var(--emerald); background: var(--emerald-glow); border: 1px solid var(--emerald-border);
+    border-radius: 4px; padding: 2px 7px; margin-top: 6px;
+  }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 4 — CAPABILITIES
+  ══════════════════════════════════════════════════ */
+  #s4 .slide-inner { grid-template-rows: auto 1fr; }
+  .cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 14px; }
+  .cap-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .2s, transform .2s;
+    position: relative; overflow: hidden;
+  }
+  .cap-card:hover { border-color: var(--emerald-border); transform: translateY(-2px); }
+  .cap-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--emerald) 0%, transparent 100%);
+  }
+  .cap-icon { font-size: 26px; }
+  .cap-title { font-size: 14px; font-weight: 800; color: var(--text); }
+  .cap-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; flex: 1; }
+  .cap-tag { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--emerald); background: var(--emerald-glow); border: 1px solid var(--emerald-border); border-radius: 4px; padding: 3px 8px; display: inline-block; align-self: flex-start; }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 5 — HOW WE SOLVE IT (FIELD SCENARIOS)
+  ══════════════════════════════════════════════════ */
+  #s5 .slide-inner { grid-template-rows: auto 1fr; }
+  .scenario-stack { display: flex; flex-direction: column; gap: 14px; }
+  .scenario-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+    display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 0; overflow: hidden; flex: 1;
+  }
+  .scenario-num {
+    background: var(--bg3); display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 900; color: var(--emerald); border-right: 1px solid var(--border);
+    font-variant-numeric: tabular-nums; padding: 20px 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .scenario-trigger {
+    padding: 16px 18px; border-right: 1px solid var(--border);
+  }
+  .scenario-trigger-label { font-size: 9px; font-weight: 600; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+  .scenario-trigger-text { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.4; }
+  .scenario-without {
+    padding: 16px 18px; border-right: 1px solid var(--border);
+    background: rgba(239,68,68,0.03);
+  }
+  .scenario-with { padding: 16px 18px; background: rgba(16,185,129,0.03); }
+  .scenario-section-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .scenario-without .scenario-section-label { color: #ef4444; }
+  .scenario-with .scenario-section-label { color: var(--emerald); }
+  .scenario-text { font-size: 12px; color: var(--text-dim); line-height: 1.55; }
+  .scenario-with .scenario-text { color: #a7f3d0; }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 6 — AGENTIC ARCHITECTURE
+  ══════════════════════════════════════════════════ */
+  #s6 { background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(16,185,129,0.04) 0%, transparent 70%), var(--bg); }
+  #s6 .slide-inner { grid-template-rows: auto 1fr; }
+  .agent-diagram {
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+    position: relative; flex: 1; justify-content: center;
+  }
+  .agent-row { display: flex; align-items: flex-start; justify-content: center; gap: 40px; }
+  .agent-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 22px; text-align: center;
+    position: relative; min-width: 180px;
+  }
+  .agent-box.orchestrator {
+    border-color: var(--emerald-border); background: linear-gradient(135deg, var(--bg2) 60%, rgba(16,185,129,0.08));
+    box-shadow: 0 0 30px rgba(16,185,129,0.1); min-width: 220px;
+  }
+  .agent-box.sub { border-color: rgba(255,255,255,0.1); min-width: 200px; }
+  .agent-box.sub.live { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.04); }
+  .agent-box.sub.rag { border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.04); }
+  .agent-box.synthesiser { border-color: var(--emerald-border); background: rgba(16,185,129,0.05); min-width: 220px; }
+  .agent-icon { font-size: 22px; margin-bottom: 8px; }
+  .agent-type { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .orchestrator .agent-type { color: var(--emerald); }
+  .sub.live .agent-type { color: var(--amber); }
+  .sub.rag .agent-type { color: var(--blue); }
+  .synthesiser .agent-type { color: var(--emerald); }
+  .agent-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .agent-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  /* SVG connectors */
+  .agent-svg { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; overflow: visible; }
+  .agent-diagram-wrap { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: space-around; gap: 10px; }
+  .conn-badges { display: flex; justify-content: center; gap: 16px; margin-top: 12px; }
+  .conn-badge { font-size: 11px; color: var(--text-dim); background: var(--bg2); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; }
+  .conn-badge span { color: var(--emerald); font-weight: 600; }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 7 — STRATEGIC FOUNDATION
+  ══════════════════════════════════════════════════ */
+  #s7 .slide-inner { grid-template-rows: auto 1fr auto; }
+  .strategy-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; flex: 1; }
+  /* Porter's */
+  .porters-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .porters-table th { text-align: left; padding: 8px 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  .porters-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .porters-table tr:last-child td { border-bottom: none; }
+  .porters-table .force { font-weight: 600; color: var(--text); font-size: 12px; }
+  .porters-table .impl { color: var(--text-dim); font-size: 11px; line-height: 1.4; }
+  .rating { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 9px; }
+  .rating.high { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+  .rating.mod { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+  .rating.low { background: rgba(16,185,129,0.12); color: var(--emerald); border: 1px solid var(--emerald-border); }
+  /* VRIO */
+  .vrio-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .vrio-table th { text-align: center; padding: 8px 6px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  .vrio-table th:first-child { text-align: left; padding-left: 12px; }
+  .vrio-table td { padding: 10px 6px; border-bottom: 1px solid var(--border); text-align: center; vertical-align: middle; }
+  .vrio-table td:first-child { text-align: left; padding-left: 12px; font-weight: 600; color: var(--text); font-size: 12px; }
+  .vrio-table tr:last-child td { border-bottom: none; }
+  .vrio-table .check { color: var(--emerald); font-size: 14px; }
+  .vrio-table .cross { color: #ef4444; font-size: 14px; }
+  .vrio-table .warn { color: var(--amber); font-size: 14px; }
+  .vrio-verdict { font-size: 10px; font-weight: 700; border-radius: 5px; padding: 3px 8px; }
+  .vrio-verdict.sustained { background: rgba(16,185,129,0.12); color: var(--emerald); border: 1px solid var(--emerald-border); }
+  .vrio-verdict.temp { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+  .vrio-verdict.parity { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+  .vrio-table tr.highlight { background: rgba(16,185,129,0.04); }
+  .strategy-callout {
+    background: linear-gradient(90deg, var(--emerald-glow), transparent);
+    border: 1px solid var(--emerald-border); border-radius: 10px;
+    padding: 14px 22px; font-size: 14px; color: var(--text); font-style: italic; margin-top: 16px;
+  }
+  .strategy-callout strong { color: var(--emerald); font-style: normal; }
+
+  /* ══════════════════════════════════════════════════
+     SLIDE 8 — LIVE NOW & ROADMAP
+  ══════════════════════════════════════════════════ */
+  #s8 { background: var(--bg); }
+  #s8 .slide-inner { grid-template-columns: 1fr 1.6fr; gap: 40px; align-items: center; }
+  .live-left { display: flex; flex-direction: column; gap: 20px; }
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--emerald-glow); border: 1px solid var(--emerald-border);
+    border-radius: 14px; padding: 18px 24px;
+  }
+  .live-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 12px var(--emerald); animation: pulse-glow 2s infinite; }
+  @keyframes pulse-glow { 0%,100%{box-shadow:0 0 6px var(--emerald)} 50%{box-shadow:0 0 20px var(--emerald)} }
+  .live-badge-text { font-size: 22px; font-weight: 900; color: var(--emerald); }
+  .live-url-box {
+    background: var(--bg2); border: 1px solid var(--emerald-border); border-radius: 10px;
+    padding: 14px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--emerald); display: flex; align-items: center; gap: 10px;
+  }
+  .live-url-box::before { content: '🔗'; font-size: 14px; }
+  .live-desc { font-size: 13px; color: var(--text-dim); line-height: 1.65; }
+  .roadmap { display: flex; flex-direction: column; gap: 0; }
+  .roadmap-phase {
+    display: grid; grid-template-columns: 44px 1fr;
+    gap: 0; position: relative;
+  }
+  .roadmap-left { display: flex; flex-direction: column; align-items: center; }
+  .roadmap-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg3); border: 2px solid var(--emerald);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: var(--emerald); flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .roadmap-line { flex: 1; width: 2px; background: var(--emerald-border); margin: 4px 0; }
+  .roadmap-phase:last-child .roadmap-line { display: none; }
+  .roadmap-content { padding: 2px 0 24px 16px; }
+  .roadmap-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .roadmap-timing { font-size: 10px; font-weight: 700; color: var(--emerald); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+  .roadmap-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+  .closing-strip {
+    position: absolute; bottom: 64px; left: 0; right: 0;
+    background: linear-gradient(90deg, var(--emerald), var(--emerald-dim));
+    padding: 14px 60px; font-size: 14px; font-weight: 700; color: white; text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── ANIMATIONS ─────────────────────────────────── */
+  .fade-in { animation: fadeIn .5s ease forwards; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── PRINT ──────────────────────────────────────── */
+  @media print {
+    .nav { display: none; }
+    .slide { position: relative; display: flex !important; page-break-after: always; break-after: page; }
+    body { overflow: visible; }
+    .deck { height: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ══ SLIDE 1: COVER ═══════════════════════════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="slide-inner">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Empirisys Ltd · July 2026</div>
+        <h1 class="cover-h1">Empirisys<br/><em>Competitive</em><br/>Intelligence Engine</h1>
+        <div class="cover-cie">// CIE</div>
+        <p class="cover-tagline">
+          A governed, agentic AI platform that makes Empirisys's competitive advantage visible, repeatable and saleable at the exact moment a deal can be won or lost.
+        </p>
+        <div class="cover-stats">
+          <div class="cover-stat"><div class="num">10,700</div><div class="lbl">Lines of Code</div></div>
+          <div class="cover-stat"><div class="num">14</div><div class="lbl">App Pages</div></div>
+          <div class="cover-stat"><div class="num">6</div><div class="lbl">Core Modules</div></div>
+          <div class="cover-stat"><div class="num">4</div><div class="lbl">AI Agents</div></div>
+        </div>
+      </div>
+
+      <!-- Dashboard mockup -->
+      <div class="dashboard-mock">
+        <div class="dash-bar">
+          <div class="dot r"></div><div class="dot a"></div><div class="dot g"></div>
+          <div class="title">COMPETITIVE INTELLIGENCE ENGINE — COMMAND CENTRE</div>
+          <div style="margin-left:auto"><span class="chip" style="font-size:10px">AI ACTIVE</span></div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-nav">
+            <div class="dash-nav-item active">Dashboard</div>
+            <div class="dash-nav-item">Competitors</div>
+            <div class="dash-nav-item">Battlecards</div>
+            <div class="dash-nav-item">Pricing</div>
+            <div class="dash-nav-item">AI Console</div>
+            <div class="dash-nav-item">Frameworks</div>
+            <div class="dash-nav-item">Threat Scan</div>
+          </div>
+          <div class="dash-content">
+            <div class="dash-heading">
+              Threat Intelligence Overview
+              <span class="threat-badge">LIVE</span>
+            </div>
+            <!-- competitor bars -->
+            <div class="competitor-row">
+              <div class="comp-name">Sphera</div>
+              <div class="threat-bar-bg"><div class="threat-bar" style="width:70%;background:#ef4444"></div></div>
+              <div class="score-label" style="color:#ef4444">70</div>
+            </div>
+            <div class="competitor-row">
+              <div class="comp-name">DNV Synergi</div>
+              <div class="threat-bar-bg"><div class="threat-bar" style="width:65%;background:#f97316"></div></div>
+              <div class="score-label" style="color:#f97316">65</div>
+            </div>
+            <div class="competitor-row">
+              <div class="comp-name">FENNEX</div>
+              <div class="threat-bar-bg"><div class="threat-bar" style="width:85%;background:#f59e0b"></div></div>
+              <div class="score-label" style="color:#f59e0b">85</div>
+            </div>
+            <div class="competitor-row">
+              <div class="comp-name">Enablon</div>
+              <div class="threat-bar-bg"><div class="threat-bar" style="width:60%;background:#f97316"></div></div>
+              <div class="score-label" style="color:#f97316">60</div>
+            </div>
+            <div class="competitor-row">
+              <div class="comp-name">DIY AI / Copilot</div>
+              <div class="threat-bar-bg"><div class="threat-bar" style="width:95%;background:#ef4444;animation:pulse-bar 2s infinite"></div></div>
+              <div class="score-label" style="color:#ef4444">95</div>
+            </div>
+            <style>@keyframes pulse-bar{0%,100%{opacity:1}50%{opacity:.6}}</style>
+            <!-- AI console mini -->
+            <div class="ai-console-box">
+              <div class="ai-prompt">▶ "How does BOOST compare with Sphera for a COMAH operator?"</div>
+              <div class="ai-response">BOOST is a System of Intelligence — it predicts incidents. Sphera is a System of Record — it catalogues them after the fact. For a COMAH site, the distinction is the difference between prevention and liability...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: THE PROBLEM ══════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="slide-inner">
+      <div>
+        <div class="slide-label">The Challenge</div>
+        <h2 class="slide-title">A genuinely superior product<br/>that <span>doesn't sell itself</span></h2>
+        <p class="slide-sub">In the HSE software market, three compounding forces cause winnable deals to stall — not because of the product, but because the advantage is invisible at the moment of decision.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card red">
+          <span class="problem-icon">🔒</span>
+          <div class="problem-name">Incumbent Lock-In</div>
+          <p class="problem-desc">Buyers have years of COMAH-mandated safety data embedded inside Sphera, DNV Synergi Life and Enablon. Switching platforms reads as operational and regulatory risk — not opportunity. Inertia, not merit, governs most renewals. The decision defaults to the incumbent every time.</p>
+        </div>
+        <div class="problem-card amber">
+          <span class="problem-icon">👁</span>
+          <div class="problem-name">The Parity Illusion</div>
+          <p class="problem-desc">Every vendor now markets "AI" and "predictive analytics." A domain-trained safety intelligence engine that can surface leading indicators weeks before an incident looks identical to a competitor's marketing veneer to a time-poor HSE buyer. Real differentiation is invisible at the point of decision.</p>
+        </div>
+        <div class="problem-card blue">
+          <span class="problem-icon">⚠️</span>
+          <div class="problem-name">The DIY Substitute</div>
+          <p class="problem-desc">Customers' own Copilot and ChatGPT deployments offer a cheap, in-house "good enough" alternative. They appear credible until their reasoning must be defended to a regulator or coroner. Generic tools have no auditability, no safety-domain governance and no repeatable outputs — but they're free.</p>
+        </div>
+      </div>
+      <div class="problem-evidence">
+        <p>At exactly the three moments Empirisys is best placed to win — <strong>a recent HSE failure, a new Director auditing inherited systems, or board pressure for evidence-based risk management</strong> — the opportunity reverts to the incumbent by default. The CIE was built to stop that.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: WHAT IS THE CIE ══════════════════════════════ -->
+  <div class="slide" id="s3">
+    <div class="slide-inner">
+      <div class="arch-left">
+        <div>
+          <div class="slide-label">The Solution</div>
+          <h2 class="slide-title">Not a slide deck.<br/><span>A working intelligence system.</span></h2>
+          <p class="slide-sub">A full-stack agentic AI platform — built, deployed and live — that arms the Empirisys commercial team to prove, at the decisive moment, that BOOST prevents what every rival only records.</p>
+        </div>
+        <div class="stat-pill"><div class="num">10,700</div><div class="desc">Lines of production-grade TypeScript and React</div></div>
+        <div class="stat-pill"><div class="num">14</div><div class="desc">Application pages, each with a distinct commercial purpose</div></div>
+        <div class="stat-pill"><div class="num">13</div><div class="desc">Secure server-side API routes — zero client-side credentials</div></div>
+        <div class="stat-pill"><div class="num">142,500</div><div class="desc">Indexed vectors in the pgvector knowledge base</div></div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:20px">System Architecture — Four Layers</div>
+        <div class="arch-diagram">
+          <div class="arch-layer">
+            <div class="arch-layer-line"><div class="arch-layer-dot"></div><div class="arch-layer-connector"></div></div>
+            <div class="arch-layer-box">
+              <div class="arch-layer-title">🖥 Presentation Layer</div>
+              <div class="arch-layer-desc">Next.js 16 App Router · React Server + Client Components · Tailwind CSS design system. Premium Dark intelligence-terminal aesthetic — UX engineered to signal analytical gravitas to a technical, sceptical buyer.</div>
+              <div class="arch-layer-tag">14 pages · 37 components</div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-layer-line"><div class="arch-layer-dot"></div><div class="arch-layer-connector"></div></div>
+            <div class="arch-layer-box">
+              <div class="arch-layer-title">🛡 Application / API Layer</div>
+              <div class="arch-layer-desc">13 server-side route handlers. All credentials are environment-variable–only and never shipped to the browser. Every route validates and type-checks input, applies rate limiting, and scopes queries to the authenticated session.</div>
+              <div class="arch-layer-tag">TypeScript · Zod validation · rate-limited</div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-layer-line"><div class="arch-layer-dot"></div><div class="arch-layer-connector"></div></div>
+            <div class="arch-layer-box">
+              <div class="arch-layer-title">🧠 Intelligence Layer</div>
+              <div class="arch-layer-desc">Governed Retrieval-Augmented Generation wrapping Anthropic's Claude API. Server-controlled system prompts encode Empirisys doctrine — every answer frames BOOST as a System of Intelligence, every incumbent as a System of Record. Not configurable by the end user.</div>
+              <div class="arch-layer-tag">Claude API · governed RAG · server-side prompts</div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-layer-line"><div class="arch-layer-dot"></div><div class="arch-layer-connector"></div></div>
+            <div class="arch-layer-box">
+              <div class="arch-layer-title">🗄 Data Layer</div>
+              <div class="arch-layer-desc">PostgreSQL with the pgvector extension. HNSW approximate-nearest-neighbour index for fast semantic search across 142,500 vectors. B-tree indexes for exact filtering by competitor, source type and date. One row per tracked organisation in the competitors table.</div>
+              <div class="arch-layer-tag">PostgreSQL · pgvector · HNSW · 142.5K vectors</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: CAPABILITIES ═════════════════════════════════ -->
+  <div class="slide" id="s4">
+    <div class="slide-inner">
+      <div>
+        <div class="slide-label">What It Does</div>
+        <h2 class="slide-title">Six capabilities. <span>One purpose.</span></h2>
+        <p class="slide-sub">Every module was built to answer one question: does this help Empirisys understand or beat a competitor? If not, it was cut.</p>
+      </div>
+      <div class="cap-grid">
+        <div class="cap-card">
+          <div class="cap-icon">🎯</div>
+          <div class="cap-title">Threat-Scoring Engine</div>
+          <div class="cap-desc">Grades every named rival — Sphera, DNV Synergi Life, Enablon, FENNEX, Cority and DIY AI — on a composite of AI analytics depth, HSE sector focus, UK market presence and client overlap. FENNEX scores 85. DIY AI scores 95. Updated in real time.</div>
+          <div class="cap-tag">FENNEX: 85 · DIY AI: 95</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">🃏</div>
+          <div class="cap-title">Sales Battlecards</div>
+          <div class="cap-desc">Pre-scripted counter-positioning for every major competitor. Each card exposes known weaknesses, flags the traps competitors lay in discovery, and scripts the winning narrative — shifting conversations from licence cost to executive liability. Governed server-side. Every rep delivers the same on-doctrine message.</div>
+          <div class="cap-tag">Sphera · DNV · FENNEX · Enablon · DIY AI</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">💰</div>
+          <div class="cap-title">TCO Pricing Comparator</div>
+          <div class="cap-desc">Side-by-side pricing intelligence pulled from live RFP data. Reframes the conversation from unit licence cost to Total Cost of Ownership — factoring in regulatory exposure, the cost of a missed leading safety indicator, and corporate-manslaughter liability. Neutralises Sphera and DNV's lower headline prices.</div>
+          <div class="cap-tag">GBP RFP data · liability reframe</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">🤖</div>
+          <div class="cap-title">Governed AI Console</div>
+          <div class="cap-desc">A natural-language intelligence assistant that answers competitive questions in seconds. Ask "How does BOOST compare with DNV for a COMAH operator?" — receive an evidenced, cited, on-doctrine response. System prompts are server-controlled. Rate-limited. Zero client-side credentials. Every answer is grounded and traceable.</div>
+          <div class="cap-tag">Claude API · RAG · cited answers</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">⚡</div>
+          <div class="cap-title">Live Threat Scan</div>
+          <div class="cap-desc">On-demand competitor intelligence pulled from their own live web presence. A five-stage Cheerio pipeline — Fetch → Parse → Extract → Chunk → Embed & Store — processes competitor pages in real time, returning a structured threat assessment graded across all four dimensions before the next client meeting.</div>
+          <div class="cap-tag">Cheerio · pgvector · real-time</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">📊</div>
+          <div class="cap-title">Strategic Frameworks Module</div>
+          <div class="cap-desc">Porter's Five Forces rendered live with real-time force ratings. Blue Ocean strategy canvas plotting Empirisys against incumbents across six competitive dimensions. VRIO capability matrix — showing exactly which resources constitute a sustained advantage versus competitive parity. The analytical case for BOOST in the sales team's hands.</div>
+          <div class="cap-tag">Porter's · Blue Ocean · VRIO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: HOW WE SOLVE IT ══════════════════════════════ -->
+  <div class="slide" id="s5">
+    <div class="slide-inner">
+      <div>
+        <div class="slide-label">How It Solves the Problem</div>
+        <h2 class="slide-title">Three moments where <span>the CIE changes the outcome</span></h2>
+        <p class="slide-sub">The platform is designed around the three "buy-trigger" moments — the windows where a decisive intervention changes the result from incumbent renewal to BOOST win.</p>
+      </div>
+      <div class="scenario-stack">
+        <div class="scenario-card">
+          <div class="scenario-num">01</div>
+          <div class="scenario-trigger">
+            <div class="scenario-trigger-label">Buy Trigger</div>
+            <div class="scenario-trigger-text">Prospect raises a competitor's lower licence cost in a meeting</div>
+          </div>
+          <div class="scenario-without">
+            <div class="scenario-section-label">❌ Without CIE</div>
+            <div class="scenario-text">Rep improvises a response. The conversation stays on price. Sphera's lower headline number wins the comparison. The deal stalls or reverts.</div>
+          </div>
+          <div class="scenario-with">
+            <div class="scenario-section-label">✅ With CIE</div>
+            <div class="scenario-text">Rep opens the Sphera battlecard. Governed AI immediately reframes: Sphera records accidents after they happen — BOOST predicts and prevents them. The TCO comparator shows the cost of one missed safety signal vs. the licence fee differential. The conversation moves onto executive liability before the objection lands.</div>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-num">02</div>
+          <div class="scenario-trigger">
+            <div class="scenario-trigger-label">Buy Trigger</div>
+            <div class="scenario-trigger-text">A new HSE Director is auditing inherited legacy systems</div>
+          </div>
+          <div class="scenario-without">
+            <div class="scenario-section-label">❌ Without CIE</div>
+            <div class="scenario-text">Rep relies on printed collateral and memory. Response is slow, inconsistent, and not calibrated to the Director's specific regulatory environment. Window closes.</div>
+          </div>
+          <div class="scenario-with">
+            <div class="scenario-section-label">✅ With CIE</div>
+            <div class="scenario-text">Rep asks the AI console in plain language: "How does BOOST compare with DNV for a COMAH operator?" An evidenced, on-doctrine comparison is returned in seconds — with citations. The rep walks in with the answer before the Director has finished the question.</div>
+          </div>
+        </div>
+        <div class="scenario-card">
+          <div class="scenario-num">03</div>
+          <div class="scenario-trigger">
+            <div class="scenario-trigger-label">Buy Trigger</div>
+            <div class="scenario-trigger-text">An unknown or emerging competitor surfaces before a pitch</div>
+          </div>
+          <div class="scenario-without">
+            <div class="scenario-section-label">❌ Without CIE</div>
+            <div class="scenario-text">Hours of manual research. The leadership meeting happens without intelligence. The team is caught flat-footed on competitive positioning.</div>
+          </div>
+          <div class="scenario-with">
+            <div class="scenario-section-label">✅ With CIE</div>
+            <div class="scenario-text">Run the Live Threat Scan. The five-stage Cheerio pipeline scrapes the competitor's live web presence and returns a structured threat assessment — graded across AI depth, HSE focus, UK presence and client overlap — before the next meeting. Structured. Cited. Actionable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6: AGENTIC ARCHITECTURE ════════════════════════ -->
+  <div class="slide" id="s6">
+    <div class="slide-inner">
+      <div>
+        <div class="slide-label">Under the Hood</div>
+        <h2 class="slide-title">One orchestrator. Three specialists.<br/><span>Every answer cited and governed.</span></h2>
+        <p class="slide-sub">The CIE doesn't issue a single monolithic prompt — it decomposes every query into specialised agents running in parallel, then reconciles their outputs into one grounded, cited answer.</p>
+      </div>
+
+      <!-- Agent diagram -->
+      <div style="display:flex;flex-direction:column;gap:14px;flex:1;justify-content:center">
+        <!-- User query -->
+        <div style="text-align:center">
+          <div style="display:inline-flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;color:var(--text-dim)">
+            <span style="font-size:18px">👤</span>
+            <span>"How does BOOST beat Sphera on a COMAH renewal?"</span>
+            <span style="background:var(--emerald-glow);border:1px solid var(--emerald-border);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--emerald);font-weight:700">QUERY</span>
+          </div>
+          <div style="width:2px;height:16px;background:var(--emerald-border);margin:0 auto"></div>
+        </div>
+
+        <!-- Orchestrator -->
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="background:linear-gradient(135deg,var(--bg2),rgba(16,185,129,0.08));border:1px solid var(--emerald-border);border-radius:14px;padding:18px 32px;text-align:center;box-shadow:0 0 30px rgba(16,185,129,0.08);width:320px">
+            <div style="font-size:24px;margin-bottom:8px">🎯</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--emerald);text-transform:uppercase;margin-bottom:4px">Coordinator</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px">Orchestrator</div>
+            <div style="font-size:11px;color:var(--text-dim);line-height:1.5">Classifies the query · decides which agents are relevant · dispatches in parallel · enforces governed system prompts · reconciles outputs</div>
+          </div>
+
+          <!-- Fork arrows -->
+          <div style="display:flex;width:400px;justify-content:space-between;align-items:flex-start;position:relative;height:30px">
+            <div style="position:absolute;left:50%;top:0;width:2px;height:100%;background:var(--emerald-border);transform:translateX(-50%)"></div>
+            <div style="position:absolute;left:25%;top:50%;right:25%;height:2px;background:var(--emerald-border)"></div>
+            <div style="width:2px;height:30px;background:var(--emerald-border);margin-left:25%"></div>
+            <div style="width:2px;height:30px;background:var(--emerald-border);margin-right:25%"></div>
+          </div>
+        </div>
+
+        <!-- Sub-agents -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:18px 22px">
+            <div style="font-size:22px;margin-bottom:8px">🌐</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:4px">Sub-Agent</div>
+            <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:8px">Live Threat Analyser</div>
+            <div style="font-size:11px;color:var(--text-dim);line-height:1.55">Runs the Cheerio scraping pipeline against live competitor web sources on demand. Surfaces pricing changes, product announcements and messaging shifts not yet present in the stored corpus. Real-time intelligence.</div>
+          </div>
+          <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.3);border-radius:14px;padding:18px 22px">
+            <div style="font-size:22px;margin-bottom:8px">📚</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:4px">Sub-Agent</div>
+            <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:8px">RAG Specialist</div>
+            <div style="font-size:11px;color:var(--text-dim);line-height:1.55">Embeds the query and runs vector-similarity search across 142,500 pgvector embeddings. Returns the most relevant historical intelligence chunks with full source citations. Deep historical intelligence.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:center;height:16px">
+          <div style="width:2px;background:var(--emerald-border)"></div>
+        </div>
+
+        <!-- Synthesiser -->
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="background:rgba(16,185,129,0.05);border:1px solid var(--emerald-border);border-radius:14px;padding:18px 32px;text-align:center;width:320px">
+            <div style="font-size:22px;margin-bottom:8px">✍️</div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--emerald);text-transform:uppercase;margin-bottom:4px">Sub-Agent</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px">Synthesiser</div>
+            <div style="font-size:11px;color:var(--text-dim);line-height:1.5">Reconciles live and historical evidence into one Claude-generated answer. Every claim attributed to a specific cited source. Never a guess — always traceable.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conn-badges">
+        <div class="conn-badge"><span>🔒</span> Server-Governed Prompts</div>
+        <div class="conn-badge"><span>📎</span> Every Answer Cited</div>
+        <div class="conn-badge"><span>⚡</span> Parallel Dispatch — Minimal Latency</div>
+        <div class="conn-badge"><span>🛡</span> Rate-Limited & Credential-Secure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7: STRATEGIC FOUNDATION ════════════════════════ -->
+  <div class="slide" id="s7">
+    <div class="slide-inner">
+      <div>
+        <div class="slide-label">The Strategic Case</div>
+        <h2 class="slide-title">Two frameworks. <span>One verdict.</span></h2>
+        <p class="slide-sub">Porter's Five Forces and VRIO analysis — both rendered live inside the CIE — confirm that Empirisys's advantage is real, durable and defensible.</p>
+      </div>
+      <div class="strategy-grid">
+        <!-- Porter's -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">Porter's Five Forces — HSE Software Market</div>
+          <div class="card" style="padding:0;overflow:hidden">
+            <table class="porters-table">
+              <thead>
+                <tr>
+                  <th>Force</th>
+                  <th>Rating</th>
+                  <th>Strategic Implication</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="force">Competitive Rivalry</td>
+                  <td><span class="rating high">🔴 High</span></td>
+                  <td class="impl">Fought on retrospective data capture — predictive intelligence is comparatively uncontested. Empirisys's axis.</td>
+                </tr>
+                <tr>
+                  <td class="force">Threat of New Entrants</td>
+                  <td><span class="rating mod">🟡 Moderate</span></td>
+                  <td class="impl">Domain credibility and COMAH entanglement block enterprise-grade entry. Demo-level is easy. Safety-critical is hard.</td>
+                </tr>
+                <tr>
+                  <td class="force">Threat of Substitutes</td>
+                  <td><span class="rating high">🔴 High & Rising</span></td>
+                  <td class="impl">DIY Copilot/ChatGPT is the single greatest structural risk. The CIE explicitly tracks it as a named competitor.</td>
+                </tr>
+                <tr>
+                  <td class="force">Bargaining Power of Buyers</td>
+                  <td><span class="rating mod">🟡 Moderate–High</span></td>
+                  <td class="impl">High on process — but personal criminal liability sharply attenuates price sensitivity exactly where BOOST is strongest.</td>
+                </tr>
+                <tr>
+                  <td class="force">Bargaining Power of Suppliers</td>
+                  <td><span class="rating low">🟢 Low</span></td>
+                  <td class="impl">Foundation models are commoditised. The scarce input is Empirisys's proprietary safety data — which it owns outright.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- VRIO -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">VRIO Capability Assessment</div>
+          <div class="card" style="padding:0;overflow:hidden">
+            <table class="vrio-table">
+              <thead>
+                <tr>
+                  <th>Resource</th>
+                  <th>V</th><th>R</th><th>I</th><th>O</th>
+                  <th>Verdict</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="highlight">
+                  <td>Domain-Trained NLP Engine</td>
+                  <td class="check">✅</td><td class="check">✅</td><td class="check">✅</td><td class="check">✅</td>
+                  <td><span class="vrio-verdict sustained">Sustained Advantage</span></td>
+                </tr>
+                <tr class="highlight">
+                  <td>Embedded Advisory Heritage</td>
+                  <td class="check">✅</td><td class="check">✅</td><td class="check">✅</td><td class="check">✅</td>
+                  <td><span class="vrio-verdict sustained">Sustained Advantage</span></td>
+                </tr>
+                <tr class="highlight">
+                  <td>Proprietary Safety Data Moat</td>
+                  <td class="check">✅</td><td class="check">✅</td><td class="check">✅</td><td class="check">✅</td>
+                  <td><span class="vrio-verdict sustained">Sustained Advantage</span></td>
+                </tr>
+                <tr>
+                  <td>Real-Time Signal Pipeline</td>
+                  <td class="check">✅</td><td class="check">✅</td><td class="cross">❌</td><td class="check">✅</td>
+                  <td><span class="vrio-verdict temp">Temporary Only</span></td>
+                </tr>
+                <tr>
+                  <td>Incumbents' Bolt-On AI</td>
+                  <td class="warn">⚠️</td><td class="cross">❌</td><td class="cross">❌</td><td class="cross">❌</td>
+                  <td><span class="vrio-verdict parity">Parity at Best</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:10px;line-height:1.5;padding:0 4px">
+            V = Valuable &nbsp;·&nbsp; R = Rare &nbsp;·&nbsp; I = Inimitable &nbsp;·&nbsp; O = Organised for exploitation
+          </div>
+        </div>
+      </div>
+      <div class="strategy-callout">
+        <strong>"The advantage rests on the two capabilities hardest to copy — a domain-trained language model and a socially complex advisory heritage.</strong> Rivals' retrofitted AI registers only as parity."
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 8: LIVE NOW ══════════════════════════════════════ -->
+  <div class="slide" id="s8">
+    <div class="slide-inner">
+      <div class="live-left">
+        <div>
+          <div class="slide-label">Delivery</div>
+          <h2 class="slide-title">Live. Deployed.<br/><span>Ready now.</span></h2>
+          <p class="slide-sub">The CIE is not a future plan. It is a working, deployed system accessible today.</p>
+        </div>
+        <div class="live-badge">
+          <div class="live-dot"></div>
+          <div class="live-badge-text">LIVE NOW</div>
+        </div>
+        <div class="live-url-box">empirisys-cie.vercel.app</div>
+        <div class="live-desc">
+          The platform is deployed on Vercel and fully accessible. It currently operates on high-fidelity seed data — structured to be realistic to the HSE market. One data-injection step turns it into a fully live operational tool.
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <span class="chip">Full-stack · Next.js 16</span>
+          <span class="chip">Claude AI · Governed</span>
+          <span class="chip">pgvector · 142.5K vectors</span>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;margin-bottom:20px">Road to Full Production</div>
+        <div class="roadmap">
+          <div class="roadmap-phase">
+            <div class="roadmap-left">
+              <div class="roadmap-num">1</div>
+              <div class="roadmap-line"></div>
+            </div>
+            <div class="roadmap-content">
+              <div class="roadmap-timing">→ Immediate · 1–2 Days</div>
+              <div class="roadmap-title">The Bridge to Reality — Data Injection</div>
+              <div class="roadmap-desc">Replace seed arrays with real field intelligence: actual RFP prices seen in live tenders, and real win/loss insights from the sales team. One developer task. The CIE becomes a live operational sales weapon overnight — same platform, real numbers.</div>
+            </div>
+          </div>
+          <div class="roadmap-phase">
+            <div class="roadmap-left">
+              <div class="roadmap-num">2</div>
+              <div class="roadmap-line"></div>
+            </div>
+            <div class="roadmap-content">
+              <div class="roadmap-timing">→ Internal Integration</div>
+              <div class="roadmap-title">Production Security Implementation</div>
+              <div class="roadmap-desc">Enterprise Single Sign-On (SSO) and Role-Based Access Control (RBAC) — so each rep sees only what they need. PostgreSQL + pgvector migration from seed arrays to a fully governed live database. Azure resource group provisioning for production hosting, per the agreed architecture.</div>
+            </div>
+          </div>
+          <div class="roadmap-phase">
+            <div class="roadmap-left">
+              <div class="roadmap-num">3</div>
+              <div class="roadmap-line"></div>
+            </div>
+            <div class="roadmap-content">
+              <div class="roadmap-timing">→ Future Scale</div>
+              <div class="roadmap-title">Live Data Activation & Moat Deepening</div>
+              <div class="roadmap-desc">Activate the full Cheerio scraping pipeline at scale for continuous competitor monitoring. Expand the pgvector corpus with new competitor sources and internal IP. Deepen the proprietary safety-data training corpus. Productise SENSE cultural diagnostics as an additional differentiated entry point no System of Record can match.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="closing-strip">
+      "The CIE converts an abstract differentiator into demonstrable proof — and makes Empirisys's advantage finally saleable at the point of decision."
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── NAVIGATION ──────────────────────────────────────────── -->
+<div class="nav">
+  <button onclick="go(-1)">←</button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter"></span>
+  <button onclick="go(1)">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  let cur = 0;
+
+  // Build dots
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    dotsEl.children[cur].classList.remove('active');
+    cur = Math.max(0, Math.min(n, slides.length-1));
+    slides[cur].classList.add('active');
+    dotsEl.children[cur].classList.add('active');
+    counter.textContent = (cur+1) + ' / ' + slides.length;
+  }
+
+  function go(d) { goTo(cur+d); }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>

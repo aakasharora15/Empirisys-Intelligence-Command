@@ -1,0 +1,65 @@
+{
+  "name": "Empirisys Intelligence Hub — Typography",
+  "fontFamilies": {
+    "primary": "Inter",
+    "secondary": "Playfair Display",
+    "fallback": "system-ui, -apple-system, sans-serif"
+  },
+  "scale": {
+    "micro": {
+      "size": "11px",
+      "weight": 500,
+      "lineHeight": 1.2,
+      "use": "Labels, badges, timestamps"
+    },
+    "caption": {
+      "size": "12px",
+      "weight": 500,
+      "lineHeight": 1.3,
+      "use": "Pill badges, chart labels, metadata"
+    },
+    "footnote": {
+      "size": "13px",
+      "weight": 400,
+      "lineHeight": 1.4,
+      "use": "Tooltip text, secondary descriptions"
+    },
+    "body": {
+      "size": "15px",
+      "weight": 400,
+      "lineHeight": 1.6,
+      "use": "Primary body text, paragraphs, card content"
+    },
+    "headline": {
+      "size": "17px",
+      "weight": 600,
+      "lineHeight": 1.4,
+      "use": "Card titles, section headers, nav items"
+    },
+    "title3": {
+      "size": "20px",
+      "weight": 600,
+      "lineHeight": 1.3,
+      "use": "Module titles, KPI values"
+    },
+    "title2": {
+      "size": "24px",
+      "weight": 700,
+      "lineHeight": 1.2,
+      "use": "Page titles, dashboard headings"
+    },
+    "title1": {
+      "size": "28px",
+      "weight": 700,
+      "lineHeight": 1.15,
+      "use": "Hero headings, primary page title"
+    }
+  },
+  "weights": {
+    "regular": 400,
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700
+  },
+  "notes": "Typography follows iOS/macOS Human Interface Guidelines scale. Inter is used for all UI text. Playfair Display is reserved for decorative or editorial headings."
+}
