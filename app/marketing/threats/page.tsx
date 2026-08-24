@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/Badge";
 import { FilterBar } from "@/components/data/filter-bar";
 import { ShieldAlert, Activity, ArrowRight, RefreshCw } from "lucide-react";
+import HeroSection from "@/components/ui/HeroSection";
 import { Button } from "@/components/ui/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
@@ -36,21 +37,25 @@ export default function ThreatsPage() {
   const criticalThreatsCount = threats.filter(t => t.level === "critical").length;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <PageHeader
-          title="Threat Monitor"
-          description="Live AI tracking of high-priority competitor moves and regulatory risks."
-        />
-        <Button 
-          onClick={fetchThreats} 
-          disabled={isLoading}
-          className="bg-red-600 hover:bg-red-700 text-white transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)]"
-        >
-          <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> 
-          {isLoading ? "Scanning Horizons..." : "Force Threat Scan"}
-        </Button>
-      </div>
+    <div className="w-full flex flex-col pb-20 -mt-[116px]">
+<div className="space-y-6 animate-in fade-in duration-500 w-full px-6 md:px-10 max-w-[1600px] mx-auto relative z-20">
+      <HeroSection 
+        title="Threat Monitor"
+        subtitle="Live AI tracking of high-priority competitor moves and regulatory risks."
+        moduleLabel="MARKETING INTELLIGENCE"
+        belowContent={
+          <div className="flex items-center mt-4">
+            <Button 
+              onClick={fetchThreats} 
+              disabled={isLoading}
+              className="bg-red-600 hover:bg-red-700 text-white transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)] rounded-full px-6"
+            >
+              <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> 
+              {isLoading ? "Scanning Horizons..." : "Force Threat Scan"}
+            </Button>
+          </div>
+        }
+      />
 
       <FilterBar
         filters={[
@@ -179,6 +184,7 @@ export default function ThreatsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   );
 }
