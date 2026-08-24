@@ -352,7 +352,7 @@ export function LeadScoringMatrix() {
                 <div className="p-6 space-y-8">
                   
                   {/* Recommended Product */}
-                  <div className="bg-gradient-to-br from-violet-500/10 to-cyan-400/10 border border-violet-500/20 rounded-2xl p-6 relative overflow-hidden text-center">
+                  <div className="bg-gradient-to-br bg-card/60 border border-white/5 rounded-2xl p-6 relative overflow-hidden text-center">
                     <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block mb-2">Target Module</span>
                     <div className="text-[24px] font-bold text-white leading-tight">{profile.recommendedProduct}</div>
                     <p className="text-[12px] text-zinc-600 text-zinc-300 mt-3">{profile.rationale}</p>

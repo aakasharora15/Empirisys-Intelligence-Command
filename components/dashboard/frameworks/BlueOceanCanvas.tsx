@@ -7,12 +7,24 @@ interface BlueOceanCanvasProps {
   competitors: Competitor[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipPayload {
+  color: string;
+  name: string;
+  value: number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-card border border-white/10 p-3 rounded-xl shadow-xl">
         <p className="text-xs font-bold text-text-secondary mb-2">{label}</p>
-        {payload.map((entry: any, index: number) => (
+        {payload.map((entry, index) => (
           <div key={index} className="flex items-center gap-2 mb-1">
             <span style={{ color: entry.color }} className="text-sm font-bold">
               {entry.name} : {entry.value}
@@ -57,7 +69,7 @@ export default function BlueOceanCanvas({ competitors: _competitors }: BlueOcean
               <PolarGrid stroke="rgba(255,255,255,0.08)" />
               <PolarAngleAxis 
                 dataKey="subject" 
-                tick={(props: any) => {
+                tick={(props: { payload: { value: string }; x: number; y: number; textAnchor: string; stroke: string }) => {
                   const { payload, x, y, textAnchor, stroke } = props;
                   return (
                     <g className="recharts-layer recharts-polar-angle-axis-tick">
@@ -69,7 +81,7 @@ export default function BlueOceanCanvas({ competitors: _competitors }: BlueOcean
                         textAnchor={textAnchor}
                         fill={
                           payload.value.includes('Predictive') || payload.value.includes('Contextual') || payload.value.includes('Consulting') 
-                            ? '#7AE03B' 
+                            ? 'var(--color-primary)' 
                             : '#9CA3AF'
                         }
                         fontSize="13"

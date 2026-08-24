@@ -414,7 +414,7 @@ export function CompetitorsClient({
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold shadow-sm overflow-hidden border border-card-border relative bg-white">
-                        <img 
+                        <Image alt="Competitor Logo" fill sizes="48px" 
                           src={comp.logoUrl || `https://logo.clearbit.com/${comp.website.replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0]}`} 
                           alt={comp.name}
                           className="w-full h-full object-contain absolute inset-0 m-auto z-10"

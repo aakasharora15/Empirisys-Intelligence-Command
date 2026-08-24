@@ -181,9 +181,9 @@ interface RawTheme {
 interface RawAggregation {
   themes: RawTheme[];
   metrics: {
-    trendVelocity: any[];
-    competitorPositioning: any[];
-    budgetAllocation: any[];
+    trendVelocity: Array<{ factor: string; velocity: number }>;
+    competitorPositioning: Array<{ name: string; dominance: number; vulnerability: number }>;
+    budgetAllocation: Array<{ category: string; percentage: number }>;
   };
 }
 
@@ -194,7 +194,11 @@ interface RawAggregation {
 export interface PipelineResult {
   events: MarketEvent[];
   themes: AggregatedTheme[];
-  metrics: any; // Using 'any' locally to avoid circular imports, types.ts handles the strict interface
+  metrics: {
+    trendVelocity: Array<{ factor: string; velocity: number }>;
+    competitorPositioning: Array<{ name: string; dominance: number; vulnerability: number }>;
+    budgetAllocation: Array<{ category: string; percentage: number }>;
+  };
   landscape: MarketLandscape | null;
 }
 

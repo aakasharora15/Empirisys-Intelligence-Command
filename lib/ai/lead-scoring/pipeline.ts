@@ -7,7 +7,7 @@ const anthropic = new Anthropic({
 });
 
 // Helper: Deterministic scoring based on simulated data points
-function calculateBant(companyName: string, industry: string, simulatedData: any): BantScore {
+function calculateBant(companyName: string, industry: string, simulatedData: { recentIncidents: number; daysSinceIncident: number }): BantScore {
   let budget = 50;
   let authority = 50;
   let need = 50;

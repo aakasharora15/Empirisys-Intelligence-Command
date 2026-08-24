@@ -455,7 +455,7 @@ export default function DashboardHeader({
                    <div key={comp.id} className="bg-background/40 border border-white/5 rounded-2xl p-4 hover:bg-white/[0.02] transition-colors flex items-center justify-between">
                      <div className="flex items-center gap-3">
                        <div className="h-8 w-8 rounded-full bg-blue-400/10 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 relative">
-                         <img src={comp.logoUrl} className="w-full h-full object-contain absolute inset-0 z-10" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                         <Image src={comp.logoUrl} alt={comp.name} fill sizes="32px" className="w-full h-full object-contain absolute inset-0 z-10" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                          <span className="absolute inset-0 flex items-center justify-center text-blue-400 text-xs font-black z-0">{comp.name.slice(0, 2).toUpperCase()}</span>
                        </div>
                        <p className="text-sm font-bold text-text-primary leading-tight">{comp.name}</p>

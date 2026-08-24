@@ -55,7 +55,7 @@ export default function CompetitorMatrixTable({
         cell: (info) => (
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-full overflow-hidden border border-card-border shrink-0 bg-accent/10 flex items-center justify-center relative bg-white">
-              <img 
+              <Image fill sizes="32px" 
                 src={info.row.original.logoUrl || `https://www.google.com/s2/favicons?domain=${info.row.original.website.replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0]}&sz=128`} 
                 alt={info.getValue() as string}
                 className="w-full h-full object-contain absolute inset-0 m-auto z-10 p-1"

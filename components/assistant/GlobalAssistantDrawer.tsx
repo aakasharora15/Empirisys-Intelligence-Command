@@ -153,7 +153,7 @@ export function GlobalAssistantDrawer() {
                   >
                     <div className={cn(
                       "h-8 w-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm",
-                      msg.role === 'user' ? "bg-violet-600" : "bg-[var(--color-primary)]"
+                      msg.role === 'user' ? "bg-zinc-800" : "bg-[var(--color-primary)]"
                     )}>
                       {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                     </div>
@@ -161,7 +161,7 @@ export function GlobalAssistantDrawer() {
                     <div className={cn(
                       "p-3.5 text-sm leading-relaxed shadow-sm overflow-hidden",
                       msg.role === 'user' 
-                        ? "bg-violet-600/20 text-white rounded-2xl rounded-tr-none border border-violet-500/30 whitespace-pre-wrap" 
+                        ? "bg-white/10 text-white rounded-2xl rounded-tr-none border border-white/10 whitespace-pre-wrap" 
                         : "bg-background text-[var(--color-text-secondary)] rounded-2xl rounded-tl-none border border-white/5"
                     )}>
                       {msg.role === 'user' ? msg.content : renderMarkdown(msg.content)}
