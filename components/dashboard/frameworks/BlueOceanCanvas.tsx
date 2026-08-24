@@ -69,7 +69,7 @@ export default function BlueOceanCanvas({ competitors: _competitors }: BlueOcean
               <PolarGrid stroke="rgba(255,255,255,0.08)" />
               <PolarAngleAxis 
                 dataKey="subject" 
-                tick={(props: { payload: { value: string }; x: number; y: number; textAnchor: string; stroke: string }) => {
+                tick={(props: { payload: { value: string }; x: number | string; y: number | string; textAnchor: "inherit" | "end" | "middle" | "start" | undefined; stroke: string }) => {
                   const { payload, x, y, textAnchor, stroke } = props;
                   return (
                     <g className="recharts-layer recharts-polar-angle-axis-tick">

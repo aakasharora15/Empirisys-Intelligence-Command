@@ -181,9 +181,27 @@ interface RawTheme {
 interface RawAggregation {
   themes: RawTheme[];
   metrics: {
-    trendVelocity: Array<{ factor: string; velocity: number }>;
-    competitorPositioning: Array<{ name: string; dominance: number; vulnerability: number }>;
-    budgetAllocation: Array<{ category: string; percentage: number }>;
+    trendVelocity: Array<{
+      day: string;
+      sociocultural: number;
+      technological: number;
+      economic: number;
+      environmental: number;
+      political: number;
+      legal: number;
+      ethical: number;
+    }>;
+    competitorPositioning: Array<{
+      competitorName: string;
+      innovationScore: number;
+      marketShareScore: number;
+      threatLevel: string;
+    }>;
+    budgetAllocation: Array<{
+      category: string;
+      allocationPercentage: number;
+      trend: string;
+    }>;
   };
 }
 
@@ -195,9 +213,27 @@ export interface PipelineResult {
   events: MarketEvent[];
   themes: AggregatedTheme[];
   metrics: {
-    trendVelocity: Array<{ factor: string; velocity: number }>;
-    competitorPositioning: Array<{ name: string; dominance: number; vulnerability: number }>;
-    budgetAllocation: Array<{ category: string; percentage: number }>;
+    trendVelocity: Array<{
+      day: string;
+      sociocultural: number;
+      technological: number;
+      economic: number;
+      environmental: number;
+      political: number;
+      legal: number;
+      ethical: number;
+    }>;
+    competitorPositioning: Array<{
+      competitorName: string;
+      innovationScore: number;
+      marketShareScore: number;
+      threatLevel: string;
+    }>;
+    budgetAllocation: Array<{
+      category: string;
+      allocationPercentage: number;
+      trend: string;
+    }>;
   };
   landscape: MarketLandscape | null;
 }
