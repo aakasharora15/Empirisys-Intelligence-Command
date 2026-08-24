@@ -17,7 +17,7 @@ export default function SettingsPage() {
     
 
   return (
-    <div className="pb-16 bg-background min-h-screen">
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
       {/* Hero Header */}
       <HeroSection
         title={
@@ -30,7 +30,7 @@ export default function SettingsPage() {
       />
 
       {/* Main Container */}
-      <div className="w-full px-6 md:px-10 mt-16 space-y-8">
+      <div className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20">
             
         {/* Profile Card */}
         <div className="glass-card p-6 shadow-sm space-y-6">

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
+import HeroSection from '@/components/ui/HeroSection';
 import { SFPencil as Doc, SFArrowDown as Download } from 'sf-symbols-lib/monochrome';
 import { useStore } from '@/lib/store';
 
@@ -8,7 +9,13 @@ export default function BoardLevelExportPage() {
   const { user } = useStore();
 
   return (
-    <div className="flex-1 w-full min-h-0 flex flex-col items-center justify-center p-6 space-y-6 overflow-y-auto">
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
+      <HeroSection 
+        title="Board-Level Export"
+        subtitle="Instantly synthesize Q2 2026 data across all modules into a highly polished, print-ready PDF presentation."
+        moduleLabel="MODULE 04 REPORTING"
+      />
+      <div className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20 flex flex-col items-center mt-12">
       
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
@@ -20,10 +27,7 @@ export default function BoardLevelExportPage() {
           <Doc className="w-10 h-10 text-accent relative z-10" />
         </div>
 
-        <h2 className="text-2xl font-bold text-text-primary mb-4">Board-Level Export Generator</h2>
-        <p className="text-sm text-text-secondary leading-relaxed mb-8">
-          Instantly synthesize Q2 2026 data across all modules (Competitor Intel, Market Signals, Churn Risk) into a highly polished, print-ready PDF presentation.
-        </p>
+        
 
         <button className="flex items-center gap-2 mx-auto px-8 py-4 bg-accent hover:bg-accent-hover text-white font-bold rounded-2xl transition-all shadow-xl shadow-accent/20">
           <Download className="w-5 h-5" />
@@ -46,6 +50,7 @@ export default function BoardLevelExportPage() {
         </div>
       </motion.div>
 
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
+import HeroSection from '@/components/ui/HeroSection';
 import { SFCreditcard as CreditCard } from 'sf-symbols-lib/monochrome';
 
 const pricingData = [
@@ -11,17 +12,13 @@ const pricingData = [
 
 export default function PricingPackagingPage() {
   return (
-    <div className="flex-1 w-full min-h-0 flex flex-col p-6 space-y-6 overflow-y-auto">
-      
-      <div className="bg-card/50 backdrop-blur-xl border border-card-border rounded-[32px] p-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-text-primary mb-1">Pricing & Packaging Analyzer</h2>
-          <p className="text-sm text-text-secondary">Enterprise contract estimates based on scraped RFP data (Q2 2026).</p>
-        </div>
-        <div className="h-12 w-12 bg-accent/10 rounded-xl flex items-center justify-center border border-accent/20">
-          <CreditCard className="w-6 h-6 text-accent" />
-        </div>
-      </div>
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
+      <HeroSection 
+        title="Pricing & Packaging Analyzer"
+        subtitle="Enterprise contract estimates based on scraped RFP data (Q2 2026)."
+        moduleLabel="MODULE 01 COMPETITOR INTELLIGENCE"
+      />
+      <div className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20">
 
       <div className="bg-card/40 backdrop-blur-xl border border-card-border rounded-[24px] overflow-hidden">
         <table className="w-full text-left border-collapse">
@@ -63,6 +60,7 @@ export default function PricingPackagingPage() {
         <p className="text-sm text-text-secondary leading-relaxed">
           While Empirisys has a higher base platform cost, eliminating per-user licensing and professional services for implementation makes the Total Cost of Ownership (TCO) 22% lower over a 3-year enterprise contract compared to Sphera.
         </p>
+      </div>
       </div>
     </div>
   );

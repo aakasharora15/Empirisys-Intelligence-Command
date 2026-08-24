@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import HeroSection from '@/components/ui/HeroSection';
 import { SFShield as Shield, SFTarget as Target, SFFlame as Flame, SFCheckmarkCircle as Check } from 'sf-symbols-lib/monochrome';
 
 const battlecards = [
@@ -50,10 +51,13 @@ export default function SalesBattlecardsPage() {
   const activeCard = battlecards.find(c => c.id === activeTab)!;
 
   return (
-    <div className="flex-1 w-full min-h-0 flex flex-col p-6 space-y-6">
-      
-      {/* Tabs */}
-      <div className="flex gap-4 border-b border-card-border pb-4">
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
+      <HeroSection 
+        title="Sales Battlecards"
+        subtitle="Tactical, on-the-ground intelligence for displacing legacy incumbents."
+        moduleLabel="MODULE 01 COMPETITOR INTELLIGENCE"
+        belowContent={
+          <div className="flex gap-4 mt-4">
         {battlecards.map(card => (
           <button
             key={card.id}
@@ -63,8 +67,11 @@ export default function SalesBattlecardsPage() {
             {card.name}
           </button>
         ))}
-      </div>
+          </div>
+        }
+      />
 
+      <div className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20">
       {/* Battlecard Content */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -135,6 +142,7 @@ export default function SalesBattlecardsPage() {
 
         </motion.div>
       </AnimatePresence>
+      </div>
     </div>
   );
 }

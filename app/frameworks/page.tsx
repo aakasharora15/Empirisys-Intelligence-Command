@@ -2,34 +2,36 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import HeroSection from '@/components/ui/HeroSection';
 import { SFShield as Shield, SFExclamationmarkTriangle as Alert } from 'sf-symbols-lib/monochrome';
 
 export default function StrategicFrameworksPage() {
   const [activeTab, setActiveTab] = useState<'porters' | 'vrio'>('porters');
 
   return (
-    <div className="flex-1 w-full min-h-0 flex flex-col p-6 space-y-6 overflow-y-auto">
-      
-      <div className="flex justify-between items-end border-b border-card-border pb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-text-primary mb-2">Strategic Frameworks</h2>
-          <p className="text-sm text-text-secondary">Academic MBA-grade plotting of Empirisys vs. Legacy Incumbents (Sphera, Intelex).</p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setActiveTab('porters')}
-            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeTab === 'porters' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-panel text-text-secondary hover:text-text-primary'}`}
-          >
-            Porter's Five Forces
-          </button>
-          <button
-            onClick={() => setActiveTab('vrio')}
-            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeTab === 'vrio' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-panel text-text-secondary hover:text-text-primary'}`}
-          >
-            VRIO Matrix
-          </button>
-        </div>
-      </div>
+    <div className="pb-16 bg-background min-h-screen z-10 relative">
+      <HeroSection 
+        title="Strategic Frameworks"
+        subtitle="Academic MBA-grade plotting of Empirisys vs. Legacy Incumbents (Sphera, Intelex)."
+        moduleLabel="MODULE 03 FRAMEWORKS"
+        belowContent={
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => setActiveTab('porters')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeTab === 'porters' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-panel text-text-secondary hover:text-text-primary'}`}
+            >
+              Porter's Five Forces
+            </button>
+            <button
+              onClick={() => setActiveTab('vrio')}
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${activeTab === 'vrio' ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-panel text-text-secondary hover:text-text-primary'}`}
+            >
+              VRIO Matrix
+            </button>
+          </div>
+        }
+      />
+      <div className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20">
 
       <AnimatePresence mode="wait">
         {activeTab === 'porters' ? (
@@ -156,6 +158,7 @@ export default function StrategicFrameworksPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
 
     </div>
   );
