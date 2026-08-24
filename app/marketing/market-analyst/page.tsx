@@ -165,13 +165,13 @@ const tierColors: Record<string, { bg: string; text: string; label: string }> = 
   A: { bg: "bg-emerald-500/10 border-emerald-500/20", text: "text-emerald-600 dark:text-emerald-400", label: "Tier A · Regulatory" },
   B: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-600 dark:text-blue-400", label: "Tier B · Procurement" },
   C: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-600 dark:text-amber-400", label: "Tier C · Trade Press" },
-  D: { bg: "bg-zinc-500/10 border-zinc-500/20", text: "text-zinc-600 dark:text-zinc-400", label: "Tier D · Business Press" },
+  D: { bg: "bg-zinc-500/10 border-zinc-500/20", text: "text-zinc-400", label: "Tier D · Business Press" },
 };
 
 const deltaLabels: Record<string, { color: string; icon: React.ReactNode }> = {
   new: { color: "text-emerald-500 bg-emerald-500/10", icon: <Zap className="h-3 w-3" /> },
   intensified: { color: "text-red-500 bg-red-500/10", icon: <AlertTriangle className="h-3 w-3" /> },
-  faded: { color: "text-zinc-500 dark:text-zinc-400 bg-zinc-400/10", icon: <ChevronDown className="h-3 w-3" /> },
+  faded: { color: "text-zinc-500 bg-zinc-400/10", icon: <ChevronDown className="h-3 w-3" /> },
   stable: { color: "text-blue-500 bg-blue-500/10", icon: <Activity className="h-3 w-3" /> },
 };
 
@@ -249,7 +249,7 @@ export default function MarketAnalystPage() {
       className="space-y-8 max-w-[1400px] mx-auto pb-20"
     >
       {/* Header section with elite glassmorphic styling */}
-      <motion.div variants={itemVariants} className="relative bg-white/40 dark:bg-[#1A1525]/40 backdrop-blur-xl border border-zinc-200/50 dark:border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl shadow-violet-500/5 overflow-hidden">
+      <motion.div variants={itemVariants} className="relative bg-white/40 bg-card/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl shadow-[var(--color-primary)]/5 overflow-hidden">
         {/* Animated Background Orbs */}
         <motion.div 
           animate={{ 
@@ -257,7 +257,7 @@ export default function MarketAnalystPage() {
             opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 right-0 w-[500px] h-[500px] bg-violet-600/20 dark:bg-violet-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"
+          className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-primary)]/10 dark:bg-[var(--color-primary)]/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none"
         />
         <motion.div 
           animate={{ 
@@ -265,16 +265,16 @@ export default function MarketAnalystPage() {
             opacity: [0.2, 0.4, 0.2],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-600/20 dark:bg-cyan-500/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"
+          className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--color-primary)]/10 dark:bg-[var(--color-primary)]/10 rounded-full blur-[80px] translate-y-1/3 -translate-x-1/4 pointer-events-none"
         />
         
         <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="px-3 py-1.5 rounded-full bg-violet-500/10 text-[11px] font-bold tracking-widest uppercase text-violet-600 dark:text-violet-400 border border-violet-500/20 flex items-center shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+              <span className="px-3 py-1.5 rounded-full bg-[var(--color-primary)]/10 text-[11px] font-bold tracking-widest uppercase text-[var(--color-primary)] border border-[var(--color-primary)]/20 flex items-center shadow-[0_0_15px_rgba(139,92,246,0.2)]">
                 <div className="relative flex h-2.5 w-2.5 mr-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-violet-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-primary)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-primary)] text-black"></span>
                 </div>
                 Intelligence Engine Live
               </span>
@@ -282,7 +282,7 @@ export default function MarketAnalystPage() {
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500 mb-3 pb-2">
               Market Analyst
             </h1>
-            <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl text-[16px] leading-relaxed font-medium">
+            <p className="text-zinc-400 max-w-2xl text-[16px] leading-relaxed font-medium">
               Event-driven intelligence pipeline: Source Ingestion → Entity Extraction → Deterministic Scoring → Theme Aggregation → Strategic Interpretation
             </p>
           </div>
@@ -323,11 +323,11 @@ export default function MarketAnalystPage() {
           {/* KPI Strip */}
           <motion.div variants={containerVariants} className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {[
-              { label: "Events Extracted", value: result.meta.totalEventsExtracted, bg: "bg-violet-500/10", border: "border-violet-500/20", color: "text-zinc-900 dark:text-white" },
-              { label: "Themes Identified", value: result.meta.totalThemes, bg: "bg-cyan-500/10", border: "border-cyan-500/20", color: "text-zinc-900 dark:text-white" },
+              { label: "Events Extracted", value: result.meta.totalEventsExtracted, bg: "bg-[var(--color-primary)]/10", border: "border-[var(--color-primary)]/20", color: "text-white" },
+              { label: "Themes Identified", value: result.meta.totalThemes, bg: "bg-[var(--color-primary)]/10", border: "border-[var(--color-primary)]/20", color: "text-white" },
               { label: "Segments Found", value: result.meta.totalSegments, bg: "bg-emerald-500/10", border: "border-emerald-500/20", color: "text-emerald-500" },
               { label: "Pending Review", value: pendingThemes.length, bg: "bg-amber-500/10", border: "border-amber-500/20", color: "text-amber-500" },
-              { label: "Pipeline Run", value: new Date(result.meta.generatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), bg: "bg-zinc-500/10", border: "border-zinc-500/20", color: "text-zinc-900 dark:text-white", textClass: "text-sm mt-2" }
+              { label: "Pipeline Run", value: new Date(result.meta.generatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), bg: "bg-zinc-500/10", border: "border-zinc-500/20", color: "text-white", textClass: "text-sm mt-2" }
             ].map((kpi, i) => (
               <motion.div 
                 variants={itemVariants}
@@ -350,8 +350,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("dashboard")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "dashboard"
-                  ? "bg-gradient-to-r from-violet-500 to-cyan-400 text-white shadow-lg"
-                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
+                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               <Activity className="h-3.5 w-3.5 inline mr-1.5" />
@@ -361,8 +361,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("themes")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "themes"
-                  ? "bg-gradient-to-r from-violet-500 to-cyan-400 text-white shadow-lg"
-                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
+                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               <Shield className="h-3.5 w-3.5 inline mr-1.5" />
@@ -372,8 +372,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("events")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "events"
-                  ? "bg-gradient-to-r from-violet-500 to-cyan-400 text-white shadow-lg"
-                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
+                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               <Network className="h-3.5 w-3.5 inline mr-1.5" />
@@ -383,8 +383,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("landscape")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "landscape"
-                  ? "bg-gradient-to-r from-emerald-500 to-cyan-400 text-white shadow-lg"
-                  : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
+                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
               }`}
             >
               <Map className="h-3.5 w-3.5 inline mr-1.5" />
@@ -398,9 +398,9 @@ export default function MarketAnalystPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Budget Allocation (Donut) */}
-                <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 dark:border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
+                <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
+                  <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
                     <Network className="h-5 w-5 text-emerald-500" /> Budget CapEx Allocation
                   </h3>
                   <div className="h-[300px] w-full relative z-10">
@@ -434,10 +434,10 @@ export default function MarketAnalystPage() {
                 </motion.div>
 
                 {/* Competitor Positioning Matrix */}
-                <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 dark:border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
-                    <Shield className="h-5 w-5 text-cyan-500" /> Competitive Positioning Matrix
+                <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-[var(--color-primary)]/5 rounded-full blur-3xl pointer-events-none"></div>
+                  <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
+                    <Shield className="h-5 w-5 text-[var(--color-primary)]" /> Competitive Positioning Matrix
                   </h3>
                   <div className="h-[300px] w-full relative z-10">
                     <ResponsiveContainer width="100%" height="100%">
@@ -462,10 +462,10 @@ export default function MarketAnalystPage() {
               </div>
               
               {/* STEEPLE Trend Velocity (Full Width, Below) */}
-              <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 dark:border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-8 uppercase tracking-wider flex items-center gap-2 relative z-10">
-                  <Activity className="h-5 w-5 text-violet-500" /> STEEPLE Trend Velocity (7 Days)
+              <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--color-primary)]/5 rounded-full blur-3xl pointer-events-none"></div>
+                <h3 className="text-lg font-bold text-white mb-8 uppercase tracking-wider flex items-center gap-2 relative z-10">
+                  <Activity className="h-5 w-5 text-[var(--color-primary)]" /> STEEPLE Trend Velocity (7 Days)
                 </h3>
                 <div className="h-[400px] w-full relative z-10">
                   <ResponsiveContainer width="100%" height="100%">
@@ -584,34 +584,34 @@ export default function MarketAnalystPage() {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-3 mb-1">
-                      <h4 className="text-[14px] font-bold text-zinc-900 dark:text-white leading-tight">
+                      <h4 className="text-[14px] font-bold text-white leading-tight">
                         {event.title}
                       </h4>
-                      <span className="text-[10px] text-zinc-500 dark:text-zinc-400 shrink-0 whitespace-nowrap">
+                      <span className="text-[10px] text-zinc-500 shrink-0 whitespace-nowrap">
                         {eventTypeLabels[event.eventType] || event.eventType}
                       </span>
                     </div>
-                    <p className="text-[12px] text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2">
+                    <p className="text-[12px] text-zinc-400 mb-3 line-clamp-2">
                       {event.summary}
                     </p>
                     <div className="flex flex-wrap items-center gap-3 text-[11px]">
-                      <span className="text-zinc-500 dark:text-zinc-400">
+                      <span className="text-zinc-500">
                         📍 {event.geography} · {event.sector}
                       </span>
-                      <span className="text-zinc-500 dark:text-zinc-400">
+                      <span className="text-zinc-500">
                         🏢 {event.entityName}
                       </span>
-                      <span className="text-zinc-500 dark:text-zinc-400">
+                      <span className="text-zinc-500">
                         📰 {event.sourceName}
                       </span>
-                      <span className="px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-600 dark:text-zinc-500 font-medium">
+                      <span className="px-2 py-0.5 rounded border border-zinc-200 border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-600 dark:text-zinc-500 font-medium">
                         {event.steepleCategory}
                       </span>
                       <div className="flex gap-2 ml-auto">
-                        <span className="px-2 py-0.5 rounded bg-violet-500/10 text-violet-500 font-bold">
+                        <span className="px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold">
                           Rel: {event.relevanceScore}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-500 font-bold">
+                        <span className="px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold">
                           Evd: {event.evidenceStrength}
                         </span>
                       </div>
@@ -627,7 +627,7 @@ export default function MarketAnalystPage() {
             <div className="space-y-6">
 
               {/* Landscape Summary */}
-              <div className="bg-gradient-to-r from-emerald-600 to-cyan-600 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="bg-card/60 border border-white/5 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-3">
@@ -651,7 +651,7 @@ export default function MarketAnalystPage() {
                     <span className="text-[10px] font-bold tracking-widest text-amber-600 dark:text-amber-400 uppercase block mb-1">
                       Strategic Precondition — Must Solve First
                     </span>
-                    <p className="text-[14px] text-zinc-800 dark:text-zinc-200 font-medium leading-relaxed">
+                    <p className="text-[14px] text-zinc-800  font-medium leading-relaxed">
                       {result.landscape.strategicPrecondition}
                     </p>
                   </div>
@@ -660,7 +660,7 @@ export default function MarketAnalystPage() {
 
               {/* Market Segments — Dynamically Discovered */}
               <div>
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
                   <Target className="h-4 w-4 text-emerald-500" /> Discovered Market Segments ({result.landscape.segments.length})
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -681,10 +681,10 @@ export default function MarketAnalystPage() {
                         {/* Header */}
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h4 className="text-[16px] font-bold text-zinc-900 dark:text-white mb-1">
+                            <h4 className="text-[16px] font-bold text-white mb-1">
                               {segment.name}
                             </h4>
-                            <span className="text-[12px] text-zinc-500 dark:text-zinc-400">📍 {segment.geography}</span>
+                            <span className="text-[12px] text-zinc-500">📍 {segment.geography}</span>
                           </div>
                           <span className={`px-2.5 py-1 rounded-lg border text-[10px] font-bold ${config.bg} ${config.text}`}>
                             {config.label}
@@ -693,10 +693,10 @@ export default function MarketAnalystPage() {
 
                         {/* Trigger */}
                         <div className="bg-card/20 rounded-xl p-3 mb-3 border border-zinc-100 dark:border-white/5">
-                          <span className="text-[9px] font-bold text-violet-500 uppercase tracking-wider block mb-1">
+                          <span className="text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-1">
                             Commercial Trigger
                           </span>
-                          <p className="text-[13px] font-semibold text-zinc-900 dark:text-white">{segment.trigger?.name}</p>
+                          <p className="text-[13px] font-semibold text-white">{segment.trigger?.name}</p>
                           <div className="flex items-center gap-3 mt-1 text-[11px] text-zinc-600 dark:text-zinc-500">
                             <span>💰 {segment.trigger?.value}</span>
                             <span>📅 {segment.trigger?.deadline}</span>
@@ -705,26 +705,26 @@ export default function MarketAnalystPage() {
 
                         {/* Mechanism */}
                         <div className="mb-3">
-                          <span className="text-[9px] font-bold text-cyan-500 uppercase tracking-wider block mb-1">Why This Creates a Buyer</span>
-                          <p className="text-[12px] text-zinc-600 dark:text-zinc-400 leading-relaxed">{segment.mechanism}</p>
+                          <span className="text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-1">Why This Creates a Buyer</span>
+                          <p className="text-[12px] text-zinc-400 leading-relaxed">{segment.mechanism}</p>
                         </div>
 
                         {/* Entry Barriers */}
                         <div className="mb-3">
                           <span className="text-[9px] font-bold text-amber-500 uppercase tracking-wider block mb-1">Entry Barriers</span>
-                          <p className="text-[12px] text-zinc-600 dark:text-zinc-400">{segment.entryBarriers}</p>
+                          <p className="text-[12px] text-zinc-400">{segment.entryBarriers}</p>
                         </div>
 
                         {/* Squeeze Opportunity */}
-                        <div className="bg-gradient-to-r from-violet-500/10 to-cyan-500/10 rounded-xl p-3 border border-violet-500/10 mb-3">
-                          <span className="text-[9px] font-bold text-violet-500 uppercase tracking-wider block mb-1">🎯 Squeeze Opportunity</span>
-                          <p className="text-[13px] font-semibold text-zinc-900 dark:text-white leading-relaxed">{segment.squeezeOpportunity}</p>
+                        <div className="bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary)]/10 rounded-xl p-3 border border-[var(--color-primary)]/10 mb-3">
+                          <span className="text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-1">🎯 Squeeze Opportunity</span>
+                          <p className="text-[13px] font-semibold text-white leading-relaxed">{segment.squeezeOpportunity}</p>
                         </div>
 
                         {/* Product Pill */}
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-zinc-500 dark:text-zinc-400">Best Fit:</span>
-                          <span className="px-3 py-1 rounded-full bg-violet-500/10 text-violet-500 text-[11px] font-bold border border-violet-500/20">
+                          <span className="text-[10px] text-zinc-500">Best Fit:</span>
+                          <span className="px-3 py-1 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-[11px] font-bold border border-[var(--color-primary)]/20">
                             {segment.bestFitProduct}
                           </span>
                         </div>
@@ -736,8 +736,8 @@ export default function MarketAnalystPage() {
 
               {/* Growth Horizons Timeline */}
               <div>
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white mb-4 uppercase tracking-wider flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-violet-500" /> Growth Strategy Horizons
+                <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-[var(--color-primary)]" /> Growth Strategy Horizons
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {result.landscape.horizons.map((horizon) => {
@@ -768,15 +768,15 @@ export default function MarketAnalystPage() {
                         <div className="p-4 space-y-3">
                           {horizon.actions?.map((action, aIdx) => (
                             <div key={aIdx} className="bg-card/20 rounded-xl p-3 border border-zinc-100 dark:border-white/5">
-                              <p className="text-[13px] font-semibold text-zinc-900 dark:text-white mb-1.5">{action.action}</p>
+                              <p className="text-[13px] font-semibold text-white mb-1.5">{action.action}</p>
                               <div className="flex items-center gap-2 text-[11px] text-zinc-600 dark:text-zinc-500 mb-1">
-                                <span className="px-2 py-0.5 rounded bg-violet-500/10 text-violet-500 font-bold">{action.segment}</span>
+                                <span className="px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold">{action.segment}</span>
                               </div>
-                              <p className="text-[11px] text-zinc-500 dark:text-zinc-400 italic">{action.rationale}</p>
+                              <p className="text-[11px] text-zinc-500 italic">{action.rationale}</p>
                             </div>
                           ))}
                           {(!horizon.actions || horizon.actions.length === 0) && (
-                            <p className="text-[12px] text-zinc-500 dark:text-zinc-400 italic text-center py-4">No actions identified for this horizon.</p>
+                            <p className="text-[12px] text-zinc-500 italic text-center py-4">No actions identified for this horizon.</p>
                           )}
                         </div>
                       </div>
@@ -791,9 +791,9 @@ export default function MarketAnalystPage() {
           {/* Landscape Not Available */}
           {activeView === "landscape" && !result.landscape && (
             <div className="bg-card/40 backdrop-blur-md rounded-2xl p-12 border border-zinc-100 dark:border-white/5 text-center">
-              <Map className="h-10 w-10 text-zinc-500 dark:text-zinc-400 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">Landscape Analysis Unavailable</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-md mx-auto">
+              <Map className="h-10 w-10 text-zinc-500 mx-auto mb-3" />
+              <h3 className="text-lg font-bold text-white mb-2">Landscape Analysis Unavailable</h3>
+              <p className="text-sm text-zinc-400 max-w-md mx-auto">
                 The market landscape analysis could not be generated in this pipeline run. Try running the pipeline again.
               </p>
             </div>
@@ -804,19 +804,19 @@ export default function MarketAnalystPage() {
       {/* Empty State */}
       {!result && !isLoading && (
         <div className="bg-card/40 backdrop-blur-md rounded-3xl p-16 border border-zinc-100 dark:border-white/5 text-center">
-          <div className="inline-flex items-center justify-center p-5 rounded-full bg-gradient-to-br from-violet-500/10 to-cyan-500/10 mb-5">
-            <Network className="h-10 w-10 text-violet-500" />
+          <div className="inline-flex items-center justify-center p-5 rounded-full bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-primary)]/10 mb-5">
+            <Network className="h-10 w-10 text-[var(--color-primary)]" />
           </div>
-          <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">
+          <h3 className="text-xl font-bold text-white mb-2">
             Market Intelligence Pipeline
           </h3>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-md mx-auto mb-8">
+          <p className="text-sm text-zinc-400 max-w-md mx-auto mb-8">
             Run the pipeline to extract structured events from tiered sources, apply deterministic scoring, 
             aggregate into strategic themes, and generate actionable intelligence.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 text-[11px] text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-wrap justify-center gap-3 text-[11px] text-zinc-500">
             {["Tier A: Regulatory", "Tier B: Procurement", "Tier C: Trade Press", "Tier D: Business Press"].map((t) => (
-              <span key={t} className="px-3 py-1.5 rounded-full border border-zinc-200 dark:border-white/10 bg-zinc-50 dark:bg-white/5">
+              <span key={t} className="px-3 py-1.5 rounded-full border border-zinc-200 border-white/10 bg-zinc-50 dark:bg-white/5">
                 {t}
               </span>
             ))}
@@ -865,11 +865,11 @@ function ThemeCard({
         className="w-full text-left p-5 flex items-start gap-4"
       >
         {/* Gradient bar */}
-        <div className="w-1.5 h-12 bg-gradient-to-b from-violet-500 to-cyan-400 rounded-full shrink-0 mt-0.5" />
+        <div className="w-1.5 h-12 bg-[var(--color-primary)] rounded-full shrink-0 mt-0.5" />
         
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3 mb-1.5">
-            <h4 className="text-[15px] font-bold text-zinc-900 dark:text-white leading-tight">
+            <h4 className="text-[15px] font-bold text-white leading-tight">
               {theme.title}
             </h4>
             <div className="flex items-center gap-2 shrink-0">
@@ -888,21 +888,21 @@ function ThemeCard({
               )}
             </div>
           </div>
-          <p className="text-[13px] text-zinc-600 dark:text-zinc-400 line-clamp-2">
+          <p className="text-[13px] text-zinc-400 line-clamp-2">
             {theme.description}
           </p>
-          <div className="flex items-center gap-4 mt-2 text-[11px] text-zinc-500 dark:text-zinc-400">
-            <span>📊 Relevance: <strong className="text-violet-500">{theme.relevanceScore}</strong></span>
+          <div className="flex items-center gap-4 mt-2 text-[11px] text-zinc-500">
+            <span>📊 Relevance: <strong className="text-[var(--color-primary)]">{theme.relevanceScore}</strong></span>
             <span>🧩 {theme.events?.length || 0} supporting events</span>
-            <span>🎯 Module: <strong className="text-cyan-500">{theme.interpretation?.relevantProduct}</strong></span>
+            <span>🎯 Module: <strong className="text-[var(--color-primary)]">{theme.interpretation?.relevantProduct}</strong></span>
           </div>
         </div>
 
         <div className="shrink-0 mt-1">
           {expanded ? (
-            <ChevronUp className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
+            <ChevronUp className="h-4 w-4 text-zinc-500" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
+            <ChevronDown className="h-4 w-4 text-zinc-500" />
           )}
         </div>
       </button>
@@ -912,7 +912,7 @@ function ThemeCard({
         <div className="px-5 pb-5 space-y-4 border-t border-zinc-100 dark:border-white/5 pt-4 animate-in fade-in duration-200">
           {/* Strategic Interpretation */}
           <div className="bg-card/20 rounded-xl p-4 border border-zinc-100 dark:border-white/5">
-            <span className="text-[10px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider block mb-2">
+            <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-2">
               Strategic Interpretation
             </span>
             {/* Stakeholder View Toggle */}
@@ -921,7 +921,7 @@ function ThemeCard({
                 onClick={(e) => { e.stopPropagation(); setStakeholderView("ceo"); }}
                 className={`px-4 py-1.5 rounded-full text-[11px] font-bold transition-all ${
                   stakeholderView === "ceo"
-                    ? "bg-violet-500 text-white shadow"
+                    ? "bg-[var(--color-primary)] text-black text-white shadow"
                     : "text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
@@ -931,7 +931,7 @@ function ThemeCard({
                 onClick={(e) => { e.stopPropagation(); setStakeholderView("cto"); }}
                 className={`px-4 py-1.5 rounded-full text-[11px] font-bold transition-all ${
                   stakeholderView === "cto"
-                    ? "bg-cyan-500 text-white shadow"
+                    ? "bg-[var(--color-primary)] text-black text-white shadow"
                     : "text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                 }`}
               >
@@ -939,7 +939,7 @@ function ThemeCard({
               </button>
             </div>
 
-            <p className="text-[13px] text-zinc-700 dark:text-zinc-300 mb-3 font-medium bg-white/5 p-3 rounded-lg border border-white/5 border-l-4 border-l-violet-500">
+            <p className="text-[13px] text-zinc-700  mb-3 font-medium bg-white/5 p-3 rounded-lg border border-white/5 border-l-4 border-l-[var(--color-primary)]">
               {stakeholderView === "ceo" 
                 ? theme.interpretation?.stakeholderViews?.ceoSummary 
                 : theme.interpretation?.stakeholderViews?.ctoSummary}
@@ -947,28 +947,28 @@ function ThemeCard({
 
             <div className="flex items-center gap-4 text-[11px] mb-4">
               <span className="text-zinc-600 dark:text-zinc-500">
-                Strategic Match: <strong className="text-violet-500">{theme.interpretation?.relevantProduct}</strong>
+                Strategic Match: <strong className="text-[var(--color-primary)]">{theme.interpretation?.relevantProduct}</strong>
               </span>
             </div>
             
             {/* Scenarios & Action */}
             <div className="grid grid-cols-1 gap-3 mb-4">
               <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-zinc-100 dark:border-white/5">
-                <span className="text-[10px] font-bold text-violet-500 uppercase tracking-wider block mb-2">
+                <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-2">
                   18-Month Scenario Forecasts
                 </span>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="bg-red-500/5 p-2 rounded border border-red-500/10">
                     <span className="text-[9px] font-bold text-red-500 block mb-1">BEAR CASE</span>
-                    <p className="text-[11px] text-zinc-600 dark:text-zinc-400">{theme.interpretation?.scenarioForecasts?.bearCase}</p>
+                    <p className="text-[11px] text-zinc-400">{theme.interpretation?.scenarioForecasts?.bearCase}</p>
                   </div>
                   <div className="bg-blue-500/5 p-2 rounded border border-blue-500/10">
                     <span className="text-[9px] font-bold text-blue-500 block mb-1">BASE CASE</span>
-                    <p className="text-[11px] text-zinc-600 dark:text-zinc-400">{theme.interpretation?.scenarioForecasts?.baseCase}</p>
+                    <p className="text-[11px] text-zinc-400">{theme.interpretation?.scenarioForecasts?.baseCase}</p>
                   </div>
                   <div className="bg-emerald-500/5 p-2 rounded border border-emerald-500/10">
                     <span className="text-[9px] font-bold text-emerald-500 block mb-1">BULL CASE</span>
-                    <p className="text-[11px] text-zinc-600 dark:text-zinc-400">{theme.interpretation?.scenarioForecasts?.bullCase}</p>
+                    <p className="text-[11px] text-zinc-400">{theme.interpretation?.scenarioForecasts?.bullCase}</p>
                   </div>
                 </div>
               </div>
@@ -977,21 +977,21 @@ function ThemeCard({
                 <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider block mb-1">
                   Suggested Action
                 </span>
-                <p className="text-[12px] text-zinc-700 dark:text-zinc-300">
+                <p className="text-[12px] text-zinc-700 ">
                   {theme.interpretation?.suggestedAction}
                 </p>
               </div>
             </div>
 
             <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-zinc-100 dark:border-white/5">
-              <span className="text-[10px] font-bold text-cyan-500 uppercase tracking-wider block mb-2">
+              <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-2">
                 VRIO Competitive Analysis ({theme.interpretation?.vrioAnalysis?.competitiveImplication})
               </span>
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-zinc-600 dark:text-zinc-400">
-                <div><strong className="text-zinc-900 dark:text-zinc-200">V:</strong> {theme.interpretation?.vrioAnalysis?.valuable}</div>
-                <div><strong className="text-zinc-900 dark:text-zinc-200">R:</strong> {theme.interpretation?.vrioAnalysis?.rare}</div>
-                <div><strong className="text-zinc-900 dark:text-zinc-200">I:</strong> {theme.interpretation?.vrioAnalysis?.inimitable}</div>
-                <div><strong className="text-zinc-900 dark:text-zinc-200">O:</strong> {theme.interpretation?.vrioAnalysis?.organization}</div>
+              <div className="grid grid-cols-2 gap-2 text-[11px] text-zinc-400">
+                <div><strong className="text-zinc-900 ">V:</strong> {theme.interpretation?.vrioAnalysis?.valuable}</div>
+                <div><strong className="text-zinc-900 ">R:</strong> {theme.interpretation?.vrioAnalysis?.rare}</div>
+                <div><strong className="text-zinc-900 ">I:</strong> {theme.interpretation?.vrioAnalysis?.inimitable}</div>
+                <div><strong className="text-zinc-900 ">O:</strong> {theme.interpretation?.vrioAnalysis?.organization}</div>
               </div>
             </div>
           </div>
@@ -999,7 +999,7 @@ function ThemeCard({
           {/* Supporting Events */}
           {theme.events && theme.events.length > 0 && (
             <div>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider block mb-2">
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-2">
                 Evidence Chain ({theme.events.length} events)
               </span>
               <div className="space-y-2">
@@ -1015,7 +1015,7 @@ function ThemeCard({
                       <p className="text-[12px] font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
                         {evt.title}
                       </p>
-                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      <p className="text-[11px] text-zinc-500 mt-0.5">
                         {evt.sourceName} · {evt.geography} · Rel: {evt.relevanceScore}
                       </p>
                     </div>
