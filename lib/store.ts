@@ -27,8 +27,8 @@ export const useStore = create<AppState>()(
   persist(
     (set) => ({
       user: {
-        name: 'Aakash Arora',
-        email: 'Aakash.arora@empirisys.io',
+        name: 'Ryan',
+        email: 'ryan@empirisys.io',
         plan: 'PRO PLAN',
         role: 'AI Strategic Lead',
       },
