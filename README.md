@@ -1,4 +1,4 @@
-# Empirisys Competitive Intelligence Engine
+# Empirisys Intelligence Command
 
 A premium Next.js 14 web application built for Empirisys Ltd, offering a unified portal for process-safety and HSE analytics intelligence.
 
