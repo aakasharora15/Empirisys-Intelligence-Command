@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { scrapeLiveThreats } from '@/lib/ai/threat-monitor/scraper';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'dummy_key',
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy_key',
 });
 
 export async function GET(req: Request) {
@@ -20,7 +20,7 @@ export async function GET(req: Request) {
     const liveThreats = await scrapeLiveThreats();
     
     // Provide a robust fallback if API key is missing
-    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'dummy_key' || process.env.OPENAI_API_KEY.includes('your-openai-api-key')) {
+    if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key') {
         return NextResponse.json({
             kpis: { totalSignalsProcessed: 1452, activeThreats: liveThreats.length, actionableSegments: 4, highConfidenceSignals: 89 },
             sectorActivity: [
@@ -46,12 +46,10 @@ export async function GET(req: Request) {
         });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: `You are the Empirisys Internal Intelligence Analytics Engine.
+    const completion = await anthropic.messages.create({
+      model: "claude-3-opus-20240229",
+      max_tokens: 1500,
+      system: `You are the Empirisys Internal Intelligence Analytics Engine.
 Your job is to look at the recent verified live threats below, and generate realistic INTERNAL analytics data representing what the Empirisys platform has processed over the last 30 days.
 Do NOT generate fake macro-economic data (like Total Addressable Market). Generate metrics about the SIGNALS, THREATS, and SOURCES the platform has processed.
 
@@ -76,13 +74,17 @@ Respond with a JSON object containing:
   - A: number (score out of 100)
   - fullMark: 100
 
-Output strictly valid JSON that matches this schema without markdown formatting.`
+Output ONLY JSON, with no markdown formatting.`,
+      messages: [
+        {
+          role: "user",
+          content: "Generate intelligence analytics."
         }
-      ],
-      response_format: { type: "json_object" }
+      ]
     });
 
-    const parsedContent = JSON.parse(completion.choices[0].message.content || '{}');
+    const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
+    const parsedContent = JSON.parse(textContent);
 
     return NextResponse.json(parsedContent);
   } catch (error) {

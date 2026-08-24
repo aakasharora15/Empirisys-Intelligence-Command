@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { scrapeLiveThreats } from '@/lib/ai/threat-monitor/scraper';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'dummy_key',
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy_key',
 });
 
 export async function GET(req: Request) {
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
     const liveThreats = await scrapeLiveThreats();
     
-    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'dummy_key' || process.env.OPENAI_API_KEY.includes('your-openai-api-key')) {
+    if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key') {
         return NextResponse.json({
             bluf: {
                 headline: "HSE Improvement Notices Spike in Offshore Wind Sector",
@@ -46,12 +46,10 @@ export async function GET(req: Request) {
         });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
+    const completion = await anthropic.messages.create({
+      model: "claude-3-opus-20240229",
+      max_tokens: 1500,
+      system: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
 Review the following live threat feed detected in the last 24 hours:
 ${JSON.stringify(liveThreats, null, 2)}
 
@@ -73,13 +71,18 @@ Output strictly valid JSON matching this schema:
     ]
   },
   "dominantTheme": "A 3-5 word string defining the most lucrative consulting topic right now"
-}`
+}
+Output ONLY JSON, with no markdown formatting.`,
+      messages: [
+        {
+          role: "user",
+          content: "Generate the Executive Briefing."
         }
-      ],
-      response_format: { type: "json_object" }
+      ]
     });
 
-    const parsedContent = JSON.parse(completion.choices[0].message.content || '{}');
+    const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
+    const parsedContent = JSON.parse(textContent);
     
     // We attach the targets directly from the scraped threats to save API calls downstream
     parsedContent.targets = liveThreats.map(t => ({

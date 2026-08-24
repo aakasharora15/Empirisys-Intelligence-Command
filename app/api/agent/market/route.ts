@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { AggregatedTheme } from '@/lib/ai/market-intelligence/types';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 
 export const maxDuration = 60; // Prevent Vercel timeouts for LLM calls
 export const dynamic = 'force-dynamic';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy_key',
 });
 
 export async function GET(req: Request) {
@@ -17,17 +17,14 @@ export async function GET(req: Request) {
       return rateLimit.errorResponse;
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY is not configured.");
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error("ANTHROPIC_API_KEY is not configured.");
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
+    const completion = await anthropic.messages.create({
+      model: "claude-3-opus-20240229",
+      max_tokens: 1500,
+      system: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
 Your task is to analyze current European (UK/Netherlands) process safety trends and generate 4 highly relevant "AggregatedThemes" based on current events.
 Output strictly in JSON format as an object with a "themes" array containing exactly 4 objects.
 Ensure exactly 2 of the themes have the status "approved", and 2 of the themes have the status "pending_validation".
@@ -45,8 +42,9 @@ Each object must perfectly match this interface:
   status: 'pending_validation' | 'approved';
   deltaStatus: 'new' | 'intensified' | 'faded' | 'stable';
   timestamp: string; (Realistic ISO 8601 string representing when this theme was aggregated, e.g. some 30 mins ago, some 12 hours ago, some 3 days ago)
-}`
-        },
+}
+Output ONLY JSON, with no markdown formatting.`,
+      messages: [
         {
           role: "user",
           content: "Generate the latest 2 aggregated market themes."
@@ -54,7 +52,8 @@ Each object must perfectly match this interface:
       ]
     });
 
-    const parsedContent = JSON.parse(completion.choices[0].message.content || '{"themes": []}');
+    const textContent = completion.content.find(c => c.type === 'text')?.text || '{"themes": []}';
+    const parsedContent = JSON.parse(textContent);
     const themes: AggregatedTheme[] = parsedContent.themes;
 
     return NextResponse.json({
