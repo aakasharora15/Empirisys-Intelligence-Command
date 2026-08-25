@@ -25,8 +25,10 @@ Output your findings as a JSON array where each object matches this interface:
 
 export async function GET(request: Request) {
   try {
-    // Vercel Cron supplies CRON_SECRET as a bearer token. The check is
-    // production-only so the route stays callable by hand in development.
+    // The real gate is in proxy.ts, which requires Bearer ${CRON_SECRET} on
+    // this path in every environment and fails closed when the secret is unset.
+    // This check is only a backstop should that matcher stop covering the route;
+    // it is weaker — production alone — so it is not the control to rely on.
     const authHeader = request.headers.get('authorization');
     if (
       process.env.NODE_ENV === 'production' &&
