@@ -4,9 +4,18 @@ import { motion } from 'framer-motion';
 import HeroSection from '@/components/ui/HeroSection';
 import { SFPencil as Doc, SFArrowDown as Download } from 'sf-symbols-lib/monochrome';
 import { useStore } from '@/lib/store';
+import FunFactLoader from '@/components/ui/FunFactLoader';
+import { useState } from 'react';
 
 export default function BoardLevelExportPage() {
   const { user } = useStore();
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerate = () => {
+    setIsGenerating(true);
+    setTimeout(() => setIsGenerating(false), 8000);
+  };
+
 
   return (
     <div className="pb-16 bg-background min-h-screen z-10 relative">
@@ -17,6 +26,9 @@ export default function BoardLevelExportPage() {
       />
       <div className="w-full px-6 md:px-10 space-y-8 max-w-[1600px] mx-auto relative z-20 flex flex-col items-center mt-12">
       
+      {isGenerating ? (
+        <FunFactLoader message="Compiling Executive Briefing..." />
+      ) : (
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -29,7 +41,7 @@ export default function BoardLevelExportPage() {
 
         
 
-        <button className="flex items-center gap-2 mx-auto px-8 py-4 bg-accent hover:bg-accent-hover text-white font-bold rounded-2xl transition-all shadow-xl shadow-accent/20">
+        <button onClick={handleGenerate} className="flex items-center gap-2 mx-auto px-8 py-4 bg-accent hover:bg-accent-hover text-white font-bold rounded-2xl transition-all shadow-xl shadow-accent/20">
           <Download className="w-5 h-5" />
           Generate Q2 Intelligence Report
         </button>
@@ -49,6 +61,7 @@ export default function BoardLevelExportPage() {
           </div>
         </div>
       </motion.div>
+      )}
 
       </div>
     </div>

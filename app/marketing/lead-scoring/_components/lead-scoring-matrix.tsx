@@ -191,9 +191,8 @@ export function LeadScoringMatrix() {
             })}
             
             {liveIncidents.length === 0 && (
-              <div className="col-span-2 text-center py-20 text-[13px] text-zinc-500 font-bold">
-                <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3 text-[var(--color-primary)]" />
-                Scanning global networks for anomalies...
+              <div className="col-span-2 py-10">
+                <FunFactLoader message="Scanning global networks for anomalies..." />
               </div>
             )}
           </div>
