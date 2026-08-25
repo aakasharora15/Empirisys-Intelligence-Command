@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import * as cheerio from 'cheerio';
+import { CLAUDE_SONNET } from '@/lib/ai/models';
 import { z } from 'zod';
 import dns from 'dns/promises';
+import net from 'net';
 
 const RequestSchema = z.object({
   url: z.string().url()
@@ -23,23 +25,62 @@ async function safeFetch(urlStr: string, redirects = 0): Promise<string> {
   const hostname = targetUrl.hostname;
   
   const checkIP = (ip: string) => {
-    return ip.startsWith('10.') || 
-           ip.startsWith('127.') || 
-           ip.startsWith('169.254.') || 
-           ip.startsWith('192.168.') || 
-           /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip) ||
-           ip === 'localhost';
+    if (!net.isIP(ip)) return ip === 'localhost';
+    
+    // IPv4 Checks
+    if (net.isIPv4(ip)) {
+      if (ip === '0.0.0.0' || ip === '255.255.255.255') return true;
+      return ip.startsWith('10.') || 
+             ip.startsWith('127.') || 
+             ip.startsWith('169.254.') || 
+             ip.startsWith('192.168.') || 
+             /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip) ||
+             /^100\.(6[4-9]|[7-9][0-9]|1[0-1][0-9]|12[0-7])\./.test(ip); // CGNAT
+    }
+    
+    // IPv6 Checks
+    if (net.isIPv6(ip)) {
+      const normalized = ip.toLowerCase();
+      return normalized === '::1' || 
+             normalized === '::' ||
+             normalized.startsWith('fc') || 
+             normalized.startsWith('fd') ||
+             normalized.startsWith('fe8') ||
+             normalized.startsWith('fe9') ||
+             normalized.startsWith('fea') ||
+             normalized.startsWith('feb') ||
+             normalized.startsWith('::ffff:');
+    }
+    return false;
   };
 
-  // 1. Test the literal string (catches 10.0.0.5 directly)
-  if (checkIP(hostname)) {
+  // 1. Test the literal string (catches 10.0.0.5, 0.0.0.0, [::1] directly)
+  let cleanHostname = hostname;
+  if (cleanHostname.startsWith('[') && cleanHostname.endsWith(']')) {
+    cleanHostname = cleanHostname.slice(1, -1);
+  }
+  
+  if (checkIP(cleanHostname)) {
     throw new Error('Private network addresses are not allowed');
   }
 
   // 2. Test resolved DNS (catches public domains pointing to internal IPs)
-  const addresses = await dns.resolve(hostname).catch(() => []);
-  if (addresses.some(checkIP)) {
-    throw new Error('Private network addresses are not allowed');
+  // Run resolve4 and resolve6 in parallel
+  if (!net.isIP(cleanHostname) && cleanHostname !== 'localhost') {
+    const [v4, v6] = await Promise.all([
+      dns.resolve4(cleanHostname).catch(() => []),
+      dns.resolve6(cleanHostname).catch(() => [])
+    ]);
+    const addresses = [...v4, ...v6];
+    
+    // Fail closed if it resolves to absolutely nothing
+    if (addresses.length === 0) {
+      throw new Error('Could not resolve hostname');
+    }
+    
+    if (addresses.some(checkIP)) {
+      throw new Error('Private network addresses are not allowed');
+    }
   }
 
   const controller = new AbortController();
@@ -114,7 +155,7 @@ Return a strict JSON response with no other text, matching this structure:
 }`;
 
     const msg = await anthropic.messages.create({
-      model: 'claude-sonnet-5',
+      model: CLAUDE_SONNET,
       max_tokens: 1024,
       system: systemPrompt,
       messages: [

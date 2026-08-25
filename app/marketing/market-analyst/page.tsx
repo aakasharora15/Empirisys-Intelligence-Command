@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import HeroSection from "@/components/ui/HeroSection";
 import { Button } from "@/components/ui/Button";
-import { FunFactLoader } from "@/components/ui/fun-fact-loader";
+import { FunFactLoader } from "@/components/ui/FunFactLoader";
 import {
   Loader2,
   Zap,

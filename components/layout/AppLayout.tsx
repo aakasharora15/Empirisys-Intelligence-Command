@@ -67,7 +67,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     } else if (query.includes('train') || query.includes('upload') || query.includes('data') || query.includes('document')) {
       router.push('/training-data');
     } else if (query.includes('ask') || query.includes('what is') || query.includes('how does') || query.includes('assistant')) {
-      router.push('/assistant');
+      toggleAssistant();
     } else if (query.includes('setting') || query.includes('config') || query.includes('api')) {
       router.push('/settings');
     } else {
@@ -103,7 +103,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     {
       group: 'AI & KNOWLEDGE',
       items: [
-        { label: 'Knowledge Assistant', href: '/assistant', icon: Bot },
+        { label: 'Knowledge Assistant', href: '#assistant', icon: Bot },
         { label: 'AI Training Data', href: '/training-data', icon: Database }
       ]
     },
@@ -163,7 +163,24 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   {group.items.map((item) => {
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
-                    return (
+                    return item.href === '#assistant' ? (
+                        <button
+                          key={item.label}
+                          onClick={() => toggleAssistant()}
+                          className={cn(
+                            "w-full block h-10 rounded-xl transition-all duration-200 relative overflow-hidden text-left",
+                            "text-text-secondary hover:text-text-primary hover:bg-panel"
+                          )}
+                          title={item.label}
+                        >
+                          <div className="absolute left-[11px] top-1/2 -translate-y-1/2">
+                            <Icon className="w-5 h-5 stroke-[1.5]" />
+                          </div>
+                          <span className="opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-12 absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[13px] font-medium transition-all duration-300 delay-75">
+                            {item.label}
+                          </span>
+                        </button>
+                      ) : (
                       <Link
                         key={item.label}
                         href={item.href}

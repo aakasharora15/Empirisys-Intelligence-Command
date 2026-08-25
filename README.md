@@ -1,6 +1,6 @@
 # Empirisys Intelligence Command
 
-A premium Next.js 14 web application built for Empirisys Ltd, offering a unified portal for process-safety and HSE analytics intelligence.
+A premium Next.js 16 web application built for Empirisys Ltd, offering a unified portal for process-safety and HSE analytics intelligence.
 
 ## Features
 
@@ -11,13 +11,13 @@ A premium Next.js 14 web application built for Empirisys Ltd, offering a unified
 
 ## Technology Stack
 
-- **Framework**: Next.js 14 App Router + TypeScript
+- **Framework**: Next.js 16 App Router + TypeScript
 - **Styling**: Tailwind CSS v4
 - **State Management**: Zustand
 - **Animations**: Framer Motion
 - **Data Visualization**: Recharts, TanStack Table
 - **PDF Export**: jsPDF + html2canvas
-- **AI Integration**: Anthropic SDK (Claude 3 Opus)
+- **AI Integration**: Anthropic SDK (Claude 3.5 Sonnet)
 - **Database**: Supabase + pgvector
 
 ## Setup Instructions
@@ -45,8 +45,7 @@ To fully enable the live AI features and database backend:
 4. **Seed Data**
    Populate the remote database with the initial dataset:
    ```bash
-   npm run seed
-   ```
+      ```
 
 5. **Start Development Server**
    ```bash

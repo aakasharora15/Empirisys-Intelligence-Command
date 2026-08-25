@@ -16,7 +16,7 @@ interface FunFactLoaderProps {
   className?: string;
 }
 
-export default function FunFactLoader({ 
+export function FunFactLoader({ 
   message = "Compiling Intelligence Dashboard...", 
   className = "" 
 }: FunFactLoaderProps) {

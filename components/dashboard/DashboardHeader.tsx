@@ -284,13 +284,13 @@ export default function DashboardHeader({
                 <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
                 <span className="text-base font-bold text-text-secondary uppercase tracking-widest">Agent Sync Active</span>
               </div>
-              <Link
-                href="/assistant"
+              <button
+                onClick={() => toggleAssistant()}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card/40 hover:bg-accent/8 border border-card-border hover:border-accent/25 text-base font-bold text-text-secondary hover:text-accent transition-all"
               >
                 <Bot className="h-3 w-3" />
                 <span>Ask Assistant</span>
-              </Link>
+              </button>
             </div>
           </div>
         }

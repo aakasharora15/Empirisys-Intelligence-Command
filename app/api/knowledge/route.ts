@@ -146,12 +146,17 @@ When answering:
 
     const readable = new ReadableStream({
       async start(controller) {
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-            controller.enqueue(new TextEncoder().encode(chunk.delta.text));
+        try {
+          for await (const chunk of stream) {
+            if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+              controller.enqueue(new TextEncoder().encode(chunk.delta.text));
+            }
           }
+        } catch (err) {
+          controller.error(err);
+        } finally {
+          try { controller.close(); } catch (e) {}
         }
-        controller.close();
       }
     });
 

@@ -92,7 +92,7 @@ export async function proxy(request: NextRequest) {
 
   // ── Protected page enforcement ────────────────────────────────────────────
   const protectedPages = [
-    '/', '/assistant', '/competitors',
+    '/', '/competitors',
     '/marketing/lead-scoring', '/marketing/market-analyst', '/marketing/threats',
     '/training-data', '/settings',
   ];

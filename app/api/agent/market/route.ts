@@ -65,7 +65,7 @@ Output ONLY JSON, with no markdown formatting.`,
     } catch (e) {
       console.error('Failed to parse themes JSON', e);
     }
-    const themes: AggregatedTheme[] = parsedContent.themes;
+    const themes: AggregatedTheme[] = parsedContent.themes ?? [];
 
     return NextResponse.json({
       themes: themes

@@ -5,7 +5,7 @@ import { Loader2, Search, Target, Zap, CheckCircle2, ShieldAlert, AlertTriangle,
 import { IncidentIntelligence } from "@/types/domain";
 import { LeadScoreProfile } from "@/lib/ai/lead-scoring/types";
 import HeroSection from "@/components/ui/HeroSection";
-import { FunFactLoader } from "@/components/ui/fun-fact-loader";
+import { FunFactLoader } from "@/components/ui/FunFactLoader";
 export function LeadScoringMatrix() {
   const [companyName, setCompanyName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +39,7 @@ export function LeadScoringMatrix() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchLiveIncidents();
   }, []);
 

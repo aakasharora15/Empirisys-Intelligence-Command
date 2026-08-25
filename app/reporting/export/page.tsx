@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import HeroSection from '@/components/ui/HeroSection';
 import { SFPencil as Doc, SFArrowDown as Download } from 'sf-symbols-lib/monochrome';
 import { useStore } from '@/lib/store';
-import FunFactLoader from '@/components/ui/FunFactLoader';
+import { FunFactLoader } from '@/components/ui/FunFactLoader';
 import { useState } from 'react';
 
 export default function BoardLevelExportPage() {
