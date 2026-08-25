@@ -49,3 +49,8 @@ SOW.pdf
 sow.docx
 public/media__*.png
 public/theme_*.png
+
+# Local AI tool config
+CLAUDE.md
+AGENTS.md
+.cursorrules
