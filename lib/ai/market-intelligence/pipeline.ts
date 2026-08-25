@@ -260,7 +260,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   const extractionResponse = await anthropic.messages.create({
     model: CLAUDE_OPUS,
     max_tokens: 2000,
-    temperature: 0.4,
     system: EXTRACTION_SYSTEM_PROMPT,
     messages: [
       {
@@ -340,7 +339,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   const aggregationResponse = await anthropic.messages.create({
     model: CLAUDE_OPUS,
     max_tokens: 2500,
-    temperature: 0.3,
     system: AGGREGATION_SYSTEM_PROMPT,
     messages: [
       {
@@ -447,7 +445,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     const landscapeResponse = await anthropic.messages.create({
       model: CLAUDE_OPUS,
       max_tokens: 1500,
-      temperature: 0.3,
       system: LANDSCAPE_SYSTEM_PROMPT,
       messages: [
         {
