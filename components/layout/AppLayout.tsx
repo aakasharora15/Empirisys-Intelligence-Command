@@ -2,6 +2,7 @@
 
 import { ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useUIStore } from '@/store/ui-store';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   SFSquareGrid2x2 as Grid, 
@@ -34,6 +35,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
+  const { toggleAssistant } = useUIStore();
   const router = useRouter();
   const { user, searchQuery, setSearchQuery } = useStore();
   const [isRefreshing, setIsRefreshing] = useState(false);

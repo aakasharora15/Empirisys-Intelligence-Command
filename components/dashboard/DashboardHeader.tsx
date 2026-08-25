@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useUIStore } from '@/store/ui-store';
 import {
   SFShield as Shield,
   SFExclamationmarkTriangle as AlertTriangle,
@@ -202,6 +203,7 @@ export default function DashboardHeader({
   
 }: DashboardHeaderProps) {
   const router = useRouter();
+  const { toggleAssistant } = useUIStore();
   const [dismissedAlert, setDismissedAlert] = useState(false);
 
   const hour = new Date().getHours();
