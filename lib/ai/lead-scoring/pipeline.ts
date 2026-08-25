@@ -59,7 +59,7 @@ export async function runLeadScoringPipeline(companyName: string): Promise<LeadS
   // Phase 3: Synthesis
   // If no real API key, return a highly realistic mock payload
   if (!AI_ENABLED) {
-    console.log('[Lead Scoring Pipeline] No OpenAI API Key found, using fallback simulated response.');
+    console.log('[Lead Scoring Pipeline] No Anthropic API Key found, using fallback simulated response.');
     
     // Create a deterministic fallback based on company name
     return {

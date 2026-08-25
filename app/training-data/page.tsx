@@ -5,7 +5,7 @@ import { SFCylinderSplit1x2 as Database, SFIcloudAndArrowUp as UploadCloud, SFTe
 import HeroSection from '@/components/ui/HeroSection';
 import { cn } from '@/lib/utils';
 
-// Mock initial data for the knowledge library
+
 const INITIAL_LIBRARY = [
   { id: 'doc_1', name: 'Empirisys_Q3_Strategic_Playbook.pdf', type: 'PDF', date: '2026-06-15', size: '4.2 MB', status: 'ACTIVE' },
   { id: 'doc_2', name: 'Competitor_Battlecards_2026.pptx', type: 'PPTX', date: '2026-06-12', size: '12.8 MB', status: 'ACTIVE' },
@@ -19,7 +19,7 @@ export default function TrainingDataPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // File upload simulation state
+  
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
@@ -30,7 +30,7 @@ export default function TrainingDataPage() {
   };
 
   const processFile = (file: File) => {
-    // 1. Add file to library with PROCESSING status
+    
     const newDoc = {
       id: `doc_${Date.now()}`,
       name: file.name,
@@ -42,7 +42,7 @@ export default function TrainingDataPage() {
     
     setLibrary(prev => [newDoc, ...prev]);
 
-    // 2. Simulate AI Vectorization and chunking taking a few seconds
+    
     setTimeout(() => {
       setLibrary(prev => prev.map(doc => 
         doc.id === newDoc.id ? { ...doc, status: 'ACTIVE' } : doc

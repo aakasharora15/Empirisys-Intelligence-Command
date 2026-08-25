@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 
 export const maxDuration = 300; // Allow 5 mins for AI discovery scan
 
-// Vercel Cron configuration (requires vercel.json in root for actual triggering, but defined here for reference)
-// "crons": [{ "path": "/api/discover-competitors", "schedule": "0 6 * * 1" }]
 
 const DISCOVERY_PROMPT = `
 You are a competitor intelligence AI agent for Empirisys. 
@@ -28,7 +26,7 @@ Output your findings as a JSON array where each object matches this interface:
 
 export async function GET(request: Request) {
   try {
-    // Check for cron authorization or API key in a production environment
+    
     const authHeader = request.headers.get('authorization');
     if (process.env.NODE_ENV === 'production' && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -37,8 +35,7 @@ export async function GET(request: Request) {
     console.log("Triggering AI Competitor Discovery...");
     console.log("System Prompt: ", DISCOVERY_PROMPT);
 
-    // TODO: Wire up actual fetch to Anthropic Claude using process.env.ANTHROPIC_API_KEY
-    // For now, return a placeholder indicating successful cron execution
+    // TODO: wire up anthropic
     
     return NextResponse.json({ 
       success: true, 
