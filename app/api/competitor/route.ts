@@ -1,5 +1,4 @@
-import { CLAUDE_OPUS } from '@/lib/ai/models';
-import { Anthropic } from '@anthropic-ai/sdk';
+import { aiEnabled, completeStream } from '@/lib/ai/client';
 import { getCompetitors, getCompetitorContent, getQueries, getDiscoveryLogs } from '@/lib/db';
 import { z } from 'zod';
 
@@ -46,10 +45,10 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ error: 'Invalid payload parameters' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
     const { query } = result.data;
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const hasProvider = aiEnabled();
     const competitorsData = await getCompetitors();
 
-    if (!apiKey) {
+    if (!hasProvider) {
       // Fallback streaming response
       const stream = new ReadableStream({
         async start(controller) {
@@ -65,29 +64,27 @@ export async function POST(req: Request) {
       return new Response(stream, { headers: { 'Content-Type': 'text/plain' } });
     }
 
-    const anthropic = new Anthropic({ apiKey });
-    
     const systemPrompt = `You are a strategic analyst for Empirisys Ltd. Use ONLY the provided competitor data to answer.
     Structure: comparison table, key insights, recommendations.
     Data: ${JSON.stringify(competitorsData, null, 2)}`;
 
-    const stream = await anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 4000,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: query }],
-      stream: true,
-    });
-
     const readable = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && 'text' in chunk.delta) {
-            controller.enqueue(encoder.encode(chunk.delta.text));
+        try {
+          const stream = completeStream({
+            system: systemPrompt,
+            messages: [{ role: 'user', content: query }],
+            maxTokens: 4000,
+          });
+          for await (const text of stream) {
+            controller.enqueue(encoder.encode(text));
           }
+        } catch (err) {
+          controller.error(err);
+        } finally {
+          try { controller.close(); } catch { /* already closed */ }
         }
-        controller.close();
       }
     });
 

@@ -1,13 +1,7 @@
-import { AI_ENABLED } from '@/lib/ai/models';
-import { CLAUDE_OPUS } from '@/lib/ai/models';
-import Anthropic from '@anthropic-ai/sdk';
+import { aiEnabled, complete } from '@/lib/ai/client';
 import { LeadScoreProfile, BantScore } from './types';
 import { performWebSearch } from '../search';
 import { parseModelJson } from '@/lib/ai/parse';
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 // Helper: Deterministic scoring based on simulated data points
 function calculateBant(companyName: string, industry: string, simulatedData: { recentIncidents: number; daysSinceIncident: number }): BantScore {
@@ -58,7 +52,7 @@ export async function runLeadScoringPipeline(companyName: string): Promise<LeadS
 
   // Phase 3: Synthesis
   // If no real API key, return a highly realistic mock payload
-  if (!AI_ENABLED) {
+  if (!aiEnabled()) {
     console.log('[Lead Scoring Pipeline] No OpenAI API Key found, using fallback simulated response.');
     
     // Create a deterministic fallback based on company name
@@ -141,16 +135,14 @@ Note: The incident block is optional if no real incident applies.
   if (scrapedData) {
     prompt += `\n\n--- LIVE INTERNET DATA ---\nUse the following real-time internet search results to ground your tactical sales dossier in actual recent events for this company:\n${scrapedData}\nIf the data is insufficient, use your deep industry knowledge to generate a realistic simulated dossier.`;
   }
-  const completion = await anthropic.messages.create({
-    model: CLAUDE_OPUS,
-    max_tokens: 1500,
-    system: "You are an elite HSE B2B Sales Intelligence AI with deep knowledge of MEDDIC, CCPS RBPS, and Challenger Sale methodologies.\nOutput ONLY JSON, with no markdown formatting.",
-    messages: [
-      { role: "user", content: prompt }
-    ]
-  });
+  
 
-  const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
+  const textContent = await complete({
+    system: "You are an elite HSE B2B Sales Intelligence AI with deep knowledge of MEDDIC, CCPS RBPS, and Challenger Sale methodologies.\nOutput ONLY JSON, with no markdown formatting.",
+    prompt: prompt,
+    maxTokens: 1500,
+    json: true,
+  }) || '{}';
   const profile = parseModelJson<LeadScoreProfile>(textContent);
   return profile;
 }

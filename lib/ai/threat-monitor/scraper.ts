@@ -1,11 +1,5 @@
-import { AI_ENABLED } from '@/lib/ai/models';
-import { CLAUDE_OPUS } from '@/lib/ai/models';
-import Anthropic from '@anthropic-ai/sdk';
+import { aiEnabled, complete } from '@/lib/ai/client';
 import { performWebSearch } from '../search';
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 export interface VerifiedThreat {
   id: string;
@@ -28,7 +22,7 @@ export interface VerifiedThreat {
 
 export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
   // If no real API key is present, provide a high-quality deterministic fallback
-  if (!AI_ENABLED) {
+  if (!aiEnabled()) {
     console.log('[Threat Scraper] No Anthropic API Key found, using fallback simulated regulatory data.');
     return [
       {
@@ -38,7 +32,7 @@ export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
         description: "The UK HSE has issued an improvement notice to a major North Sea operator regarding severe corrosion under insulation (CUI) on primary containment vessels.",
         timeAgo: "2 hours ago",
         source: "UK Health and Safety Executive (HSE) Public Register",
-        companyName: "BP",
+        companyName: "Illustrative North Sea operator",
         sector: "Oil & Gas",
         bowTieAnalysis: {
           hazard: "High-pressure hydrocarbons in aging vessels",
@@ -56,7 +50,7 @@ export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
         description: "A chemical manufacturing plant in Antwerp has been fined for exceeding permitted storage limits of toxic precursors, violating the Seveso III directive.",
         timeAgo: "5 hours ago",
         source: "European Environment Agency (EEA) Enforcement Log",
-        companyName: "Ineos",
+        companyName: "Illustrative chemical site operator",
         sector: "Chemicals",
         bowTieAnalysis: {
           hazard: "Storage of highly toxic chemical precursors",
@@ -87,7 +81,7 @@ For each threat, output strictly valid JSON matching this schema:
   "description": "Executive summary of the regulatory action or incident",
   "timeAgo": "e.g., 3 hours ago",
   "source": "e.g., UK HSE Public Register",
-  "companyName": "Target company name (e.g. Shell, Orsted, Balfour Beatty)",
+  "companyName": "The operator exactly as named in the supplied search results. Never supply a company the results do not name.",
   "sector": "e.g., Oil & Gas, Offshore Wind",
   "bowTieAnalysis": {
     "hazard": "The dangerous condition",
@@ -109,16 +103,14 @@ Output format must be:
     prompt += `\n\nSince no internet data is available, do not fabricate data. Return an empty list of threats.`;
   }
 
-  const completion = await anthropic.messages.create({
-    model: CLAUDE_OPUS,
-    max_tokens: 1500,
-    system: "You are an elite European HSE Regulatory Scraping AI with deep knowledge of the BowTie methodology.\nOutput ONLY JSON, with no markdown formatting.",
-    messages: [
-      { role: "user", content: prompt }
-    ]
-  });
+  
 
-  const textContent = completion.content.find(c => c.type === 'text')?.text || '{"threats": []}';
+  const textContent = await complete({
+    system: "You are an elite European HSE Regulatory Scraping AI with deep knowledge of the BowTie methodology.\nOutput ONLY JSON, with no markdown formatting.",
+    prompt: prompt,
+    maxTokens: 1500,
+    json: true,
+  }) || '{"threats": []}';
     let parsed = { threats: [] };
   try {
     const jsonMatch = textContent.match(/\{[\s\S]*\}/);

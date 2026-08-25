@@ -1,5 +1,4 @@
-import { CLAUDE_OPUS } from '@/lib/ai/models';
-import { Anthropic } from '@anthropic-ai/sdk';
+import { aiEnabled, completeStream } from '@/lib/ai/client';
 import { mockClientAnalyses, ClientAnalysis } from '@/lib/db';
 
 export const runtime = 'nodejs';
@@ -102,7 +101,7 @@ export async function POST(req: Request) {
 
     const { companyName } = parseResult.data;
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const hasProvider = aiEnabled();
     const formattedName = companyName.trim();
 
     // Check if we have preseeded data for the client
@@ -110,7 +109,7 @@ export async function POST(req: Request) {
       c => c.company_name.toLowerCase() === formattedName.toLowerCase()
     );
 
-    if (!apiKey) {
+    if (!hasProvider) {
       // Stream fallback mock data token by token (or rather word by word)
       const text = preseeded ? getFallbackMarkdown(preseeded) : getGenericFallback(formattedName);
       
@@ -129,8 +128,6 @@ export async function POST(req: Request) {
       return new Response(stream, { headers: { 'Content-Type': 'text/plain' } });
     }
 
-    // Call Claude
-    const anthropic = new Anthropic({ apiKey });
     const prompt = `You are a sales intelligence analyst for Empirisys. 
     Analyze target client: ${formattedName}
     
@@ -168,23 +165,23 @@ export async function POST(req: Request) {
     
     Provide realistic, detailed, high fidelity text and do not use dashes.`;
 
-    const stream = await anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 3000,
-      system: "You are a sales intelligence analyst for Empirisys. Do not output any dashes in your response.",
-      messages: [{ role: 'user', content: prompt }],
-      stream: true,
-    });
-
     const readable = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && 'text' in chunk.delta) {
-            controller.enqueue(encoder.encode(chunk.delta.text));
+        try {
+          const stream = completeStream({
+            system: 'You are a sales intelligence analyst for Empirisys. Do not output any dashes in your response.',
+            messages: [{ role: 'user', content: prompt }],
+            maxTokens: 3000,
+          });
+          for await (const text of stream) {
+            controller.enqueue(encoder.encode(text));
           }
+        } catch (err) {
+          controller.error(err);
+        } finally {
+          try { controller.close(); } catch { /* already closed */ }
         }
-        controller.close();
       }
     });
 

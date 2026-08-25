@@ -1,17 +1,11 @@
-import { AI_ENABLED } from '@/lib/ai/models';
-import { CLAUDE_OPUS } from '@/lib/ai/models';
+import { aiEnabled, complete } from '@/lib/ai/client';
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
 import { scrapeLiveThreats } from '@/lib/ai/threat-monitor/scraper';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { parseModelJson } from '@/lib/ai/parse';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
 
 export async function GET(req: Request) {
   try {
@@ -22,7 +16,7 @@ export async function GET(req: Request) {
 
     const liveThreats = await scrapeLiveThreats();
     
-    if (!AI_ENABLED) {
+    if (!aiEnabled()) {
         return NextResponse.json({
             bluf: {
                 headline: "HSE Improvement Notices Spike in Offshore Wind Sector",
@@ -49,9 +43,9 @@ export async function GET(req: Request) {
         });
     }
 
-    const completion = await anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 1500,
+    
+
+    const textContent = await complete({
       system: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
 Review the following live threat feed detected in the last 24 hours:
 ${JSON.stringify(liveThreats, null, 2)}
@@ -76,15 +70,10 @@ Output strictly valid JSON matching this schema:
   "dominantTheme": "A 3-5 word string defining the most lucrative consulting topic right now"
 }
 Output ONLY JSON, with no markdown formatting.`,
-      messages: [
-        {
-          role: "user",
-          content: "Generate the Executive Briefing."
-        }
-      ]
-    });
-
-    const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
+      prompt: "Generate the Executive Briefing.",
+      maxTokens: 1500,
+      json: true,
+    }) || '{}';
     const parsedContent = parseModelJson<Record<string, unknown>>(textContent);
     
     // We attach the targets directly from the scraped threats to save API calls downstream

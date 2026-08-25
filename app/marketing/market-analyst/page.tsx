@@ -216,8 +216,8 @@ export default function MarketAnalystPage() {
         description: `Extracted ${data.meta.totalEventsExtracted} events → ${data.meta.totalThemes} themes`,
       });
     } catch (e: any) {
-      if (e.message?.includes('ANTHROPIC_API_KEY_MISSING') || (e.response && e.response.status === 500)) {
-        alert("Anthropic API Key is missing. The engine cannot run the real-time pipeline. Please set ANTHROPIC_API_KEY in your Vercel environment variables.");
+      if (e.message?.includes('AI_PROVIDER_NOT_CONFIGURED') || (e.response && e.response.status === 500)) {
+        alert("No AI provider key is configured, so the real-time pipeline cannot run. Set OPENAI_API_KEY or ANTHROPIC_API_KEY in your Vercel environment variables.");
       }
       console.error(e);
       toast({

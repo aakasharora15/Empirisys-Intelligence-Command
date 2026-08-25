@@ -1,11 +1,6 @@
-import { CLAUDE_SONNET } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import { aiEnabled, completeStream } from '@/lib/ai/client';
 import { z } from 'zod';
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
 
 const MessageSchema = z.object({
   role: z.enum(['user', 'assistant']),
@@ -136,21 +131,20 @@ When answering:
 - If asked about a competitor, use the battlecard framing: their weakness, the trap they set, how to win
 - Be specific — reference actual clients, actual products and actual price ranges where available`;
 
-    const stream = await anthropic.messages.create({
-      model: CLAUDE_SONNET,
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
-      stream: true,
-    });
+    if (!aiEnabled()) {
+      return NextResponse.json({ error: 'No AI provider configured' }, { status: 503 });
+    }
 
     const readable = new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of stream) {
-            if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-              controller.enqueue(new TextEncoder().encode(chunk.delta.text));
-            }
+          const stream = completeStream({
+            system: systemPrompt,
+            messages: messages.map((m) => ({ role: m.role, content: m.content })),
+            maxTokens: 1024,
+          });
+          for await (const text of stream) {
+            controller.enqueue(new TextEncoder().encode(text));
           }
         } catch (err) {
           controller.error(err);

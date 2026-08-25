@@ -1,6 +1,4 @@
-import { AI_ENABLED } from '@/lib/ai/models';
-import { CLAUDE_OPUS } from '@/lib/ai/models';
-import Anthropic from '@anthropic-ai/sdk';
+import { aiEnabled, complete } from '@/lib/ai/client';
 import type {
   MarketEvent,
   AggregatedTheme,
@@ -26,7 +24,7 @@ import { parseModelJson } from '@/lib/ai/parse';
 const EXTRACTION_SYSTEM_PROMPT = `You are the Empirisys Market Intelligence Extraction Engine. You analyze source intelligence from the European HSE (Health, Safety, Environment) and process safety market.
 Your cognitive foundation is the **STEEPLE** framework.
 
-Your task: Given a batch of simulated market intelligence sources across four tiers (A: regulatory/official, B: procurement/contracts, C: trade press, D: business press), extract structured events.
+Your task: Given a batch of market intelligence sources across four tiers (A: regulatory/official, B: procurement/contracts, C: trade press, D: business press), extract structured events.
 
 For each event, extract:
 - entityName: The company, facility, or regulatory body involved
@@ -35,7 +33,7 @@ For each event, extract:
 - steepleCategory: Analyze the event and strictly categorize it as 'Socio-cultural', 'Technological', 'Economic', 'Environmental', 'Political', 'Legal', or 'Ethical'
 - title: A concise event title (max 15 words)
 - summary: 2-3 sentence description of the event and its significance
-- sourceUrl: A realistic URL for the source
+- sourceUrl: The exact URL as it appears in the supplied search results. Never construct, guess or complete a URL. Omit this field entirely if the search results do not contain one.
 - sourceName: Name of the publication/body
 - sourceTier: 'A', 'B', 'C', or 'D'
 - geography: Country or region (e.g., 'UK', 'Netherlands', 'Germany')
@@ -242,10 +240,9 @@ export interface PipelineResult {
 }
 
 export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
-  if (!AI_ENABLED) {
-    throw new Error("ANTHROPIC_API_KEY_MISSING");
+  if (!aiEnabled()) {
+    throw new Error('AI_PROVIDER_NOT_CONFIGURED');
   }
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   // ── Step 1: Extract events via LLM ──────────────────────
   const searchQuery = "European process safety HSE news latest OR offshore wind safety OR chemical industry regulations";
@@ -254,22 +251,26 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   let userContent = 'Generate a fresh batch of market intelligence events for the current period. Today\'s date is ' + new Date().toISOString().slice(0, 10) + '.';
   
   if (scrapedData) {
-    userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this real-world data as the factual basis for your generated events. If the live data is insufficient to generate exactly 8 events, invent the remaining ones as highly realistic simulations.`;
+    userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this data as the sole factual basis for the events you extract. Return only the events the data actually supports, even if that is fewer than 8. DO NOT invent or fabricate events, entities, dates or URLs to reach a target count.`;
+  } else {
+    // Search returned nothing. Without grounding there is no factual basis for
+    // any event, so return empty rather than letting the model supply one.
+    console.warn('[Market Intelligence] Web search returned no results; skipping extraction rather than generating ungrounded events.');
+    return {
+      events: [],
+      themes: [],
+      metrics: { trendVelocity: [], competitorPositioning: [], budgetAllocation: [] },
+      landscape: null,
+    };
   }
 
-  const extractionResponse = await anthropic.messages.create({
-    model: CLAUDE_OPUS,
-    max_tokens: 2000,
+  const extractionText = await complete({
     system: EXTRACTION_SYSTEM_PROMPT,
-    messages: [
-      {
-        role: 'user',
-        content: userContent,
-      },
-    ],
+    prompt: userContent,
+    maxTokens: 2000,
+    json: true,
   });
 
-  const extractionText = extractionResponse.content.find(c => c.type === 'text')?.text;
   if (!extractionText) {
     throw new Error('LLM returned empty extraction response');
   }
@@ -336,21 +337,15 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     sourceTier: e.sourceTier,
   }));
 
-  const aggregationResponse = await anthropic.messages.create({
-    model: CLAUDE_OPUS,
-    max_tokens: 2500,
+  const aggregationText = await complete({
     system: AGGREGATION_SYSTEM_PROMPT,
-    messages: [
-      {
-        role: 'user',
-        content:
-          'Here are the scored market events to aggregate into strategic themes:\n\n' +
-          JSON.stringify(eventsForLLM, null, 2),
-      },
-    ],
+    prompt:
+      'Here are the scored market events to aggregate into strategic themes:\n\n' +
+      JSON.stringify(eventsForLLM, null, 2),
+    maxTokens: 2500,
+    json: true,
   });
 
-  const aggregationText = aggregationResponse.content.find(c => c.type === 'text')?.text;
   if (!aggregationText) {
     throw new Error('LLM returned empty aggregation response');
   }
@@ -442,23 +437,17 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
       })),
     };
 
-    const landscapeResponse = await anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 1500,
+    const landscapeText = await complete({
       system: LANDSCAPE_SYSTEM_PROMPT,
-      messages: [
-        {
-          role: 'user',
-          content:
-            'Here are the market events and strategic themes extracted from the current intelligence cycle. Use them as your evidence base to build the market landscape and growth strategy.\n\nToday\'s date is ' +
-            new Date().toISOString().slice(0, 10) +
-            '.\n\nEmpirisys Products:\n- SENSE: Real-time AI anomaly detection for process safety\n- BOOST: AI-powered safety performance improvement platform\n- Insight360: Comprehensive HSE analytics and reporting\n- Leadership360: Leadership safety culture assessment\n\n' +
-            JSON.stringify(landscapeContext, null, 2),
-        },
-      ],
+      prompt:
+        'Here are the market events and strategic themes extracted from the current intelligence cycle. Use them as your evidence base to build the market landscape and growth strategy.\n\nToday\'s date is ' +
+        new Date().toISOString().slice(0, 10) +
+        '.\n\nEmpirisys Products:\n- SENSE: Real-time AI anomaly detection for process safety\n- BOOST: AI-powered safety performance improvement platform\n- Insight360: Comprehensive HSE analytics and reporting\n- Leadership360: Leadership safety culture assessment\n\n' +
+        JSON.stringify(landscapeContext, null, 2),
+      maxTokens: 1500,
+      json: true,
     });
 
-    const landscapeText = landscapeResponse.content.find(c => c.type === 'text')?.text;
     if (landscapeText) {
       const parsedLandscape = parseModelJson<MarketLandscape>(landscapeText);
       landscape = {

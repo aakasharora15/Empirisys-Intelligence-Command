@@ -1,7 +1,6 @@
-import { CLAUDE_OPUS } from '@/lib/ai/models';
-import Anthropic from '@anthropic-ai/sdk';
 import { RawSignal, TriggerEvent, MatrixScore, ExecutiveOutput } from './types';
 import { parseModelJson } from '@/lib/ai/parse';
+import { complete } from '@/lib/ai/client';
 
 /**
  * HSE Lead-Scoring Agent Engine
@@ -13,12 +12,6 @@ import { parseModelJson } from '@/lib/ai/parse';
  * 4. Automated Executive Output (LLM-powered MEDDIC synthesis)
  */
 export class LeadScoringAgent {
-  private anthropic: Anthropic;
-
-  constructor() {
-    this.anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-  }
-
   async processIncomingSignal(signal: RawSignal): Promise<ExecutiveOutput | null> {
     console.log(`[Data Ingestion Layer] Processing signal from ${signal.sourceType}: ${signal.sourceUrl}`);
 
@@ -46,9 +39,9 @@ export class LeadScoringAgent {
   }
 
   private async triggerEventFilter(rawText: string): Promise<TriggerEvent | null> {
-    const response = await this.anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 1000,
+    
+
+    const textContent = await complete({
       system: `You are the Empirisys Lead Qualification Filter.
 Analyze the following market signal and identify if it contains a high-value trigger event.
 Valid types: 'safety_near_miss', 'environmental_fine', 'plant_modernization', 'new_head_of_process_safety'.
@@ -63,12 +56,10 @@ If a valid trigger event is found, output JSON:
 }
 If no valid trigger is found, output: { "isValid": false }
 Output ONLY JSON, with no markdown formatting.`,
-      messages: [
-        { role: "user", content: rawText }
-      ]
-    });
-
-    const textContent = response.content.find(c => c.type === 'text')?.text || '{"isValid": false}';
+      prompt: rawText,
+      maxTokens: 1000,
+      json: true,
+    }) || '{"isValid": false}';
     const parsed = parseModelJson<{ isValid?: boolean } & Partial<TriggerEvent>>(textContent);
     
     if (parsed.isValid && parsed.type) {
@@ -118,9 +109,9 @@ Output ONLY JSON, with no markdown formatting.`,
   private async generateExecutiveOutput(trigger: TriggerEvent, score: MatrixScore, rawText: string): Promise<ExecutiveOutput> {
     const productRecommendation = trigger.type === 'plant_modernization' ? 'BOOST' : 'DETECT';
 
-    const response = await this.anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 1500,
+    
+
+    const textContent = await complete({
       system: `You are an elite Enterprise B2B Sales Partner with decades of experience closing high-ticket deals at top global management consulting firms (e.g., McKinsey, Big Four). Your logic must reflect the absolute highest echelon of elite corporate deal structuring and strategic client acquisition.
 You are preparing an executive pitch brief based on a new trigger event.
 Empirisys sells two main products: 
@@ -157,12 +148,10 @@ Output JSON matching exactly this schema:
   }
 }
 Output ONLY JSON, with no markdown formatting.`,
-      messages: [
-        { role: "user", content: `Trigger Event: ${JSON.stringify(trigger)}\nRaw Signal Context: ${rawText}` }
-      ]
-    });
-
-    const textContent = response.content.find(c => c.type === 'text')?.text || '{}';
+      prompt: `Trigger Event: ${JSON.stringify(trigger)}\nRaw Signal Context: ${rawText}`,
+      maxTokens: 1500,
+      json: true,
+    }) || '{}';
     return parseModelJson<ExecutiveOutput>(textContent);
   }
 }

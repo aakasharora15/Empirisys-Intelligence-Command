@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
 import * as cheerio from 'cheerio';
-import { CLAUDE_SONNET } from '@/lib/ai/models';
+import { complete } from '@/lib/ai/client';
+import { parseModelJson } from '@/lib/ai/parse';
 import { z } from 'zod';
 import dns from 'dns/promises';
 import net from 'net';
 
 const RequestSchema = z.object({
   url: z.string().url()
-});
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
 async function safeFetch(urlStr: string, redirects = 0): Promise<string> {
@@ -154,26 +150,15 @@ Return a strict JSON response with no other text, matching this structure:
   "whyFlagged": "A 1-sentence punchy explanation of why they are a threat to Empirisys."
 }`;
 
-    const msg = await anthropic.messages.create({
-      model: CLAUDE_SONNET,
-      max_tokens: 1024,
+    const aiResponseText = await complete({
       system: systemPrompt,
-      messages: [
-        { role: 'user', content: `Analyze this competitor's website content:\n\nURL: ${url}\n\nCONTENT:\n${textContent}` }
-      ],
+      prompt: `Analyze this competitor's website content:\n\nURL: ${url}\n\nCONTENT:\n${textContent}`,
+      maxTokens: 1024,
+      json: true,
     });
 
-    let aiResponseText = '';
-    if (msg.content[0].type === 'text') {
-      aiResponseText = msg.content[0].text;
-    }
-
     try {
-      const jsonMatch = aiResponseText.match(/\{[\s\S]*\}/);
-      const jsonStr = jsonMatch ? jsonMatch[0] : aiResponseText;
-      const parsedData = JSON.parse(jsonStr);
-
-      return NextResponse.json(parsedData, { status: 200 });
+      return NextResponse.json(parseModelJson(aiResponseText), { status: 200 });
     } catch {
       console.error("Failed to parse JSON from AI:", aiResponseText);
       return NextResponse.json({ error: 'AI failed to return structured threat data' }, { status: 500 });

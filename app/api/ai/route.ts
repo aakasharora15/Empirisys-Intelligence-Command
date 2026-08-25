@@ -1,15 +1,10 @@
-import { CLAUDE_SONNET } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import { aiEnabled, completeStream } from '@/lib/ai/client';
 import { z } from 'zod';
 
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.warn('CRITICAL: ANTHROPIC_API_KEY environment variable is missing.');
+if (!aiEnabled()) {
+  console.warn('CRITICAL: no AI provider key configured (OPENAI_API_KEY or ANTHROPIC_API_KEY).');
 }
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
 
 // Strict Zod schema for input validation
 const RequestSchema = z.object({
@@ -96,21 +91,20 @@ export async function POST(req: Request) {
     const { prompt, moduleType } = result.data;
     const systemPrompt = SYSTEM_PROMPTS[moduleType as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.general;
 
-    const stream = await anthropic.messages.create({
-      model: CLAUDE_SONNET,
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: prompt }],
-      stream: true,
-    });
+    if (!aiEnabled()) {
+      return NextResponse.json({ error: 'No AI provider configured' }, { status: 503 });
+    }
 
     const readableStream = new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of stream) {
-            if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-              controller.enqueue(new TextEncoder().encode(chunk.delta.text));
-            }
+          const stream = completeStream({
+            system: systemPrompt,
+            messages: [{ role: 'user', content: prompt }],
+            maxTokens: 1024,
+          });
+          for await (const text of stream) {
+            controller.enqueue(new TextEncoder().encode(text));
           }
         } catch (err) {
           controller.error(err);
