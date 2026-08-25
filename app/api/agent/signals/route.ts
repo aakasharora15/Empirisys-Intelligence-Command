@@ -1,14 +1,13 @@
-import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { parseModelJson } from '@/lib/ai/parse';
 
-export const maxDuration = 60; // Prevent Vercel timeouts for LLM calls
+export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export interface IntelligenceSignal {
@@ -32,14 +31,17 @@ export async function GET(req: Request) {
       return rateLimit.errorResponse;
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY is not configured.");
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY is not configured.");
     }
 
-    const completion = await anthropic.messages.create({
-      model: CLAUDE_OPUS,
-      max_tokens: 1500,
-      system: `You are an elite HSE (Health, Safety, and Environment) Market Intelligence AI. 
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "system",
+          content: `You are an elite HSE (Health, Safety, and Environment) Market Intelligence AI. 
 Your job is to scrape simulated real-time data and generate 5 highly realistic, up-to-the-minute market signals relevant to process safety, industrial risk, and HSE consulting in Europe (especially UK/Netherlands).
 Output strictly in JSON format as an object with a "signals" array containing exactly 5 objects.
 Each object must perfectly match this TypeScript interface:
@@ -55,9 +57,8 @@ Each object must perfectly match this TypeScript interface:
   confidence: number; (0-100)
   strategicTags: string[]; (2-3 short tags like "Lead Gen", "Compliance", "Competitor Threat")
   url: string; (A realistic URL pointing to the source material, e.g., "https://www.hse.gov.uk/news" or "https://reuters.com/...")
-}
-Output ONLY JSON, with no markdown formatting.`,
-      messages: [
+}`
+        },
         {
           role: "user",
           content: "Generate the latest 5 live HSE intelligence signals for the Empirisys dashboard."
@@ -65,8 +66,8 @@ Output ONLY JSON, with no markdown formatting.`,
       ]
     });
 
-    const textContent = completion.content.find(c => c.type === 'text')?.text || '{"signals": []}';
-    const parsedContent = parseModelJson<Record<string, unknown>>(textContent);
+    const textContent = completion.choices[0].message.content || '{"signals": []}';
+    const parsedContent = parseModelJson<{signals: IntelligenceSignal[]}>(textContent);
 
     return NextResponse.json({ signals: parsedContent.signals });
   } catch (error) {
