@@ -12,6 +12,61 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
+async function safeFetch(urlStr: string, redirects = 0): Promise<string> {
+  if (redirects > 3) throw new Error("Too many redirects");
+  
+  const targetUrl = new URL(urlStr);
+  if (targetUrl.protocol !== 'http:' && targetUrl.protocol !== 'https:') {
+    throw new Error('Only HTTP/HTTPS allowed');
+  }
+
+  const hostname = targetUrl.hostname;
+  
+  const checkIP = (ip: string) => {
+    return ip.startsWith('10.') || 
+           ip.startsWith('127.') || 
+           ip.startsWith('169.254.') || 
+           ip.startsWith('192.168.') || 
+           /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip) ||
+           ip === 'localhost';
+  };
+
+  // 1. Test the literal string (catches 10.0.0.5 directly)
+  if (checkIP(hostname)) {
+    throw new Error('Private network addresses are not allowed');
+  }
+
+  // 2. Test resolved DNS (catches public domains pointing to internal IPs)
+  const addresses = await dns.resolve(hostname).catch(() => []);
+  if (addresses.some(checkIP)) {
+    throw new Error('Private network addresses are not allowed');
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  
+  try {
+    const response = await fetch(urlStr, { 
+      signal: controller.signal, 
+      redirect: 'manual',
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EmpirisysBot/1.0)' } 
+    });
+    
+    // 3. Catch redirects and recursively validate the target
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('location');
+      if (!location) throw new Error("Redirect without location");
+      const nextUrl = new URL(location, urlStr).toString();
+      return safeFetch(nextUrl, redirects + 1);
+    }
+    
+    if (!response.ok) throw new Error(`Failed to fetch URL: ${response.status}`);
+    return await response.text();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -22,47 +77,21 @@ export async function POST(req: Request) {
     }
 
     const { url } = result.data;
-
-    // 1. Validate against SSRF
-    const targetUrl = new URL(url);
-    if (targetUrl.protocol !== 'http:' && targetUrl.protocol !== 'https:') {
-      return NextResponse.json({ error: 'Only HTTP/HTTPS allowed' }, { status: 400 });
-    }
-    const hostname = targetUrl.hostname;
-    const addresses = await dns.resolve(hostname).catch(() => []);
-    const isPrivate = addresses.some(ip => {
-      // Very basic private IP checks (RFC1918, loopback, link-local)
-      return ip.startsWith('10.') || 
-             ip.startsWith('127.') || 
-             ip.startsWith('169.254.') || 
-             ip.startsWith('192.168.') || 
-             ip.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./);
-    });
     
-    if (isPrivate || hostname === 'localhost') {
-      return NextResponse.json({ error: 'Private network addresses are not allowed' }, { status: 400 });
-    }
-
-    // 2. Fetch live HTML
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
     let html = '';
-    
     try {
-      const response = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EmpirisysBot/1.0)' } });
-      clearTimeout(timeoutId);
-      if (!response.ok) throw new Error('Failed to fetch URL');
-      html = await response.text();
-    } catch (e) {
+      html = await safeFetch(url);
+    } catch (e: any) {
+      if (e.message === 'Private network addresses are not allowed') {
+        return NextResponse.json({ error: e.message }, { status: 400 });
+      }
       return NextResponse.json({ error: 'Failed to access the provided website' }, { status: 422 });
     }
 
-    // 2. Extract meaningful text using cheerio
     const $ = cheerio.load(html);
     $('script, style, noscript, iframe, img, svg, nav, footer').remove();
     let textContent = $('body').text().replace(/\s+/g, ' ').trim();
     
-    // Limit text to avoid blowing up token limits (take first ~15k chars)
     textContent = textContent.slice(0, 15000);
     
     if (!textContent || textContent.length < 50) {
@@ -71,9 +100,7 @@ export async function POST(req: Request) {
 
     const companyDomain = new URL(url).hostname.replace('www.', '');
     const companyName = companyDomain.split('.')[0];
-    const capitalizedName = companyName.charAt(0).toUpperCase() + companyName.slice(1);
 
-    // 3. Send to Anthropic Claude 5 for structured threat analysis
     const systemPrompt = `You are the Empirisys AI Threat Intelligence engine.
 Analyze the following website text scraped from a potential competitor. 
 Determine what the company does, their target market, and critically, how much of a threat they pose to Empirisys BOOST (which focuses on AI safety intelligence, risk prediction, and decision-support for high-hazard industries).
@@ -95,20 +122,18 @@ Return a strict JSON response with no other text, matching this structure:
       ],
     });
 
-    // 4. Parse the AI response
     let aiResponseText = '';
     if (msg.content[0].type === 'text') {
       aiResponseText = msg.content[0].text;
     }
 
     try {
-      // Find JSON block if Claude wrapped it in markdown
       const jsonMatch = aiResponseText.match(/\{[\s\S]*\}/);
       const jsonStr = jsonMatch ? jsonMatch[0] : aiResponseText;
       const parsedData = JSON.parse(jsonStr);
 
       return NextResponse.json(parsedData, { status: 200 });
-    } catch (parseError) {
+    } catch {
       console.error("Failed to parse JSON from AI:", aiResponseText);
       return NextResponse.json({ error: 'AI failed to return structured threat data' }, { status: 500 });
     }
