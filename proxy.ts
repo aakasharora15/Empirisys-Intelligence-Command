@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
@@ -26,6 +27,22 @@ function checkMemoryRateLimit(ip: string): boolean {
   return true;
 }
 
+async function isAuthenticated(request: NextRequest): Promise<boolean> {
+  const authCookie = request.cookies.get('eih_auth');
+  if (!authCookie?.value) return false;
+  
+  const jwtSecretStr = process.env.JWT_SECRET || (process.env.NODE_ENV === 'development' ? 'dev_jwt_secret_12345' : null);
+  if (!jwtSecretStr) return false;
+
+  try {
+    const JWT_SECRET = new TextEncoder().encode(jwtSecretStr);
+    await jwtVerify(authCookie.value, JWT_SECRET);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -40,8 +57,10 @@ export async function proxy(request: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
     } else {
-      // Demo Mode: We've removed JWT auth for API routes because this is an open wireframe demo.
-      // If we wanted to re-enable auth, we'd add jwtVerify here.
+      // API Authentication Restored: Block unauthenticated requests to AI routes
+      if (!(await isAuthenticated(request))) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
     }
 
     // Global rate limit applied
@@ -74,10 +93,13 @@ export async function proxy(request: NextRequest) {
   // ── Protected page enforcement ────────────────────────────────────────────
   const protectedPages = [
     '/', '/assistant', '/competitors',
+    '/marketing/lead-scoring', '/marketing/market-analyst', '/marketing/threats',
     '/training-data', '/settings',
   ];
   if (protectedPages.includes(pathname)) {
-    // Auth redirect disabled for presentation/screenshot mode
+    if (!(await isAuthenticated(request))) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
   }
 
   // ── Security headers on every response ───────────────────────────────────
