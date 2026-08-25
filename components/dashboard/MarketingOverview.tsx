@@ -18,7 +18,7 @@ export default function MarketingOverview() {
     <div className="w-full px-6 md:px-10 mb-16 max-w-[1600px] mx-auto">
       <div className="mb-10 border-b border-card-border/50 pb-6 flex items-end justify-between">
         <div>
-          <h2 className="text-3xl font-black text-text-primary tracking-tight mb-2 flex items-center gap-3">
+          <h2 className="text-2xl font-extrabold text-text-primary tracking-tight mb-2 flex items-center gap-3">
             <Zap className="h-7 w-7 text-[var(--color-primary)]" />
             Marketing & Client Acquisition
           </h2>
@@ -41,8 +41,8 @@ export default function MarketingOverview() {
             <div className="h-12 w-12 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center mb-6 border border-[var(--color-primary)]/20">
               <Target className="h-6 w-6 text-[var(--color-primary)]" />
             </div>
-            <h3 className="text-xl font-bold text-text-primary mb-3">Client Acquisition (CAI)</h3>
-            <p className="text-sm text-text-secondary leading-relaxed mb-6">
+            <h3 className="text-lg font-bold text-text-primary mb-3">Client Acquisition (CAI)</h3>
+            <p className="text-sm text-text-secondary leading-loose mb-6">
               AI-driven profiles automatically scoring leads based on HSE compliance and strategic entry points.
             </p>
             
@@ -68,8 +68,8 @@ export default function MarketingOverview() {
             <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20">
               <Eye className="h-6 w-6 text-blue-400" />
             </div>
-            <h3 className="text-xl font-bold text-text-primary mb-3">Analytics Dashboard</h3>
-            <p className="text-sm text-text-secondary leading-relaxed mb-6">
+            <h3 className="text-lg font-bold text-text-primary mb-3">Analytics Dashboard</h3>
+            <p className="text-sm text-text-secondary leading-loose mb-6">
               Strategic intelligence pipelines extracting structural events and converting them into actionable marketing themes.
             </p>
 
@@ -95,15 +95,15 @@ export default function MarketingOverview() {
             <div className="h-12 w-12 rounded-full bg-red-500/10 flex items-center justify-center mb-6 border border-red-500/20">
               <Radio className="h-6 w-6 text-red-400" />
             </div>
-            <h3 className="text-xl font-bold text-text-primary mb-3">Neural Signals Feed</h3>
-            <p className="text-sm text-text-secondary leading-relaxed mb-6">
+            <h3 className="text-lg font-bold text-text-primary mb-3">Neural Signals Feed</h3>
+            <p className="text-sm text-text-secondary leading-loose mb-6">
               Live automated tracking of high-priority regulatory risks, Tier 1 incidents, and market signals.
             </p>
 
             <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-8">
               <span className="text-[10px] font-black text-red-400 uppercase tracking-widest block mb-2">CRITICAL THREATS</span>
               <div className="flex items-end gap-2">
-                <span className="text-3xl font-black text-text-primary leading-none">2</span>
+                <span className="text-2xl font-extrabold text-text-primary leading-none">2</span>
                 <span className="text-xs text-text-secondary mb-1">Require immediate action</span>
               </div>
             </div>

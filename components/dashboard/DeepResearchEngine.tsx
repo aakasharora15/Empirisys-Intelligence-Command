@@ -49,11 +49,11 @@ export default function DeepResearchEngine() {
       
       {/* Header */}
       <div className="mb-10">
-        <h2 className="text-4xl font-black text-text-primary tracking-tight mb-4 flex items-center gap-4">
+        <h2 className="text-3xl font-extrabold text-text-primary tracking-tight mb-4 flex items-center gap-4">
           <FiTerminal className="h-8 w-8 text-accent" />
           Automated Deep Research Engine
         </h2>
-        <p className="text-lg text-text-secondary max-w-4xl leading-relaxed">
+        <p className="text-base text-text-secondary max-w-4xl leading-relaxed">
           The Hub autonomously scrapes metadata and unstructured sentiment that humans cannot gather at scale. It maps hidden technology vulnerabilities and identifies competitor clients who are highly dissatisfied and ready to churn.
         </p>
       </div>
@@ -66,7 +66,7 @@ export default function DeepResearchEngine() {
           
           <div className="flex items-center gap-3 mb-8">
             <FiServer className="h-6 w-6 text-accent" />
-            <h3 className="text-xl font-bold text-text-primary tracking-wide">Tech Stack Vulnerability Scanner</h3>
+            <h3 className="text-lg font-bold text-text-primary tracking-wide">Tech Stack Vulnerability Scanner</h3>
           </div>
           
           <div className="space-y-6">
@@ -92,7 +92,7 @@ export default function DeepResearchEngine() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-base text-text-primary font-mono mb-1">{vuln.tech}</p>
+                  <p className="text-sm text-text-primary font-mono mb-1">{vuln.tech}</p>
                   <p className="text-sm text-accent font-semibold">Sales Action: {vuln.impact}</p>
                 </div>
               </motion.div>
@@ -106,7 +106,7 @@ export default function DeepResearchEngine() {
           
           <div className="flex items-center gap-3 mb-8">
             <FiUsers className="h-6 w-6 text-blue-400" />
-            <h3 className="text-xl font-bold text-text-primary tracking-wide">Customer Sentiment & Churn Radar</h3>
+            <h3 className="text-lg font-bold text-text-primary tracking-wide">Customer Sentiment & Churn Radar</h3>
           </div>
 
           <div className="space-y-6">
@@ -120,7 +120,7 @@ export default function DeepResearchEngine() {
               >
                 <div className="flex justify-between items-start border-b border-card-border/50 pb-3">
                   <div>
-                    <h4 className="text-base font-bold text-text-primary">{signal.company}</h4>
+                    <h4 className="text-sm font-semibold text-text-primary">{signal.company}</h4>
                     <p className="text-xs text-text-secondary font-mono mt-1">Targeting: {signal.currentVendor} • {signal.source}</p>
                   </div>
                   <div className="flex items-center gap-2">

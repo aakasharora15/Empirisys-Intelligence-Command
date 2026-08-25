@@ -304,7 +304,7 @@ export default function DashboardHeader({
                 <AlertTriangle className="h-5 w-5 text-accent" />
               </div>
               <div>
-                <p className="text-lg font-bold text-text-primary">
+                <p className="text-base font-bold text-text-primary">
                   {discoveryLogs.length} new competitor{discoveryLogs.length > 1 ? 's' : ''} detected in the trailing 7 days.
                 </p>
                 <Link href="/competitors" className="text-lg text-accent hover:text-accent/80 font-bold mt-0.5 inline-block">
@@ -367,7 +367,7 @@ export default function DashboardHeader({
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-amber-400" />
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-widest">Direct Rivals</h3>
+                  <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Direct Rivals</h3>
                   <div className="ml-2"><ChartInfoButton title="Direct Rivals" description="Identifies competitors actively contesting your target accounts, highlighting product sprawl and capability gaps." /></div>
                 </div>
                 <span className="text-xs font-bold tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-1 rounded-md uppercase">{directRivals.length} tracked</span>
@@ -391,7 +391,7 @@ export default function DashboardHeader({
                            </span>
                          </div>
                          <div>
-                           <p className="text-lg font-bold text-text-primary leading-tight">{comp.name}</p>
+                           <p className="text-base font-bold text-text-primary leading-tight">{comp.name}</p>
                            <p className="text-xs text-text-secondary mt-0.5">{comp.hq}</p>
                          </div>
                        </div>
@@ -414,7 +414,7 @@ export default function DashboardHeader({
             <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <Eye className="h-4 w-4 text-amber-400" />
-                <h3 className="text-sm font-bold text-text-secondary uppercase tracking-widest">Competitor Activity Feed</h3>
+                <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Competitor Activity Feed</h3>
                 <div className="ml-2"><ChartInfoButton title="Competitor Activity Feed" description="Real-time ingestion of competitor press releases, product updates, and client signals categorized by LLM." /></div>
               </div>
               <span className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-widest">
@@ -433,7 +433,7 @@ export default function DashboardHeader({
                       </span>
                       <span className="text-xs text-text-secondary">{item.time}</span>
                     </div>
-                    <p className="text-base font-bold text-text-primary leading-snug mb-2">{item.title}</p>
+                    <p className="text-sm font-semibold text-text-primary leading-relaxed mb-2">{item.title}</p>
                     <p className="text-xs text-text-secondary leading-relaxed font-mono">{item.detail}</p>
                   </div>
                 );
@@ -446,7 +446,7 @@ export default function DashboardHeader({
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-blue-400" />
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-widest">Incumbent Systems</h3>
+                  <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Incumbent Systems</h3>
                   <div className="ml-2"><ChartInfoButton title="Incumbent Systems" description="Legacy capture platforms vulnerable to disruption by predictive AI models. Highly likely to contain retrospective data only." /></div>
                 </div>
                 <span className="text-xs font-bold tracking-widest text-blue-400 bg-blue-400/10 border border-blue-400/20 px-2 py-1 rounded-md uppercase">{incumbents.length} tracked</span>
@@ -461,9 +461,9 @@ export default function DashboardHeader({
                          <Image src={comp.logoUrl || ""} alt={comp.name} fill sizes="32px" className="w-full h-full object-contain absolute inset-0 z-10" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                          <span className="absolute inset-0 flex items-center justify-center text-blue-400 text-xs font-black z-0">{comp.name.slice(0, 2).toUpperCase()}</span>
                        </div>
-                       <p className="text-sm font-bold text-text-primary leading-tight">{comp.name}</p>
+                       <p className="text-sm font-medium text-text-primary leading-normal">{comp.name}</p>
                      </div>
-                     <span className="text-lg font-black text-text-primary">{comp.threat_score}</span>
+                     <span className="text-base font-bold text-text-primary">{comp.threat_score}</span>
                    </div>
                  );
                })}
@@ -475,7 +475,7 @@ export default function DashboardHeader({
             <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <Zap className="h-4 w-4 text-amber-400" />
-                <h3 className="text-sm font-bold text-text-secondary uppercase tracking-widest">HSE Pain Points</h3>
+                <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">HSE Pain Points</h3>
                 <div className="ml-2"><ChartInfoButton title="HSE Pain Points" description="Industry-wide Health, Safety, and Environment events or regulatory shifts that create immediate demand for Empirisys." /></div>
               </div>
               <span className="text-xs font-bold text-text-secondary">{triggerEvents.length} active</span>
@@ -492,7 +492,7 @@ export default function DashboardHeader({
                     {event.severity}
                   </span>
                   <div className="flex-1 min-w-0 space-y-1.5">
-                    <p className="text-sm font-bold text-text-primary leading-snug">{event.title}</p>
+                    <p className="text-sm font-medium text-text-primary leading-relaxed">{event.title}</p>
                     <p className="text-xs text-accent font-semibold italic">{event.why_relevant}</p>
                   </div>
                 </div>
@@ -505,7 +505,7 @@ export default function DashboardHeader({
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-[#EF4444]" />
-                  <h3 className="text-sm font-bold text-text-secondary uppercase tracking-widest">Substitute Threats</h3>
+                  <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Substitute Threats</h3>
                   <div className="ml-2"><ChartInfoButton title="Substitute Threats" description="DIY AI initiatives, internal toolings, or generic copilots that pose high security risks and lack auditability." /></div>
                 </div>
                 <span className="text-xs font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/20 px-2 py-1 rounded-md uppercase">{substitutes.length} tracked</span>
@@ -523,7 +523,7 @@ export default function DashboardHeader({
                            </span>
                          </div>
                          <div>
-                           <p className="text-lg font-bold text-text-primary leading-tight">{comp.name}</p>
+                           <p className="text-base font-bold text-text-primary leading-tight">{comp.name}</p>
                            <p className="text-xs text-[#EF4444] mt-0.5 font-bold uppercase tracking-wider">{threat.label} RISK</p>
                          </div>
                        </div>
@@ -542,7 +542,7 @@ export default function DashboardHeader({
           <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
              <div className="flex items-center gap-3 mb-6">
                 <div className="h-2 w-2 rounded-full bg-accent" />
-                <h3 className="text-sm font-bold text-text-secondary uppercase tracking-widest">Sales Battlecards</h3>
+                <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Sales Battlecards</h3>
                 <div className="ml-2"><ChartInfoButton title="Sales Battlecards" description="Instant tactical kill-sheets outlining specific weaknesses and counter-arguments against major competitors to help sales win deals." /></div>
              </div>
              <div className="grid grid-cols-1 gap-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">

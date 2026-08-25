@@ -51,8 +51,8 @@ export default function BlueOceanCanvas({ competitors: _competitors }: BlueOcean
     <div className="w-full px-6 md:px-10 mb-20 max-w-[1600px] mx-auto mt-16">
       
       <div className="mb-8">
-        <h3 className="text-accent text-sm font-bold tracking-widest uppercase mb-2">Framework 02 • Blue Ocean Strategy Canvas</h3>
-        <h2 className="text-3xl font-black text-text-primary tracking-tight">
+        <h3 className="text-accent text-xs font-bold tracking-widest uppercase mb-2">Framework 02 • Blue Ocean Strategy Canvas</h3>
+        <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
           We compete where legacy can&apos;t follow.
         </h2>
         <p className="text-base text-text-secondary mt-2">
@@ -133,7 +133,7 @@ export default function BlueOceanCanvas({ competitors: _competitors }: BlueOcean
           {/* Legacy Card */}
           <div className="bg-card rounded-xl border border-card-border/50 p-6 flex-1">
             <h4 className="text-xs font-bold tracking-widest text-text-secondary uppercase mb-3">Where legacy scores high</h4>
-            <p className="text-base text-text-primary leading-relaxed font-semibold">
+            <p className="text-sm text-text-primary leading-loose font-medium">
               Retrospective logging depth, UI complexity, and total cost — factors buyers tolerate, not value.
             </p>
           </div>

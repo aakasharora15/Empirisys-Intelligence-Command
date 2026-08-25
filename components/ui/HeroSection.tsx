@@ -38,10 +38,10 @@ export default function HeroSection({
               {moduleLabel}
             </span>
           )}
-          <h1 className="text-3xl md:text-[2.75rem] font-serif font-bold leading-[1.15] tracking-tight text-text-primary">
+          <h1 className="text-3xl md:text-4xl font-serif font-bold leading-[1.15] tracking-tight text-text-primary">
             {title}
           </h1>
-          <p className="text-sm md:text-footnote text-text-secondary font-sans max-w-2xl leading-relaxed">
+          <p className="text-base text-text-secondary font-sans max-w-2xl leading-relaxed">
             {subtitle}
           </p>
           {belowContent && (

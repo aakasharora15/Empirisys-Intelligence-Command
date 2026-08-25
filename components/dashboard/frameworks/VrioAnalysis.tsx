@@ -44,8 +44,8 @@ export default function VrioAnalysis() {
   return (
     <div className="w-full px-6 md:px-10 mb-20 mt-16 max-w-[1600px] mx-auto">
       <div className="mb-8">
-        <h3 className="text-accent text-sm font-bold tracking-widest uppercase mb-2">Framework 03 • VRIO Capability Matrix</h3>
-        <h2 className="text-3xl font-black text-text-primary tracking-tight">
+        <h3 className="text-accent text-xs font-bold tracking-widest uppercase mb-2">Framework 03 • VRIO Capability Matrix</h3>
+        <h2 className="text-2xl font-extrabold text-text-primary tracking-tight">
           Which advantages are actually durable.
         </h2>
         <p className="text-base text-text-secondary mt-2">
@@ -75,7 +75,7 @@ export default function VrioAnalysis() {
                 className="border-b border-card-border/50 hover:bg-card/40 transition-colors"
               >
                 <td className="py-6 px-8">
-                  <p className="text-base font-bold text-text-primary">{item.capability}</p>
+                  <p className="text-sm font-semibold text-text-primary">{item.capability}</p>
                   <p className="text-sm text-text-secondary mt-0.5">{item.sub}</p>
                 </td>
                 <td className="py-6 px-4 text-center">{item.v ? <Check /> : <Cross />}</td>
