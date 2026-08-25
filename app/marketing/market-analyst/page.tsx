@@ -248,7 +248,7 @@ export default function MarketAnalystPage() {
   return (
     <div className="pb-16 bg-background min-h-screen z-10 relative">
       <HeroSection 
-        title="Market Analyst"
+        title="Analytics Dashboard"
         subtitle="Event-driven intelligence pipeline: Source Ingestion → Entity Extraction → Deterministic Scoring → Theme Aggregation → Strategic Interpretation"
         moduleLabel="MARKETING INTELLIGENCE"
         belowContent={

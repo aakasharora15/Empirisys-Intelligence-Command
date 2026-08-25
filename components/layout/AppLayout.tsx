@@ -95,9 +95,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
     {
       group: 'MARKETING INTELLIGENCE',
       items: [
-        { label: 'Lead Scoring', href: '/marketing/lead-scoring', icon: Shield },
-        { label: 'Market Analyst', href: '/marketing/market-analyst', icon: Eye },
-        { label: 'Threat Monitor', href: '/marketing/threats', icon: Radio },
+        { label: 'Client Acquisition (CAI)', href: '/marketing/lead-scoring', icon: Shield },
+        { label: 'Analytics Dashboard', href: '/marketing/market-analyst', icon: Eye },
+        { label: 'Neural Signals Feed', href: '/marketing/threats', icon: Radio },
       ]
     },
     {

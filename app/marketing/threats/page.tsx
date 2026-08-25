@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FilterBar } from "@/components/data/filter-bar";
-import { ShieldAlert, Activity, ArrowRight, RefreshCw } from "lucide-react";
+import { ShieldAlert, Activity, ArrowRight, RefreshCw, Radio } from "lucide-react";
 import HeroSection from "@/components/ui/HeroSection";
 import { Button } from "@/components/ui/Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 export default function ThreatsPage() {
   const [threats, setThreats] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'signals' | 'threats'>('signals');
   const [selectedThreat, setSelectedThreat] = useState<any | null>(null);
 
   const fetchThreats = async () => {
@@ -39,18 +40,33 @@ export default function ThreatsPage() {
   return (
     <div className="pb-16 bg-background min-h-screen z-10 relative">
       <HeroSection 
-        title="Threat Monitor"
+        title="Neural Signals Feed"
         subtitle="Live AI tracking of high-priority competitor moves and regulatory risks."
         moduleLabel="MARKETING INTELLIGENCE"
         belowContent={
-          <div className="flex items-center mt-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 mt-6">
+            <div className="flex items-center bg-card/40 backdrop-blur-xl border border-card-border p-1 rounded-full shadow-inner">
+              <button 
+                onClick={() => setActiveTab('signals')}
+                className={`px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'signals' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-lg' : 'text-text-secondary hover:text-text-primary'}`}
+              >
+                <Radio className="w-4 h-4" /> Market Signals
+              </button>
+              <button 
+                onClick={() => setActiveTab('threats')}
+                className={`px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 transition-all ${activeTab === 'threats' ? 'bg-red-500 text-white shadow-lg shadow-red-500/20' : 'text-text-secondary hover:text-text-primary'}`}
+              >
+                <ShieldAlert className="w-4 h-4" /> Verified Threats
+              </button>
+            </div>
+            
             <Button 
               onClick={fetchThreats} 
               disabled={isLoading}
-              className="bg-red-600 hover:bg-red-700 text-white transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)] rounded-full px-6"
+              className="bg-accent hover:bg-accent-hover text-white transition-all shadow-[0_0_15px_rgba(122,224,59,0.3)] rounded-full px-6 py-2.5 h-auto"
             >
               <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} /> 
-              {isLoading ? "Scanning Horizons..." : "Force Threat Scan"}
+              {isLoading ? "Scanning..." : "Force Scan"}
             </Button>
           </div>
         }
