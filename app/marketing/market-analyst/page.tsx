@@ -207,7 +207,15 @@ export default function MarketAnalystPage() {
         body: JSON.stringify({}),
       });
 
-      if (!res.ok) throw new Error("Pipeline failed");
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        if (body?.error === "ANTHROPIC_API_KEY_MISSING") {
+          throw new Error(
+            "ANTHROPIC_API_KEY is not configured on the server, so the pipeline cannot run.",
+          );
+        }
+        throw new Error(body?.detail || `Pipeline failed (HTTP ${res.status})`);
+      }
 
       const data: PipelineResult = await res.json();
       setResult(data);
@@ -215,14 +223,14 @@ export default function MarketAnalystPage() {
         title: "Pipeline Complete",
         description: `Extracted ${data.meta.totalEventsExtracted} events → ${data.meta.totalThemes} themes`,
       });
-    } catch (e: any) {
-      if (e.message?.includes('ANTHROPIC_API_KEY_MISSING') || (e.response && e.response.status === 500)) {
-        alert("Anthropic API Key is missing. The engine cannot run the real-time pipeline. Please set ANTHROPIC_API_KEY in your Vercel environment variables.");
-      }
+    } catch (e: unknown) {
       console.error(e);
       toast({
         title: "Pipeline Error",
-        description: "Failed to execute the intelligence pipeline. Check console.",
+        description:
+          e instanceof Error
+            ? e.message
+            : "Failed to execute the intelligence pipeline. Check console.",
         variant: "destructive",
       });
     } finally {

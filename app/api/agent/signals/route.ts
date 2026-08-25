@@ -6,9 +6,11 @@ import { parseModelJson } from '@/lib/ai/parse';
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazily constructed: instantiating the SDK at module scope throws when
+// OPENAI_API_KEY is absent, which breaks `next build` page-data collection.
+function getOpenAI(): OpenAI {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 export interface IntelligenceSignal {
   id: string;
@@ -34,6 +36,8 @@ export async function GET(req: Request) {
     if (!process.env.OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY is not configured.");
     }
+
+    const openai = getOpenAI();
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",

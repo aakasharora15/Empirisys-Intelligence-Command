@@ -36,7 +36,15 @@ export async function POST(req: Request) {
     if (error instanceof Error && error.message === 'ANTHROPIC_API_KEY_MISSING') {
       return NextResponse.json({ error: 'ANTHROPIC_API_KEY_MISSING' }, { status: 500 });
     }
-    return new NextResponse('Pipeline execution failed', { status: 500 });
+    // Return the reason as JSON so the dashboard can show why the run failed
+    // instead of a generic "Pipeline Error" toast.
+    return NextResponse.json(
+      {
+        error: 'PIPELINE_FAILED',
+        detail: error instanceof Error ? error.message : 'Pipeline execution failed',
+      },
+      { status: 500 },
+    );
   }
 }
 
