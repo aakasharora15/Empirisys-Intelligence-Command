@@ -1,4 +1,5 @@
-export type IncidentSource = 'eu_osha' | 'chemical_park_registry' | 'regional_press' | 'public_database';
+export type IncidentSource =
+  'eu_osha' | 'chemical_park_registry' | 'regional_press' | 'public_database';
 
 export interface RawSignal {
   id: string;
@@ -9,7 +10,11 @@ export interface RawSignal {
 }
 
 export interface TriggerEvent {
-  type: 'safety_near_miss' | 'environmental_fine' | 'plant_modernization' | 'new_head_of_process_safety';
+  type:
+    | 'safety_near_miss'
+    | 'environmental_fine'
+    | 'plant_modernization'
+    | 'new_head_of_process_safety';
   description: string;
   companyName: string;
   location: string;

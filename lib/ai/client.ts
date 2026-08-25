@@ -112,10 +112,7 @@ export async function* completeStream(req: StreamRequest): AsyncGenerator<string
       model: process.env.OPENAI_MODEL || OPENAI_DEFAULT_MODEL,
       max_tokens: maxTokens,
       stream: true,
-      messages: [
-        { role: 'system', content: req.system },
-        ...req.messages,
-      ],
+      messages: [{ role: 'system', content: req.system }, ...req.messages],
     });
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta?.content;

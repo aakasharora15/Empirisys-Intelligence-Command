@@ -79,18 +79,21 @@ export async function GET(req: Request) {
     }
 
     const scrapedData = await performWebSearch(
-      'UK HSE process safety regulation news OR chemical industry enforcement OR offshore safety tender'
+      'UK HSE process safety regulation news OR chemical industry enforcement OR offshore safety tender',
     );
 
     if (!scrapedData) {
       // No grounding available. Returning demo data is honest; asking the model
       // to fill the gap would produce invented signals and invented sources.
-      console.warn('[Signals] Web search returned no results; serving demo signals rather than ungrounded output.');
+      console.warn(
+        '[Signals] Web search returned no results; serving demo signals rather than ungrounded output.',
+      );
       return NextResponse.json({ signals: DEMO_SIGNALS, grounded: false });
     }
 
-    const textContent = await complete({
-      system: `You are an elite HSE (Health, Safety, and Environment) Market Intelligence AI. 
+    const textContent =
+      (await complete({
+        system: `You are an elite HSE (Health, Safety, and Environment) Market Intelligence AI. 
 You will be given real search results. Your job is to turn them into up to 5 market signals relevant to process safety, industrial risk and HSE consulting in Europe (especially UK/Netherlands).
 Return only signals the supplied results actually support — fewer than 5 is correct if that is all the data shows. DO NOT invent or fabricate signals, companies, dates or URLs.
 Output strictly in JSON format as an object with a "signals" array of at most 5 objects.
@@ -109,18 +112,15 @@ Each object must perfectly match this TypeScript interface:
   url: string; (The exact source URL as it appears in the supplied search results. Never construct, guess or complete a URL. Omit this field if the results do not contain one.)
 }
 Output ONLY JSON, with no markdown formatting.`,
-      prompt: `Derive the signals strictly from these search results:\n\n${scrapedData}`,
-      maxTokens: 1500,
-      json: true,
-    }) || '{"signals": []}';
+        prompt: `Derive the signals strictly from these search results:\n\n${scrapedData}`,
+        maxTokens: 1500,
+        json: true,
+      })) || '{"signals": []}';
     const parsedContent = parseModelJson<Record<string, unknown>>(textContent);
 
     return NextResponse.json({ signals: parsedContent.signals });
   } catch (error) {
     console.error('Signals agent live error:', error);
-    return NextResponse.json(
-      { error: 'Failed to process live market signals' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to process live market signals' }, { status: 500 });
   }
 }

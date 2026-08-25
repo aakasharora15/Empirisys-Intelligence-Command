@@ -15,38 +15,51 @@ export async function GET(req: Request) {
     }
 
     const liveThreats = await scrapeLiveThreats();
-    
+
     if (!aiEnabled()) {
-        return NextResponse.json({
-            bluf: {
-                headline: "HSE Improvement Notices Spike in Offshore Wind Sector",
-                summary: "Recent enforcement logs show 3 major improvement notices issued to aging North Sea assets regarding corrosion under insulation.",
-                recommendedAction: "Deploy Client Acquisition pipeline for BP and Balfour Beatty focusing on SENSE cultural diagnostic."
+      return NextResponse.json({
+        bluf: {
+          headline: 'HSE Improvement Notices Spike in Offshore Wind Sector',
+          summary:
+            'Recent enforcement logs show 3 major improvement notices issued to aging North Sea assets regarding corrosion under insulation.',
+          recommendedAction:
+            'Deploy Client Acquisition pipeline for BP and Balfour Beatty focusing on SENSE cultural diagnostic.',
+        },
+        matrix: {
+          tailwinds: [
+            {
+              sector: 'Offshore Wind',
+              driver: 'Aging asset integrity crackdowns',
+              intensity: 'high',
             },
-            matrix: {
-                tailwinds: [
-                    { sector: "Offshore Wind", driver: "Aging asset integrity crackdowns", intensity: "high" },
-                    { sector: "Process Safety", driver: "Seveso III inventory limits tightening", intensity: "medium" }
-                ],
-                headwinds: [
-                    { sector: "Hydrogen", driver: "CapEx freezes pending EU subsidy approvals", intensity: "high" }
-                ]
+            {
+              sector: 'Process Safety',
+              driver: 'Seveso III inventory limits tightening',
+              intensity: 'medium',
             },
-            dominantTheme: "Aging Asset Integrity",
-            targets: liveThreats.map(t => ({
-                id: t.id,
-                companyName: t.companyName,
-                sector: t.sector,
-                triggerIncident: t.title,
-                timeAgo: t.timeAgo,
-            }))
-        });
+          ],
+          headwinds: [
+            {
+              sector: 'Hydrogen',
+              driver: 'CapEx freezes pending EU subsidy approvals',
+              intensity: 'high',
+            },
+          ],
+        },
+        dominantTheme: 'Aging Asset Integrity',
+        targets: liveThreats.map((t) => ({
+          id: t.id,
+          companyName: t.companyName,
+          sector: t.sector,
+          triggerIncident: t.title,
+          timeAgo: t.timeAgo,
+        })),
+      });
     }
 
-    
-
-    const textContent = await complete({
-      system: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
+    const textContent =
+      (await complete({
+        system: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
 Review the following live threat feed detected in the last 24 hours:
 ${JSON.stringify(liveThreats, null, 2)}
 
@@ -70,24 +83,24 @@ Output strictly valid JSON matching this schema:
   "dominantTheme": "A 3-5 word string defining the most lucrative consulting topic right now"
 }
 Output ONLY JSON, with no markdown formatting.`,
-      prompt: "Generate the Executive Briefing.",
-      maxTokens: 1500,
-      json: true,
-    }) || '{}';
+        prompt: 'Generate the Executive Briefing.',
+        maxTokens: 1500,
+        json: true,
+      })) || '{}';
     const parsedContent = parseModelJson<Record<string, unknown>>(textContent);
-    
+
     // We attach the targets directly from the scraped threats to save API calls downstream
-    parsedContent.targets = liveThreats.map(t => ({
-        id: t.id,
-        companyName: t.companyName,
-        sector: t.sector,
-        triggerIncident: t.title,
-        timeAgo: t.timeAgo,
+    parsedContent.targets = liveThreats.map((t) => ({
+      id: t.id,
+      companyName: t.companyName,
+      sector: t.sector,
+      triggerIncident: t.title,
+      timeAgo: t.timeAgo,
     }));
 
     return NextResponse.json(parsedContent);
   } catch (error) {
     console.error('Executive Briefing API error:', error);
-    return new NextResponse("Failed to fetch executive briefing", { status: 500 });
+    return new NextResponse('Failed to fetch executive briefing', { status: 500 });
   }
 }

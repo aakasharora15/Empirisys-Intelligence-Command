@@ -30,19 +30,22 @@ export async function GET(request: Request) {
   try {
     // Check for cron authorization or API key in a production environment
     const authHeader = request.headers.get('authorization');
-    if (process.env.NODE_ENV === 'production' && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (
+      process.env.NODE_ENV === 'production' &&
+      authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log("Triggering AI Competitor Discovery...");
-    console.log("System Prompt: ", DISCOVERY_PROMPT);
+    console.log('Triggering AI Competitor Discovery...');
+    console.log('System Prompt: ', DISCOVERY_PROMPT);
 
     // TODO: Wire up actual fetch to Anthropic Claude using process.env.ANTHROPIC_API_KEY
     // For now, return a placeholder indicating successful cron execution
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: "Discovery scan triggered successfully.",
+
+    return NextResponse.json({
+      success: true,
+      message: 'Discovery scan triggered successfully.',
       prompt_used: DISCOVERY_PROMPT,
       simulated_result: [
         {
@@ -53,15 +56,12 @@ export async function GET(request: Request) {
           source: 'Crunchbase',
           detected_at: new Date().toISOString().split('T')[0],
           confidence_score: 85,
-          status: 'EMERGING'
-        }
-      ]
+          status: 'EMERGING',
+        },
+      ],
     });
   } catch (error) {
     console.error('Competitor discovery error:', error);
-    return NextResponse.json(
-      { error: 'Failed to run discovery scan' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to run discovery scan' }, { status: 500 });
   }
 }

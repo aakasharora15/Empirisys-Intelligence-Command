@@ -1,26 +1,20 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface Toast {
   id: string;
   title: string;
   description?: string;
-  variant?: "default" | "destructive";
+  variant?: 'default' | 'destructive';
 }
 
 let toastListeners: ((toast: Toast) => void)[] = [];
 let toastCounter = 0;
 
-export function toast({
-  title,
-  description,
-  variant = "default",
-}: Omit<Toast, "id">) {
+export function toast({ title, description, variant = 'default' }: Omit<Toast, 'id'>) {
   const id = String(++toastCounter);
-  toastListeners.forEach((listener) =>
-    listener({ id, title, description, variant })
-  );
+  toastListeners.forEach((listener) => listener({ id, title, description, variant }));
 }
 
 export function Toaster() {
@@ -45,17 +39,13 @@ export function Toaster() {
         <div
           key={t.id}
           className={`rounded-lg border px-4 py-3 shadow-lg transition-all animate-in slide-in-from-bottom-5 ${
-            t.variant === "destructive"
-              ? "border-destructive bg-destructive text-destructive-foreground"
-              : "border-border bg-background text-foreground"
+            t.variant === 'destructive'
+              ? 'border-destructive bg-destructive text-destructive-foreground'
+              : 'border-border bg-background text-foreground'
           }`}
         >
           <p className="text-sm font-semibold">{t.title}</p>
-          {t.description && (
-            <p className="mt-1 text-xs text-muted-foreground">
-              {t.description}
-            </p>
-          )}
+          {t.description && <p className="mt-1 text-xs text-muted-foreground">{t.description}</p>}
         </div>
       ))}
     </div>

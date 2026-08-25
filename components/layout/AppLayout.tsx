@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
 import { ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { 
-  SFSquareGrid2x2 as Grid, 
-  SFShield as Shield, 
-  SFEye as Eye, 
-  SFDesktopcomputer as Bot, 
-  SFCylinderSplit1x2 as Database, 
-  SFMagnifyingglass as Search, 
-  SFBell as Bell, 
-  SFArrowClockwise as RefreshCw, 
-  SFSunMax as Sun, 
+import {
+  SFSquareGrid2x2 as Grid,
+  SFShield as Shield,
+  SFEye as Eye,
+  SFDesktopcomputer as Bot,
+  SFCylinderSplit1x2 as Database,
+  SFMagnifyingglass as Search,
+  SFBell as Bell,
+  SFArrowClockwise as RefreshCw,
+  SFSunMax as Sun,
   SFMoon as Moon,
   SFChartBar as ChartBar,
   SFFolder as FolderBadge,
   SFPencil as DocText,
   SFCreditcard as CreditCard,
-  SFRadio as Radio
+  SFRadio as Radio,
 } from 'sf-symbols-lib/monochrome';
 import { useTheme } from 'next-themes';
 import { useStore } from '@/lib/store';
@@ -59,14 +59,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
     }, 1000);
   };
 
-  
   const navItems = [
     {
       group: 'COMMAND CENTER',
       items: [
         { label: 'Executive Dashboard', href: '/', icon: Grid },
         { label: 'Strategic Frameworks', href: '/frameworks', icon: ChartBar },
-      ]
+      ],
     },
     {
       group: 'COMPETITOR INTEL',
@@ -75,7 +74,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         { label: 'Sales Battlecards', href: '/competitors/battlecards', icon: DocText },
         { label: 'Pricing & Packaging', href: '/competitors/pricing', icon: CreditCard },
         { label: 'Tech Stack Vulnerabilities', href: '/product/tech-stack', icon: Database },
-      ]
+      ],
     },
     {
       group: 'MARKETING INTELLIGENCE',
@@ -83,21 +82,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
         { label: 'Client Acquisition (CAI)', href: '/marketing/lead-scoring', icon: Shield },
         { label: 'Analytics Dashboard', href: '/marketing/market-analyst', icon: Eye },
         { label: 'Neural Signals Feed', href: '/marketing/threats', icon: Radio },
-      ]
+      ],
     },
     {
       group: 'AI & KNOWLEDGE',
       items: [
         { label: 'Knowledge Assistant', href: '#assistant', icon: Bot },
-        { label: 'AI Training Data', href: '/training-data', icon: Database }
-      ]
+        { label: 'AI Training Data', href: '/training-data', icon: Database },
+      ],
     },
     {
       group: 'REPORTING & EXPORTS',
-      items: [
-        { label: 'Board-Level Export', href: '/reporting/export', icon: DocText }
-      ]
-    }
+      items: [{ label: 'Board-Level Export', href: '/reporting/export', icon: DocText }],
+    },
   ];
 
   const getHeaderInfo = () => {
@@ -115,10 +112,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="min-h-screen flex bg-transparent text-foreground font-sans z-0 relative">
-      
       {/* Floating Expandable Sidebar */}
       <aside className="peer fixed left-4 top-4 bottom-4 w-[72px] hover:w-[275px] bg-card/95 backdrop-blur-2xl border border-card-border rounded-[32px] z-50 hidden md:flex flex-col justify-between group overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-xl shadow-black/5 dark:shadow-none">
-        
         <div className="flex flex-col flex-1 overflow-y-auto hide-scrollbar pb-2">
           {/* Logo Section */}
           <div className="h-[88px] flex items-center px-[22px] shrink-0">
@@ -142,50 +137,54 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <span className="px-4 text-[10px] font-bold text-text-secondary/40 tracking-[0.1em] uppercase block mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                   {group.group}
                 </span>
-                
+
                 {/* Items */}
                 <div className="space-y-1 relative z-10">
                   {group.items.map((item) => {
                     const isActive = pathname === item.href;
                     const Icon = item.icon;
                     return item.href === '#assistant' ? (
-                        <button
-                          key={item.label}
-                          onClick={() => toggleAssistant()}
-                          className={cn(
-                            "w-full block h-10 rounded-xl transition-all duration-200 relative overflow-hidden text-left",
-                            "text-text-secondary hover:text-text-primary hover:bg-panel"
-                          )}
-                          title={item.label}
-                        >
-                          <div className="absolute left-[11px] top-1/2 -translate-y-1/2">
-                            <Icon className="w-5 h-5 stroke-[1.5]" />
-                          </div>
-                          <span className="opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-12 absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[13px] font-medium transition-all duration-300 delay-75">
-                            {item.label}
-                          </span>
-                        </button>
-                      ) : (
+                      <button
+                        key={item.label}
+                        onClick={() => toggleAssistant()}
+                        className={cn(
+                          'w-full block h-10 rounded-xl transition-all duration-200 relative overflow-hidden text-left',
+                          'text-text-secondary hover:text-text-primary hover:bg-panel',
+                        )}
+                        title={item.label}
+                      >
+                        <div className="absolute left-[11px] top-1/2 -translate-y-1/2">
+                          <Icon className="w-5 h-5 stroke-[1.5]" />
+                        </div>
+                        <span className="opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-12 absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[13px] font-medium transition-all duration-300 delay-75">
+                          {item.label}
+                        </span>
+                      </button>
+                    ) : (
                       <Link
                         key={item.label}
                         href={item.href}
                         className={cn(
-                          "block h-10 rounded-xl transition-all duration-200 relative overflow-hidden",
+                          'block h-10 rounded-xl transition-all duration-200 relative overflow-hidden',
                           isActive
-                            ? "text-accent"
-                            : "text-text-secondary hover:text-text-primary hover:bg-panel"
+                            ? 'text-accent'
+                            : 'text-text-secondary hover:text-text-primary hover:bg-panel',
                         )}
                         title={item.label}
                       >
                         {/* Active Background Indicator */}
-                        {isActive && (
-                          <div className="absolute inset-0 bg-accent/8 rounded-xl" />
-                        )}
+                        {isActive && <div className="absolute inset-0 bg-accent/8 rounded-xl" />}
 
                         <div className="absolute left-[1px] top-0 w-12 h-10 flex items-center justify-center z-10">
-                          <Icon className={cn("h-[16px] w-[16px] transition-colors", isActive ? "text-accent" : "text-text-secondary/60")} strokeWidth={isActive ? 2.5 : 2} />
+                          <Icon
+                            className={cn(
+                              'h-[16px] w-[16px] transition-colors',
+                              isActive ? 'text-accent' : 'text-text-secondary/60',
+                            )}
+                            strokeWidth={isActive ? 2.5 : 2}
+                          />
                         </div>
-                        
+
                         <div className="h-full pl-12 pr-4 flex items-center whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 relative z-10">
                           <span className="text-xs font-semibold">{item.label}</span>
                         </div>
@@ -200,13 +199,23 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
         {/* User Section */}
         <div className="px-[11px] pb-4 shrink-0 relative bg-card/95 pt-2 border-t border-card-border mt-2">
-          <Link href="/settings" className={cn(
-            "block h-10 rounded-xl transition-colors cursor-pointer overflow-hidden relative",
-            pathname === '/settings' ? "bg-accent/10 border border-accent/20" : "bg-panel/50 hover:bg-panel"
-          )}>
+          <Link
+            href="/settings"
+            className={cn(
+              'block h-10 rounded-xl transition-colors cursor-pointer overflow-hidden relative',
+              pathname === '/settings'
+                ? 'bg-accent/10 border border-accent/20'
+                : 'bg-panel/50 hover:bg-panel',
+            )}
+          >
             <div className="absolute left-[1px] top-0 w-12 h-10 flex items-center justify-center z-10">
               <div className="h-8 w-8 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-white font-bold text-xs shadow-md">
-                {user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                {user.name
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .slice(0, 2)
+                  .toUpperCase()}
               </div>
             </div>
             <div className="h-full pl-12 pr-4 flex flex-col justify-center whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -242,8 +251,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <span>Press ⌘K to search or ask...</span>
               </div>
               <div className="flex gap-1">
-                <kbd className="bg-background border border-card-border rounded px-1.5 py-0.5 text-[10px] font-sans font-bold text-text-secondary">⌘</kbd>
-                <kbd className="bg-background border border-card-border rounded px-1.5 py-0.5 text-[10px] font-sans font-bold text-text-secondary">K</kbd>
+                <kbd className="bg-background border border-card-border rounded px-1.5 py-0.5 text-[10px] font-sans font-bold text-text-secondary">
+                  ⌘
+                </kbd>
+                <kbd className="bg-background border border-card-border rounded px-1.5 py-0.5 text-[10px] font-sans font-bold text-text-secondary">
+                  K
+                </kbd>
               </div>
             </button>
           </div>
@@ -253,8 +266,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <button
               onClick={handleRefresh}
               className={cn(
-                "w-10 h-10 flex items-center justify-center text-text-secondary hover:text-accent hover:bg-accent/5 rounded-full transition-all shrink-0",
-                isRefreshing && "animate-spin text-accent"
+                'w-10 h-10 flex items-center justify-center text-text-secondary hover:text-accent hover:bg-accent/5 rounded-full transition-all shrink-0',
+                isRefreshing && 'animate-spin text-accent',
               )}
               title="Refresh cache"
             >
@@ -262,7 +275,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </button>
 
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="w-10 h-10 flex items-center justify-center text-text-secondary hover:text-accent hover:bg-accent/5 rounded-full transition-all shrink-0 relative"
               >
@@ -293,9 +306,12 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             Competitor Content Detected
                           </p>
                           <p className="text-caption text-text-secondary leading-snug">
-                            New strategic positioning from HSE Software Ltd detected in press release.
+                            New strategic positioning from HSE Software Ltd detected in press
+                            release.
                           </p>
-                          <span className="text-micro text-text-secondary/60 uppercase font-bold mt-1">10 mins ago</span>
+                          <span className="text-micro text-text-secondary/60 uppercase font-bold mt-1">
+                            10 mins ago
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -311,12 +327,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
                           <p className="text-caption text-text-secondary leading-snug">
                             All competitor background trackers are active.
                           </p>
-                          <span className="text-micro text-text-secondary/60 uppercase font-bold mt-1">1 hour ago</span>
+                          <span className="text-micro text-text-secondary/60 uppercase font-bold mt-1">
+                            1 hour ago
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div 
+                  <div
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -338,30 +356,34 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className="w-10 h-10 flex items-center justify-center text-text-secondary hover:text-accent hover:bg-accent/5 rounded-full transition-all shrink-0 cursor-pointer"
               title="Toggle theme"
             >
-              {mounted && resolvedTheme === 'dark' ? <Sun className="h-[18px] w-[18px]" strokeWidth={2.5} /> : <Moon className="h-[18px] w-[18px]" strokeWidth={2.5} />}
+              {mounted && resolvedTheme === 'dark' ? (
+                <Sun className="h-[18px] w-[18px]" strokeWidth={2.5} />
+              ) : (
+                <Moon className="h-[18px] w-[18px]" strokeWidth={2.5} />
+              )}
             </button>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 w-full min-h-0 px-4 md:px-0">
-          {children}
-        </main>
+        <main className="flex-1 w-full min-h-0 px-4 md:px-0">{children}</main>
       </div>
 
       {/* Bottom Nav Mobile */}
       <nav className="fixed bottom-4 left-4 right-4 h-16 bg-card/95 backdrop-blur-xl border border-card-border rounded-2xl z-50 md:hidden flex items-center justify-around px-2 shadow-lg">
         {navItems.map((group) => {
           const item = group.items[0];
-          const isActive = pathname === item.href || (group.group === 'INTELLIGENCE' && pathname === '/competitors');
+          const isActive =
+            pathname === item.href ||
+            (group.group === 'INTELLIGENCE' && pathname === '/competitors');
           const Icon = item.icon;
           return (
             <Link
               key={item.label}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center p-1 rounded-xl transition-all w-12",
-                isActive ? "text-accent" : "text-text-secondary hover:text-text-primary"
+                'flex flex-col items-center justify-center p-1 rounded-xl transition-all w-12',
+                isActive ? 'text-accent' : 'text-text-secondary hover:text-text-primary',
               )}
             >
               <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
@@ -372,7 +394,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           );
         })}
       </nav>
-      
+
       <CommandPalette open={isCommandOpen} setOpen={setIsCommandOpen} />
       <GlobalAssistantDrawer />
     </div>

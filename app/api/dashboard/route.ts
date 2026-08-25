@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { 
-  getCompetitors, getCompetitorContent, getQueries, getDiscoveryLogs
-} from '@/lib/db';
+import { getCompetitors, getCompetitorContent, getQueries, getDiscoveryLogs } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -9,14 +7,14 @@ export async function GET() {
       getCompetitors(),
       getCompetitorContent(),
       getQueries(),
-      getDiscoveryLogs()
+      getDiscoveryLogs(),
     ]);
 
     return NextResponse.json({
       competitors,
       contentList,
       queries,
-      discoveryLogs
+      discoveryLogs,
     });
   } catch (error) {
     console.error('Error fetching dashboard data:', error);

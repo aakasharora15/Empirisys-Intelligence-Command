@@ -4,7 +4,11 @@ import { performWebSearch } from '../search';
 import { parseModelJson } from '@/lib/ai/parse';
 
 // Helper: Deterministic scoring based on simulated data points
-function calculateBant(companyName: string, industry: string, simulatedData: { recentIncidents: number; daysSinceIncident: number }): BantScore {
+function calculateBant(
+  companyName: string,
+  industry: string,
+  simulatedData: { recentIncidents: number; daysSinceIncident: number },
+): BantScore {
   let budget = 50;
   let authority = 50;
   let need = 50;
@@ -12,13 +16,13 @@ function calculateBant(companyName: string, industry: string, simulatedData: { r
 
   // Need increases if there are recent incidents
   if (simulatedData.recentIncidents > 0) need += 30;
-  
+
   // Timing increases if the incident is very recent
   if (simulatedData.daysSinceIncident < 30) timing += 35;
-  
+
   // Budget depends on industry CapEx
   if (['Oil & Gas', 'Chemicals', 'Offshore Wind'].includes(industry)) budget += 25;
-  
+
   // Authority: Assume finding the right HSE VP is a bit easier in heavily regulated industries
   if (['Oil & Gas', 'Nuclear', 'Chemicals'].includes(industry)) authority += 15;
 
@@ -27,21 +31,21 @@ function calculateBant(companyName: string, industry: string, simulatedData: { r
     authority: Math.min(100, authority),
     need: Math.min(100, need),
     timing: Math.min(100, timing),
-    overall: Math.min(100, (budget + authority + need + timing) / 4)
+    overall: Math.min(100, (budget + authority + need + timing) / 4),
   };
 }
 
 export async function runLeadScoringPipeline(companyName: string): Promise<LeadScoreProfile> {
   // Phase 1: Ingestion & Normalization (Simulated for now)
   const industryMap: Record<string, string> = {
-    'BP': 'Oil & Gas',
-    'Ineos': 'Chemicals',
-    'Shell': 'Oil & Gas',
-    'Orsted': 'Offshore Wind',
+    BP: 'Oil & Gas',
+    Ineos: 'Chemicals',
+    Shell: 'Oil & Gas',
+    Orsted: 'Offshore Wind',
   };
-  
+
   const industry = industryMap[companyName] || 'Manufacturing';
-  
+
   const simulatedData = {
     recentIncidents: Math.random() > 0.3 ? 1 : 0, // 70% chance of a recent incident
     daysSinceIncident: Math.floor(Math.random() * 90) + 1, // 1-90 days ago
@@ -53,8 +57,10 @@ export async function runLeadScoringPipeline(companyName: string): Promise<LeadS
   // Phase 3: Synthesis
   // If no real API key, return a highly realistic mock payload
   if (!aiEnabled()) {
-    console.log('[Lead Scoring Pipeline] No OpenAI API Key found, using fallback simulated response.');
-    
+    console.log(
+      '[Lead Scoring Pipeline] No OpenAI API Key found, using fallback simulated response.',
+    );
+
     // Create a deterministic fallback based on company name
     return {
       companyName: companyName,
@@ -62,26 +68,33 @@ export async function runLeadScoringPipeline(companyName: string): Promise<LeadS
       overallScore: bant.overall,
       bant,
       keyRiskFactors: [
-        "Ageing asset infrastructure leading to containment losses",
-        "Disconnect between corporate safety metrics and frontline reality",
-        "High contractor turnover eroding local safety culture"
+        'Ageing asset infrastructure leading to containment losses',
+        'Disconnect between corporate safety metrics and frontline reality',
+        'High contractor turnover eroding local safety culture',
       ],
-      recommendedProduct: bant.need > 75 ? "SENSE" : "BOOST",
+      recommendedProduct: bant.need > 75 ? 'SENSE' : 'BOOST',
       confidenceLevel: 85,
       rationale: `With recent regulatory pressure in the ${industry} sector, ${companyName} needs to demonstrate proactive safety culture transformation.`,
       displacementStrategy: {
-        incumbentConsultant: "dss+",
-        vulnerability: "Incumbent approach relies on heavy manual audits and legacy checklists that frontline workers ignore.",
-        pitchAngle: "Pitch SENSE as a data-driven, continuous diagnostic that replaces static quarterly audits with real-time cultural insights."
+        incumbentConsultant: 'dss+',
+        vulnerability:
+          'Incumbent approach relies on heavy manual audits and legacy checklists that frontline workers ignore.',
+        pitchAngle:
+          'Pitch SENSE as a data-driven, continuous diagnostic that replaces static quarterly audits with real-time cultural insights.',
       },
-      incident: simulatedData.recentIncidents > 0 ? {
-        id: `inc-${Date.now()}`,
-        incidentType: "Tier 1 Process Safety Event",
-        incidentDescription: `A recent minor loss of primary containment at a regional ${industry.toLowerCase()} facility triggered a regulatory investigation, revealing gaps in barrier management.`,
-        regulatoryNotice: "Improvement Notice issued by Competent Authority.",
-        scenario: "Start-up operations post-turnaround",
-        dateTime: new Date(Date.now() - (simulatedData.daysSinceIncident * 24 * 60 * 60 * 1000)).toISOString()
-      } : undefined
+      incident:
+        simulatedData.recentIncidents > 0
+          ? {
+              id: `inc-${Date.now()}`,
+              incidentType: 'Tier 1 Process Safety Event',
+              incidentDescription: `A recent minor loss of primary containment at a regional ${industry.toLowerCase()} facility triggered a regulatory investigation, revealing gaps in barrier management.`,
+              regulatoryNotice: 'Improvement Notice issued by Competent Authority.',
+              scenario: 'Start-up operations post-turnaround',
+              dateTime: new Date(
+                Date.now() - simulatedData.daysSinceIncident * 24 * 60 * 60 * 1000,
+              ).toISOString(),
+            }
+          : undefined,
     };
   }
 
@@ -135,14 +148,15 @@ Note: The incident block is optional if no real incident applies.
   if (scrapedData) {
     prompt += `\n\n--- LIVE INTERNET DATA ---\nUse the following real-time internet search results to ground your tactical sales dossier in actual recent events for this company:\n${scrapedData}\nIf the data is insufficient, use your deep industry knowledge to generate a realistic simulated dossier.`;
   }
-  
 
-  const textContent = await complete({
-    system: "You are an elite HSE B2B Sales Intelligence AI with deep knowledge of MEDDIC, CCPS RBPS, and Challenger Sale methodologies.\nOutput ONLY JSON, with no markdown formatting.",
-    prompt: prompt,
-    maxTokens: 1500,
-    json: true,
-  }) || '{}';
+  const textContent =
+    (await complete({
+      system:
+        'You are an elite HSE B2B Sales Intelligence AI with deep knowledge of MEDDIC, CCPS RBPS, and Challenger Sale methodologies.\nOutput ONLY JSON, with no markdown formatting.',
+      prompt: prompt,
+      maxTokens: 1500,
+      json: true,
+    })) || '{}';
   const profile = parseModelJson<LeadScoreProfile>(textContent);
   return profile;
 }

@@ -9,13 +9,13 @@ export default async function CompetitorsPage() {
     getCompetitors(),
     getCompetitorContent(),
     getDiscoveryLogs(),
-    scrapeHSEAndCompetitorNews()
+    scrapeHSEAndCompetitorNews(),
   ]);
 
   const combinedContent = [...liveData.competitorContent, ...content];
 
   return (
-    <CompetitorsClient 
+    <CompetitorsClient
       initialCompetitors={competitors}
       initialContent={combinedContent}
       initialDiscoveryLogs={discoveryLogs}

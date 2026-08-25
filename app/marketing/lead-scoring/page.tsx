@@ -1,4 +1,4 @@
-import { LeadScoringMatrix } from "./_components/lead-scoring-matrix";
+import { LeadScoringMatrix } from './_components/lead-scoring-matrix';
 
 export default function LeadScoringPage() {
   return (

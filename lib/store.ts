@@ -47,6 +47,6 @@ export const useStore = create<AppState>()(
     {
       name: 'empirisys-storage', // unique name
       partialize: (state) => ({ colorTheme: state.colorTheme, isSidebarOpen: state.isSidebarOpen }), // Only persist these
-    }
-  )
+    },
+  ),
 );

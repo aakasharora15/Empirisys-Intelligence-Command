@@ -31,7 +31,6 @@ export async function proxy(request: NextRequest) {
 
   // ── API route enforcement ─────────────────────────────────────────────────
   if (pathname.startsWith('/api') && pathname !== '/api/login') {
-
     // Cron-only route: requires dedicated secret, not user JWT
     if (pathname === '/api/discover-competitors') {
       const cronSecret = request.headers.get('Authorization');

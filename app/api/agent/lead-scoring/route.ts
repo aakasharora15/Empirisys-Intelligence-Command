@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     if (!validation.success) {
       return NextResponse.json(
         { error: 'Invalid company name', details: validation.error.flatten() },
-        { status: 400, headers: rateLimit.headers }
+        { status: 400, headers: rateLimit.headers },
       );
     }
 
@@ -28,9 +28,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ profile }, { headers: rateLimit.headers });
   } catch (error) {
     console.error('[LEAD_SCORING_API_ERROR]', error);
-    return NextResponse.json(
-      { error: 'Failed to process lead score pipeline' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to process lead score pipeline' }, { status: 500 });
   }
 }

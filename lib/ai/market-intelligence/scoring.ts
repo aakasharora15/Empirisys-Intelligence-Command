@@ -60,10 +60,7 @@ const HIGH_VALUE_EVENT_TYPES = new Set([
   'capex_announcement',
 ]);
 
-const MID_VALUE_EVENT_TYPES = new Set([
-  'm_and_a',
-  'leadership_change',
-]);
+const MID_VALUE_EVENT_TYPES = new Set(['m_and_a', 'leadership_change']);
 
 /**
  * Rules-based relevance score (0–100).

@@ -1,9 +1,15 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { SFMagnifyingglass as Search, SFBell as Bell, SFMoon as Moon, SFSunMax as Sun, SFLine3Horizontal as Menu } from 'sf-symbols-lib/monochrome';
+import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import {
+  SFMagnifyingglass as Search,
+  SFBell as Bell,
+  SFMoon as Moon,
+  SFSunMax as Sun,
+  SFLine3Horizontal as Menu,
+} from 'sf-symbols-lib/monochrome';
 
 export interface Notification {
   id: string;
@@ -11,7 +17,7 @@ export interface Notification {
   description: string;
   time: string;
   read: boolean;
-  type: "info" | "warning" | "error" | "success";
+  type: 'info' | 'warning' | 'error' | 'success';
 }
 
 export interface UserInfo {
@@ -49,7 +55,7 @@ export function Header({
   className,
 }: HeaderProps) {
   const [notifOpen, setNotifOpen] = useState(false);
-  
+
   const notifRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -63,22 +69,22 @@ export function Header({
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const notifTypeColors: Record<string, string> = {
-    info: "bg-blue-500",
-    warning: "bg-amber-500",
-    error: "bg-red-500",
-    success: "bg-emerald-500",
+    info: 'bg-blue-500',
+    warning: 'bg-amber-500',
+    error: 'bg-red-500',
+    success: 'bg-emerald-500',
   };
 
   return (
     <header
       className={cn(
-        "flex h-14 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-card)] px-4",
-        className
+        'flex h-14 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-card)] px-4',
+        className,
       )}
     >
       {/* Left: Hamburger + Logo */}
@@ -90,7 +96,13 @@ export function Header({
         >
           <Menu className="h-5 w-5" />
         </button>
-        <Image src="/logo.svg" alt="Empirisys" width={120} height={42} className="shrink-0 logo-themed" />
+        <Image
+          src="/logo.svg"
+          alt="Empirisys"
+          width={120}
+          height={42}
+          className="shrink-0 logo-themed"
+        />
       </div>
 
       {/* Center: Search */}
@@ -134,7 +146,7 @@ export function Header({
             <Bell className="h-4 w-4" />
             {unreadCount > 0 && (
               <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-danger)] text-micro font-bold text-white">
-                {unreadCount > 9 ? "9+" : unreadCount}
+                {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
@@ -142,9 +154,13 @@ export function Header({
           {notifOpen && (
             <div className="absolute right-0 top-full z-50 mt-1 w-80 rounded-xl border border-[var(--color-border)] bg-[var(--color-popover)] shadow-xl">
               <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
-                <h3 className="text-sm font-bold text-[var(--color-text-primary)]">Notifications</h3>
+                <h3 className="text-sm font-bold text-[var(--color-text-primary)]">
+                  Notifications
+                </h3>
                 {unreadCount > 0 && (
-                  <span className="text-xs text-[var(--color-text-muted)]">{unreadCount} unread</span>
+                  <span className="text-xs text-[var(--color-text-muted)]">
+                    {unreadCount} unread
+                  </span>
                 )}
               </div>
               <div className="max-h-80 overflow-y-auto">
@@ -156,17 +172,31 @@ export function Header({
                   notifications.map((notif) => (
                     <button
                       key={notif.id}
-                      onClick={() => { onNotificationClick?.(notif); setNotifOpen(false); }}
+                      onClick={() => {
+                        onNotificationClick?.(notif);
+                        setNotifOpen(false);
+                      }}
                       className={cn(
-                        "flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--color-accent)] cursor-pointer",
-                        !notif.read && "bg-[var(--color-primary)]/5"
+                        'flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--color-accent)] cursor-pointer',
+                        !notif.read && 'bg-[var(--color-primary)]/5',
                       )}
                     >
-                      <div className={cn("mt-1.5 h-2 w-2 shrink-0 rounded-full", notifTypeColors[notif.type])} />
+                      <div
+                        className={cn(
+                          'mt-1.5 h-2 w-2 shrink-0 rounded-full',
+                          notifTypeColors[notif.type],
+                        )}
+                      />
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">{notif.title}</p>
-                        <p className="text-xs text-[var(--color-text-muted)] line-clamp-2 mt-0.5">{notif.description}</p>
-                        <p className="text-caption text-[var(--color-text-faint)] mt-1">{notif.time}</p>
+                        <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">
+                          {notif.title}
+                        </p>
+                        <p className="text-xs text-[var(--color-text-muted)] line-clamp-2 mt-0.5">
+                          {notif.description}
+                        </p>
+                        <p className="text-caption text-[var(--color-text-faint)] mt-1">
+                          {notif.time}
+                        </p>
                       </div>
                     </button>
                   ))

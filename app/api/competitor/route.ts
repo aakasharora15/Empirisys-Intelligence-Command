@@ -15,12 +15,12 @@ export async function GET() {
       getCompetitors(),
       getCompetitorContent(),
       getQueries(),
-      getDiscoveryLogs()
+      getDiscoveryLogs(),
     ]);
-    
+
     // Artificial delay to simulate live fetching visualization
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
     return Response.json({ competitors, content, queries, discoveryLogs });
   } catch {
     return Response.json({ error: 'Failed to fetch competitor data' }, { status: 500 });
@@ -42,7 +42,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     const result = RequestSchema.safeParse(body);
     if (!result.success) {
-      return new Response(JSON.stringify({ error: 'Invalid payload parameters' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Invalid payload parameters' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
     const { query } = result.data;
     const hasProvider = aiEnabled();
@@ -56,10 +59,10 @@ export async function POST(req: Request) {
           const words = fallbackResponse.split(' ');
           for (const word of words) {
             controller.enqueue(encoder.encode(word + ' '));
-            await new Promise(r => setTimeout(r, 50));
+            await new Promise((r) => setTimeout(r, 50));
           }
           controller.close();
-        }
+        },
       });
       return new Response(stream, { headers: { 'Content-Type': 'text/plain' } });
     }
@@ -83,14 +86,20 @@ export async function POST(req: Request) {
         } catch (err) {
           controller.error(err);
         } finally {
-          try { controller.close(); } catch { /* already closed */ }
+          try {
+            controller.close();
+          } catch {
+            /* already closed */
+          }
         }
-      }
+      },
     });
 
     return new Response(readable, { headers: { 'Content-Type': 'text/plain' } });
   } catch (error) {
     console.error('Competitor API Error:', error);
-    return new Response('Unable to process the request at this time.', { headers: { 'Content-Type': 'text/plain' } });
+    return new Response('Unable to process the request at this time.', {
+      headers: { 'Content-Type': 'text/plain' },
+    });
   }
 }

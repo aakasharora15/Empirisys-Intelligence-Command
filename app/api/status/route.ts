@@ -11,6 +11,6 @@ export async function GET() {
     anthropic: !!anthropicKey,
     supabase: !!supabaseUrl,
     model: CLAUDE_OPUS,
-    webSearch: !!anthropicKey // we'll tie web search to anthropic key presence
+    webSearch: !!anthropicKey, // we'll tie web search to anthropic key presence
   });
 }

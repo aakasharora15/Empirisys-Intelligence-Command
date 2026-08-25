@@ -4,7 +4,7 @@ import { performWebSearch } from '../search';
 export interface VerifiedThreat {
   id: string;
   title: string;
-  level: "critical" | "high";
+  level: 'critical' | 'high';
   description: string;
   timeAgo: string;
   source: string;
@@ -23,49 +23,81 @@ export interface VerifiedThreat {
 export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
   // If no real API key is present, provide a high-quality deterministic fallback
   if (!aiEnabled()) {
-    console.log('[Threat Scraper] No Anthropic API Key found, using fallback simulated regulatory data.');
+    console.log(
+      '[Threat Scraper] No Anthropic API Key found, using fallback simulated regulatory data.',
+    );
     return [
       {
         id: `thr-${Date.now()}-1`,
-        title: "COMAH Improvement Notice Issued for Aging Assets",
-        level: "critical",
-        description: "The UK HSE has issued an improvement notice to a major North Sea operator regarding severe corrosion under insulation (CUI) on primary containment vessels.",
-        timeAgo: "2 hours ago",
-        source: "UK Health and Safety Executive (HSE) Public Register",
-        companyName: "Illustrative North Sea operator",
-        sector: "Oil & Gas",
+        title: 'COMAH Improvement Notice Issued for Aging Assets',
+        level: 'critical',
+        description:
+          'The UK HSE has issued an improvement notice to a major North Sea operator regarding severe corrosion under insulation (CUI) on primary containment vessels.',
+        timeAgo: '2 hours ago',
+        source: 'UK Health and Safety Executive (HSE) Public Register',
+        companyName: 'Illustrative North Sea operator',
+        sector: 'Oil & Gas',
         bowTieAnalysis: {
-          hazard: "High-pressure hydrocarbons in aging vessels",
-          topEvent: "Loss of Primary Containment (LOPC)",
-          threats: ["Corrosion Under Insulation (CUI)", "Inadequate inspection intervals", "Deferred maintenance"],
-          consequences: ["Fire/Explosion", "Environmental spill", "Regulatory shutdown"],
-          preventativeBarriers: ["Non-destructive testing (NDT)", "Corrosion inhibitors", "Coating integrity management"],
-          mitigativeBarriers: ["Gas detection systems", "Emergency shutdown (ESD) valves", "Deluge systems"]
-        }
+          hazard: 'High-pressure hydrocarbons in aging vessels',
+          topEvent: 'Loss of Primary Containment (LOPC)',
+          threats: [
+            'Corrosion Under Insulation (CUI)',
+            'Inadequate inspection intervals',
+            'Deferred maintenance',
+          ],
+          consequences: ['Fire/Explosion', 'Environmental spill', 'Regulatory shutdown'],
+          preventativeBarriers: [
+            'Non-destructive testing (NDT)',
+            'Corrosion inhibitors',
+            'Coating integrity management',
+          ],
+          mitigativeBarriers: [
+            'Gas detection systems',
+            'Emergency shutdown (ESD) valves',
+            'Deluge systems',
+          ],
+        },
       },
       {
         id: `thr-${Date.now()}-2`,
-        title: "Seveso Directive Violation: Chemical Storage",
-        level: "high",
-        description: "A chemical manufacturing plant in Antwerp has been fined for exceeding permitted storage limits of toxic precursors, violating the Seveso III directive.",
-        timeAgo: "5 hours ago",
-        source: "European Environment Agency (EEA) Enforcement Log",
-        companyName: "Illustrative chemical site operator",
-        sector: "Chemicals",
+        title: 'Seveso Directive Violation: Chemical Storage',
+        level: 'high',
+        description:
+          'A chemical manufacturing plant in Antwerp has been fined for exceeding permitted storage limits of toxic precursors, violating the Seveso III directive.',
+        timeAgo: '5 hours ago',
+        source: 'European Environment Agency (EEA) Enforcement Log',
+        companyName: 'Illustrative chemical site operator',
+        sector: 'Chemicals',
         bowTieAnalysis: {
-          hazard: "Storage of highly toxic chemical precursors",
-          topEvent: "Toxic gas release beyond site boundary",
-          threats: ["Inventory mismanagement", "Failure of inventory tracking software", "Supply chain bottleneck causing stockpile"],
-          consequences: ["Off-site public health impact", "Massive regulatory fine", "Facility closure"],
-          preventativeBarriers: ["Automated inventory hard-stops", "Daily mass balance audits", "Just-in-time delivery protocols"],
-          mitigativeBarriers: ["Scrubber systems", "Shelter-in-place alarms for local community", "Site boundary atmospheric monitoring"]
-        }
-      }
+          hazard: 'Storage of highly toxic chemical precursors',
+          topEvent: 'Toxic gas release beyond site boundary',
+          threats: [
+            'Inventory mismanagement',
+            'Failure of inventory tracking software',
+            'Supply chain bottleneck causing stockpile',
+          ],
+          consequences: [
+            'Off-site public health impact',
+            'Massive regulatory fine',
+            'Facility closure',
+          ],
+          preventativeBarriers: [
+            'Automated inventory hard-stops',
+            'Daily mass balance audits',
+            'Just-in-time delivery protocols',
+          ],
+          mitigativeBarriers: [
+            'Scrubber systems',
+            'Shelter-in-place alarms for local community',
+            'Site boundary atmospheric monitoring',
+          ],
+        },
+      },
     ];
   }
 
   // Live OpenAI parsing of hypothetical regulatory feeds
-  const searchQuery = "UK HSE enforcement notice environmental incident Seveso";
+  const searchQuery = 'UK HSE enforcement notice environmental incident Seveso';
   const scrapedData = await performWebSearch(searchQuery);
 
   let prompt = `
@@ -103,15 +135,15 @@ Output format must be:
     prompt += `\n\nSince no internet data is available, do not fabricate data. Return an empty list of threats.`;
   }
 
-  
-
-  const textContent = await complete({
-    system: "You are an elite European HSE Regulatory Scraping AI with deep knowledge of the BowTie methodology.\nOutput ONLY JSON, with no markdown formatting.",
-    prompt: prompt,
-    maxTokens: 1500,
-    json: true,
-  }) || '{"threats": []}';
-    let parsed = { threats: [] };
+  const textContent =
+    (await complete({
+      system:
+        'You are an elite European HSE Regulatory Scraping AI with deep knowledge of the BowTie methodology.\nOutput ONLY JSON, with no markdown formatting.',
+      prompt: prompt,
+      maxTokens: 1500,
+      json: true,
+    })) || '{"threats": []}';
+  let parsed = { threats: [] };
   try {
     const jsonMatch = textContent.match(/\{[\s\S]*\}/);
     if (jsonMatch) {

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
@@ -18,14 +18,16 @@ export default function HeroSection({
   moduleLabel,
   children,
   belowContent,
-  className
+  className,
 }: HeroSectionProps) {
   return (
-    <div className={cn(
-      "w-full -mt-[84px] pt-[140px] pb-32 md:pb-36 relative overflow-x-clip",
-      "bg-gradient-to-b from-[var(--hero-from)] via-[var(--hero-via)] to-transparent",
-      className
-    )}>
+    <div
+      className={cn(
+        'w-full -mt-[84px] pt-[140px] pb-32 md:pb-36 relative overflow-x-clip',
+        'bg-gradient-to-b from-[var(--hero-from)] via-[var(--hero-via)] to-transparent',
+        className,
+      )}
+    >
       {/* Soft ambient glow */}
       <div className="absolute top-[-30%] right-[15%] w-[400px] h-[400px] bg-accent/6 blur-[120px] rounded-full pointer-events-none ambient-glow" />
       <div className="absolute bottom-[-20%] left-[10%] w-[300px] h-[300px] bg-accent/4 blur-[100px] rounded-full pointer-events-none" />
@@ -44,18 +46,10 @@ export default function HeroSection({
           <p className="text-base text-text-secondary font-sans max-w-2xl leading-relaxed">
             {subtitle}
           </p>
-          {belowContent && (
-            <div className="pt-3">
-              {belowContent}
-            </div>
-          )}
+          {belowContent && <div className="pt-3">{belowContent}</div>}
         </div>
 
-        {children && (
-          <div className="mt-6 w-full">
-            {children}
-          </div>
-        )}
+        {children && <div className="mt-6 w-full">{children}</div>}
       </div>
     </div>
   );

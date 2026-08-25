@@ -18,8 +18,10 @@ const DEMO_INCIDENTS: IncidentIntelligence[] = [
     id: 'demo-1',
     incidentType: 'Tier 1 Process Safety Near-Miss',
     consultantHired: 'ERM',
-    pitchApproach: 'Pitch BOOST to integrate frontline worker safety logs directly into operational dashboards.',
-    incidentDescription: 'Alarm fatigue on a high-pressure system contributed to a near-miss loss of containment during maintenance.',
+    pitchApproach:
+      'Pitch BOOST to integrate frontline worker safety logs directly into operational dashboards.',
+    incidentDescription:
+      'Alarm fatigue on a high-pressure system contributed to a near-miss loss of containment during maintenance.',
     regulatoryNotice: 'Improvement Notice served',
     clientDetails: 'Illustrative offshore operator',
     scenario: 'Offshore Platform',
@@ -29,7 +31,8 @@ const DEMO_INCIDENTS: IncidentIntelligence[] = [
     id: 'demo-2',
     incidentType: 'Safety Culture Degradation',
     consultantHired: 'dss+',
-    pitchApproach: 'Propose SENSE to run automated deep-dives on safety culture metrics instead of manual surveys.',
+    pitchApproach:
+      'Propose SENSE to run automated deep-dives on safety culture metrics instead of manual surveys.',
     incidentDescription: 'Subcontractor accident rate rose sharply following a turnaround phase.',
     regulatoryNotice: 'Internal Audit Flag',
     clientDetails: 'Illustrative onshore processing site',
@@ -50,18 +53,21 @@ export async function GET(req: Request) {
     }
 
     const scrapedData = await performWebSearch(
-      'UK HSE enforcement notice process safety incident OR industrial near miss investigation'
+      'UK HSE enforcement notice process safety incident OR industrial near miss investigation',
     );
 
     if (!scrapedData) {
       // No grounding. Serving demo data is honest; asking the model to fill the
       // gap produced invented incidents attributed to real named operators.
-      console.warn('[Live Incidents] Web search returned no results; serving demo incidents rather than ungrounded output.');
+      console.warn(
+        '[Live Incidents] Web search returned no results; serving demo incidents rather than ungrounded output.',
+      );
       return NextResponse.json({ incidents: DEMO_INCIDENTS, grounded: false });
     }
 
-    const textContent = await complete({
-      system: `You are a real-time web-scraping and intelligence aggregation AI for Empirisys Ltd. 
+    const textContent =
+      (await complete({
+        system: `You are a real-time web-scraping and intelligence aggregation AI for Empirisys Ltd. 
 You will be given real search results. Your task is to extract industrial and process safety incidents that those results actually report.
 
 Return only incidents the supplied results substantiate — fewer than 4, or none at all, is correct if that is all the data shows.
@@ -81,15 +87,14 @@ Each object must perfectly match this interface:
   dateTime: string; (ISO 8601 timestamp taken from the source. Omit if the source does not give one — do not estimate.)
 }
 Output ONLY JSON, with no markdown formatting.`,
-      prompt: "Generate 4 recent live incidents.",
-      maxTokens: 1500,
-      json: true,
-    }) || '{"incidents": []}';
+        prompt: 'Generate 4 recent live incidents.',
+        maxTokens: 1500,
+        json: true,
+      })) || '{"incidents": []}';
     const parsedContent = parseModelJson<{ incidents: IncidentIntelligence[] }>(textContent);
     const incidents: IncidentIntelligence[] = parsedContent.incidents;
 
     return NextResponse.json({ incidents });
-
   } catch (error) {
     console.error('[LIVE_INCIDENTS_ERROR]', error);
     return new NextResponse('Internal Error', { status: 500 });

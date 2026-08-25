@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { ReactNode, useEffect, useState } from "react";
-import AppLayout from "@/components/layout/AppLayout";
-import { useStore } from "@/lib/store";
-import SplashScreen from "@/components/ui/SplashScreen";
+import { ReactNode, useEffect, useState } from 'react';
+import AppLayout from '@/components/layout/AppLayout';
+import { useStore } from '@/lib/store';
+import SplashScreen from '@/components/ui/SplashScreen';
 
 export default function AppLayoutWrapper({ children }: { children: ReactNode }) {
   const { colorTheme } = useStore();
-    const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
 
   // Handle global color theme changes
   useEffect(() => {
@@ -30,14 +30,10 @@ export default function AppLayoutWrapper({ children }: { children: ReactNode }) 
   return (
     <>
       <SplashScreen isVisible={isSplashVisible} />
-      
+
       {/* We only mount the main app layout when the splash screen starts fading out, 
           so the framer-motion dashboard stagger animations play at the perfect time. */}
-      {!isSplashVisible && (
-        <AppLayout>
-          {children}
-        </AppLayout>
-      )}
+      {!isSplashVisible && <AppLayout>{children}</AppLayout>}
     </>
   );
 }

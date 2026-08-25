@@ -35,7 +35,8 @@ const DEMO_THEMES: AggregatedTheme[] = [
       },
       stakeholderViews: {
         ceoSummary: 'A dated, externally imposed trigger we can build a campaign around.',
-        ctoSummary: 'Requires NLP over unstructured maintenance and observation text, which is our core.',
+        ctoSummary:
+          'Requires NLP over unstructured maintenance and observation text, which is our core.',
       },
       vrioAnalysis: {
         valuable: 'Directly addresses a regulatory obligation with a fixed date.',
@@ -91,10 +92,9 @@ export async function GET(req: Request) {
       return NextResponse.json({ themes: DEMO_THEMES });
     }
 
-    
-
-    const textContent = await complete({
-      system: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
+    const textContent =
+      (await complete({
+        system: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
 Your task is to analyze current European (UK/Netherlands) process safety trends and generate 4 highly relevant "AggregatedThemes" based on current events.
 Output strictly in JSON format as an object with a "themes" array containing exactly 4 objects.
 Ensure exactly 2 of the themes have the status "approved", and 2 of the themes have the status "pending_review".
@@ -114,11 +114,11 @@ Each object must perfectly match this interface:
   timestamp: string; (Realistic ISO 8601 string representing when this theme was aggregated, e.g. some 30 mins ago, some 12 hours ago, some 3 days ago)
 }
 Output ONLY JSON, with no markdown formatting.`,
-      prompt: "Generate the 4 aggregated market themes as instructed.",
-      maxTokens: 1500,
-      json: true,
-    }) || '{"themes": []}';
-        let parsedContent = { themes: [] };
+        prompt: 'Generate the 4 aggregated market themes as instructed.',
+        maxTokens: 1500,
+        json: true,
+      })) || '{"themes": []}';
+    let parsedContent = { themes: [] };
     try {
       const jsonMatch = textContent.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
@@ -132,9 +132,8 @@ Output ONLY JSON, with no markdown formatting.`,
     const themes: AggregatedTheme[] = parsedContent.themes ?? [];
 
     return NextResponse.json({
-      themes: themes
+      themes: themes,
     });
-
   } catch (error) {
     console.error('[MARKET_AGENT_ERROR]', error);
     return new NextResponse('Internal Error', { status: 500 });

@@ -1,31 +1,61 @@
-"use client";
+'use client';
 
 import { useEffect, useState, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SFDesktopcomputer as Bot, SFPaperplane as Send, SFPerson as User, SFXmark as CloseIcon } from 'sf-symbols-lib/monochrome';
+import {
+  SFDesktopcomputer as Bot,
+  SFPaperplane as Send,
+  SFPerson as User,
+  SFXmark as CloseIcon,
+} from 'sf-symbols-lib/monochrome';
 import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
 const renderMarkdown = (text: string) => {
   return text.split('\n').map((line, i) => {
     if (!line.trim()) return <br key={i} />;
-    
+
     const boldRegex = /\*\*(.*?)\*\*/g;
-    const htmlLine = line.replace(boldRegex, '<strong class="text-[var(--color-text-primary)]">$1</strong>');
-    
+    const htmlLine = line.replace(
+      boldRegex,
+      '<strong class="text-[var(--color-text-primary)]">$1</strong>',
+    );
+
     if (htmlLine.startsWith('### ')) {
-      return <h4 key={i} className="text-sm font-bold text-[var(--color-text-primary)] mt-3 mb-1" dangerouslySetInnerHTML={{ __html: htmlLine.substring(4) }} />;
+      return (
+        <h4
+          key={i}
+          className="text-sm font-bold text-[var(--color-text-primary)] mt-3 mb-1"
+          dangerouslySetInnerHTML={{ __html: htmlLine.substring(4) }}
+        />
+      );
     }
     if (htmlLine.startsWith('## ')) {
-      return <h3 key={i} className="text-sm font-black text-[var(--color-text-primary)] mt-4 mb-2 uppercase tracking-wide" dangerouslySetInnerHTML={{ __html: htmlLine.substring(3) }} />;
+      return (
+        <h3
+          key={i}
+          className="text-sm font-black text-[var(--color-text-primary)] mt-4 mb-2 uppercase tracking-wide"
+          dangerouslySetInnerHTML={{ __html: htmlLine.substring(3) }}
+        />
+      );
     }
     if (htmlLine.startsWith('# ')) {
-      return <h2 key={i} className="text-base font-black text-[var(--color-primary)] mt-4 mb-2" dangerouslySetInnerHTML={{ __html: htmlLine.substring(2) }} />;
+      return (
+        <h2
+          key={i}
+          className="text-base font-black text-[var(--color-primary)] mt-4 mb-2"
+          dangerouslySetInnerHTML={{ __html: htmlLine.substring(2) }}
+        />
+      );
     }
-    
+
     return (
-      <span key={i} className="block mb-1.5 whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: htmlLine }} />
+      <span
+        key={i}
+        className="block mb-1.5 whitespace-pre-wrap"
+        dangerouslySetInnerHTML={{ __html: htmlLine }}
+      />
     );
   });
 };
@@ -38,7 +68,7 @@ interface Message {
 export function GlobalAssistantDrawer() {
   const pathname = usePathname();
   const { isAssistantOpen, setAssistantOpen } = useStore();
-  
+
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -63,17 +93,17 @@ export function GlobalAssistantDrawer() {
       const response = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           query: userMsg,
-          context: `User is currently viewing path: ${pathname}` 
+          context: `User is currently viewing path: ${pathname}`,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       const fullContent = data.response || "I couldn't process that request.";
       let currentLen = 0;
-      
+
       const typeInterval = setInterval(() => {
         currentLen += 3;
         if (currentLen > fullContent.length) {
@@ -86,10 +116,9 @@ export function GlobalAssistantDrawer() {
           setTypedContent(fullContent.slice(0, currentLen));
         }
       }, 20);
-
     } catch (err) {
       setIsTyping(false);
-      setChatMessages((prev) => [...prev, { role: 'assistant', content: "An error occurred." }]);
+      setChatMessages((prev) => [...prev, { role: 'assistant', content: 'An error occurred.' }]);
     }
   };
 
@@ -105,7 +134,7 @@ export function GlobalAssistantDrawer() {
             onClick={() => setAssistantOpen(false)}
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[90]"
           />
-          
+
           {/* Drawer */}
           <motion.div
             initial={{ x: '100%' }}
@@ -121,11 +150,15 @@ export function GlobalAssistantDrawer() {
                   <Bot className="h-5 w-5 text-[var(--color-primary)]" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[var(--color-text-primary)]">Knowledge Assistant</h3>
-                  <p className="text-xs text-[var(--color-text-muted)] font-medium">Context: {pathname}</p>
+                  <h3 className="font-bold text-[var(--color-text-primary)]">
+                    Knowledge Assistant
+                  </h3>
+                  <p className="text-xs text-[var(--color-text-muted)] font-medium">
+                    Context: {pathname}
+                  </p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setAssistantOpen(false)}
                 className="p-2 text-[var(--color-text-muted)] hover:text-white rounded-full hover:bg-white/5 transition-colors cursor-pointer"
               >
@@ -139,31 +172,40 @@ export function GlobalAssistantDrawer() {
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-70">
                   <Bot className="h-12 w-12 text-[var(--color-primary)]/50" />
                   <p className="text-sm text-[var(--color-text-secondary)] font-medium max-w-[80%]">
-                    I am the Empirisys Command Assistant. I'm connected to the Vector DB and aware of your current context. Ask me anything.
+                    I am the Empirisys Command Assistant. I'm connected to the Vector DB and aware
+                    of your current context. Ask me anything.
                   </p>
                 </div>
               ) : (
                 chatMessages.map((msg, idx) => (
-                  <div 
+                  <div
                     key={idx}
                     className={cn(
-                      "flex items-start gap-3 max-w-[85%]",
-                      msg.role === 'user' ? "ml-auto flex-row-reverse" : ""
+                      'flex items-start gap-3 max-w-[85%]',
+                      msg.role === 'user' ? 'ml-auto flex-row-reverse' : '',
                     )}
                   >
-                    <div className={cn(
-                      "h-8 w-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm",
-                      msg.role === 'user' ? "bg-panel-sec" : "bg-[var(--color-primary)]"
-                    )}>
-                      {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                    <div
+                      className={cn(
+                        'h-8 w-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm',
+                        msg.role === 'user' ? 'bg-panel-sec' : 'bg-[var(--color-primary)]',
+                      )}
+                    >
+                      {msg.role === 'user' ? (
+                        <User className="h-4 w-4" />
+                      ) : (
+                        <Bot className="h-4 w-4" />
+                      )}
                     </div>
 
-                    <div className={cn(
-                      "p-3.5 text-sm leading-relaxed shadow-sm overflow-hidden",
-                      msg.role === 'user' 
-                        ? "bg-white/10 text-white rounded-2xl rounded-tr-none border border-white/10 whitespace-pre-wrap" 
-                        : "bg-background text-[var(--color-text-secondary)] rounded-2xl rounded-tl-none border border-white/5"
-                    )}>
+                    <div
+                      className={cn(
+                        'p-3.5 text-sm leading-relaxed shadow-sm overflow-hidden',
+                        msg.role === 'user'
+                          ? 'bg-white/10 text-white rounded-2xl rounded-tr-none border border-white/10 whitespace-pre-wrap'
+                          : 'bg-background text-[var(--color-text-secondary)] rounded-2xl rounded-tl-none border border-white/5',
+                      )}
+                    >
                       {msg.role === 'user' ? msg.content : renderMarkdown(msg.content)}
                     </div>
                   </div>
@@ -186,7 +228,10 @@ export function GlobalAssistantDrawer() {
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleFormSubmit} className="p-4 border-t border-white/5 bg-background/50 flex items-center gap-3">
+            <form
+              onSubmit={handleFormSubmit}
+              className="p-4 border-t border-white/5 bg-background/50 flex items-center gap-3"
+            >
               <input
                 type="text"
                 value={inputText}

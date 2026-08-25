@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { FilterChip } from "./filter-chip";
-import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { FilterChip } from './filter-chip';
+import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 
-export type FilterType = "text" | "select" | "multiselect" | "date" | "daterange";
+export type FilterType = 'text' | 'select' | 'multiselect' | 'date' | 'daterange';
 
 export interface FilterOption {
   label: string;
@@ -45,15 +45,15 @@ export function FilterBar({
   onFilterChange = () => {},
   onFilterRemove = () => {},
   onClearAll = () => {},
-  searchValue = "",
+  searchValue = '',
   onSearchChange,
-  searchPlaceholder = "Search...",
+  searchPlaceholder = 'Search...',
   className,
 }: FilterBarProps) {
   const [openFilter, setOpenFilter] = useState<string | null>(null);
 
   return (
-    <div className={cn("space-y-3", className)}>
+    <div className={cn('space-y-3', className)}>
       <div className="flex flex-wrap items-center gap-2">
         {/* Search input */}
         {onSearchChange && (
@@ -68,7 +68,7 @@ export function FilterBar({
             />
             {searchValue && (
               <button
-                onClick={() => onSearchChange("")}
+                onClick={() => onSearchChange('')}
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-text-secondary hover:text-text-primary"
               >
                 <X className="h-3.5 w-3.5" />
@@ -83,14 +83,12 @@ export function FilterBar({
           {filters.map((filter) => (
             <div key={filter.id} className="relative">
               <button
-                onClick={() =>
-                  setOpenFilter(openFilter === filter.id ? null : filter.id)
-                }
+                onClick={() => setOpenFilter(openFilter === filter.id ? null : filter.id)}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors",
+                  'flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors',
                   openFilter === filter.id
-                    ? "border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-600 dark:bg-blue-950 dark:text-blue-400"
-                    : "border-card-border bg-card text-text-primary hover:bg-panel dark:border-card-border   "
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-600 dark:bg-blue-950 dark:text-blue-400'
+                    : 'border-card-border bg-card text-text-primary hover:bg-panel dark:border-card-border   ',
                 )}
               >
                 {filter.label}
@@ -99,7 +97,7 @@ export function FilterBar({
 
               {openFilter === filter.id && (
                 <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-card-border bg-card py-1 shadow-lg dark:border-card-border ">
-                  {filter.type === "text" && (
+                  {filter.type === 'text' && (
                     <div className="px-3 py-2">
                       <input
                         type="text"
@@ -107,7 +105,7 @@ export function FilterBar({
                         className="w-full rounded-md border border-card-border bg-card px-3 py-1.5 text-sm dark:border-card-border  "
                         autoFocus
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") {
+                          if (e.key === 'Enter') {
                             const val = (e.target as HTMLInputElement).value;
                             if (val) {
                               onFilterChange(filter.id, val);
@@ -118,29 +116,25 @@ export function FilterBar({
                       />
                     </div>
                   )}
-                  {(filter.type === "select" ||
-                    filter.type === "multiselect") &&
+                  {(filter.type === 'select' || filter.type === 'multiselect') &&
                     filter.options?.map((opt) => (
                       <button
                         key={opt.value}
                         onClick={() => {
                           onFilterChange(filter.id, opt.value);
-                          if (filter.type === "select") setOpenFilter(null);
+                          if (filter.type === 'select') setOpenFilter(null);
                         }}
                         className={cn(
-                          "flex w-full items-center px-4 py-2 text-left text-sm transition-colors hover:bg-panel ",
-                          activeFilters.some(
-                            (af) =>
-                              af.id === filter.id && af.value === opt.value
-                          )
-                            ? "text-blue-700 font-medium dark:text-blue-400"
-                            : "text-text-primary "
+                          'flex w-full items-center px-4 py-2 text-left text-sm transition-colors hover:bg-panel ',
+                          activeFilters.some((af) => af.id === filter.id && af.value === opt.value)
+                            ? 'text-blue-700 font-medium dark:text-blue-400'
+                            : 'text-text-primary ',
                         )}
                       >
                         {opt.label}
                       </button>
                     ))}
-                  {filter.type === "date" && (
+                  {filter.type === 'date' && (
                     <div className="px-3 py-2">
                       <input
                         type="date"
@@ -154,7 +148,7 @@ export function FilterBar({
                       />
                     </div>
                   )}
-                  {filter.type === "daterange" && (
+                  {filter.type === 'daterange' && (
                     <div className="space-y-2 px-3 py-2">
                       <input
                         type="date"
@@ -171,16 +165,13 @@ export function FilterBar({
                       <button
                         onClick={() => {
                           const startEl = document.getElementById(
-                            `${filter.id}-start`
+                            `${filter.id}-start`,
                           ) as HTMLInputElement;
                           const endEl = document.getElementById(
-                            `${filter.id}-end`
+                            `${filter.id}-end`,
                           ) as HTMLInputElement;
                           if (startEl?.value && endEl?.value) {
-                            onFilterChange(
-                              filter.id,
-                              `${startEl.value}~${endEl.value}`
-                            );
+                            onFilterChange(filter.id, `${startEl.value}~${endEl.value}`);
                             setOpenFilter(null);
                           }
                         }}

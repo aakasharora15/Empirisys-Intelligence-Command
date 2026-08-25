@@ -16,6 +16,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ threats }, { headers: rateLimit.headers });
   } catch (error) {
     console.error('[THREAT_MONITOR_API_ERROR]', error);
-    return new NextResponse("Failed to fetch live threats", { status: 500 });
+    return new NextResponse('Failed to fetch live threats', { status: 500 });
   }
 }

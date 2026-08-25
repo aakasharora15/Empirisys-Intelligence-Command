@@ -18,7 +18,7 @@ export interface LeadScoreProfile {
   overallScore: number;
   bant: BantScore;
   keyRiskFactors: string[];
-  recommendedProduct: "BOOST" | "SENSE" | "Both" | "Insight360" | "Leadership360";
+  recommendedProduct: 'BOOST' | 'SENSE' | 'Both' | 'Insight360' | 'Leadership360';
   confidenceLevel: number;
   rationale: string;
   displacementStrategy?: DisplacementStrategy;

@@ -13,12 +13,7 @@ export type EventType =
 
 export type EntityType = 'company' | 'facility' | 'regulator' | 'government';
 
-export type EventLifecycle =
-  | 'extracted'
-  | 'filtered'
-  | 'scored'
-  | 'aggregated'
-  | 'archived';
+export type EventLifecycle = 'extracted' | 'filtered' | 'scored' | 'aggregated' | 'archived';
 
 export type ThemeValidation = 'pending_review' | 'approved' | 'rejected';
 
@@ -26,7 +21,14 @@ export type DeltaStatus = 'new' | 'intensified' | 'faded' | 'stable';
 
 export type EmpProduct = 'Sense' | 'Boost' | 'Insight360' | 'Leadership360';
 
-export type SteepleCategory = 'Socio-cultural' | 'Technological' | 'Economic' | 'Environmental' | 'Political' | 'Legal' | 'Ethical';
+export type SteepleCategory =
+  | 'Socio-cultural'
+  | 'Technological'
+  | 'Economic'
+  | 'Environmental'
+  | 'Political'
+  | 'Legal'
+  | 'Ethical';
 
 export interface MarketEvent {
   id: string;
@@ -188,4 +190,3 @@ export interface MarketLandscape {
   strategicPrecondition: string;
   landscapeSummary: string;
 }
-

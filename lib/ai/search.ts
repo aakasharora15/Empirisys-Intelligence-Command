@@ -1,4 +1,4 @@
-import * as cheerio from "cheerio";
+import * as cheerio from 'cheerio';
 
 /**
  * Performs a real-time web search via DuckDuckGo HTML interface.
@@ -14,11 +14,11 @@ export async function performWebSearch(query: string): Promise<string> {
 
     if (!sanitizedQuery) {
       console.warn('[performWebSearch] Empty or invalid query after sanitization.');
-      return "";
+      return '';
     }
 
     const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(sanitizedQuery)}`;
-    
+
     // 2. Add timeout protection so hanging DuckDuckGo connections don't block serverless execution
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
@@ -27,9 +27,10 @@ export async function performWebSearch(query: string): Promise<string> {
     try {
       response = await fetch(url, {
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          "Accept-Language": "en-US,en;q=0.5",
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
         },
         signal: controller.signal,
       });
@@ -39,12 +40,12 @@ export async function performWebSearch(query: string): Promise<string> {
 
     if (!response.ok) {
       console.warn(`[performWebSearch] DuckDuckGo returned non-OK status: ${response.status}`);
-      return "";
+      return '';
     }
 
     const html = await response.text();
     const $ = cheerio.load(html);
-    
+
     const results: string[] = [];
     $('.result__snippet').each((i, el) => {
       if (i < 5) {
@@ -56,18 +57,20 @@ export async function performWebSearch(query: string): Promise<string> {
         }
       }
     });
-    
-    const combinedResults = results.join("\n\n");
-    
+
+    const combinedResults = results.join('\n\n');
+
     if (combinedResults.length > 0) {
-      console.log(`[performWebSearch] Successfully extracted ${results.length} snippets for query: "${sanitizedQuery}"`);
+      console.log(
+        `[performWebSearch] Successfully extracted ${results.length} snippets for query: "${sanitizedQuery}"`,
+      );
     } else {
       console.log(`[performWebSearch] No snippets found for query: "${sanitizedQuery}"`);
     }
 
     return combinedResults;
   } catch (error) {
-    console.error("[performWebSearch] Web search error:", error);
-    return "";
+    console.error('[performWebSearch] Web search error:', error);
+    return '';
   }
 }

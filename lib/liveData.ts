@@ -2,7 +2,9 @@ import Parser from 'rss-parser';
 import Sentiment from 'sentiment';
 import { CompetitorContent } from './db';
 
-export async function scrapeHSEAndCompetitorNews(): Promise<{ competitorContent: CompetitorContent[] }> {
+export async function scrapeHSEAndCompetitorNews(): Promise<{
+  competitorContent: CompetitorContent[];
+}> {
   const parser = new Parser();
   const sentiment = new Sentiment();
   const competitorContent: CompetitorContent[] = [];
@@ -24,12 +26,14 @@ export async function scrapeHSEAndCompetitorNews(): Promise<{ competitorContent:
         title: title,
         url: item.link || '#',
         source: 'Energy Voice',
-        published_at: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB'),
+        published_at: item.pubDate
+          ? new Date(item.pubDate).toLocaleDateString('en-GB')
+          : new Date().toLocaleDateString('en-GB'),
         summary: (item.contentSnippet || '').slice(0, 120) + '...',
         sentiment_score: sentimentScore,
         relevance_score: Math.floor(Math.random() * 40) + 50,
         engagement_count: Math.floor(Math.random() * 500),
-        topic_tags: ['Energy', 'Market Update']
+        topic_tags: ['Energy', 'Market Update'],
       });
     });
   } catch (err) {

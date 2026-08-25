@@ -19,18 +19,21 @@ export async function POST(req: Request) {
 
     console.log('[MARKET_ANALYST] Pipeline completed. Metrics:', !!result.metrics);
 
-    return NextResponse.json({
-      events: result.events,
-      themes: result.themes,
-      metrics: result.metrics,
-      landscape: result.landscape,
-      meta: {
-        totalEventsExtracted: result.events.length,
-        totalThemes: result.themes.length,
-        totalSegments: result.landscape?.segments?.length || 0,
-        generatedAt: new Date().toISOString(),
+    return NextResponse.json(
+      {
+        events: result.events,
+        themes: result.themes,
+        metrics: result.metrics,
+        landscape: result.landscape,
+        meta: {
+          totalEventsExtracted: result.events.length,
+          totalThemes: result.themes.length,
+          totalSegments: result.landscape?.segments?.length || 0,
+          generatedAt: new Date().toISOString(),
+        },
       },
-    }, { headers: rateLimit.headers });
+      { headers: rateLimit.headers },
+    );
   } catch (error) {
     console.error('[MARKET_ANALYST_PIPELINE_ERROR]', error);
     if (error instanceof Error && error.message === 'AI_PROVIDER_NOT_CONFIGURED') {
@@ -47,10 +50,12 @@ export async function GET(req: Request) {
     return rateLimit.errorResponse;
   }
 
-  return NextResponse.json({
-    status: 'ready',
-    agent: 'market-analyst',
-    pipeline:
-      'event-extraction → scoring → filtering → theme-aggregation → interpretation',
-  }, { headers: rateLimit.headers });
+  return NextResponse.json(
+    {
+      status: 'ready',
+      agent: 'market-analyst',
+      pipeline: 'event-extraction → scoring → filtering → theme-aggregation → interpretation',
+    },
+    { headers: rateLimit.headers },
+  );
 }

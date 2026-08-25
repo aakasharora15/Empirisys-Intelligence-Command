@@ -8,12 +8,7 @@ import type {
   ThemeValidation,
   MarketLandscape,
 } from './types';
-import {
-  calculateRelevance,
-  calculateEvidenceStrength,
-  applyDecay,
-  shouldFilter,
-} from './scoring';
+import { calculateRelevance, calculateEvidenceStrength, applyDecay, shouldFilter } from './scoring';
 import { performWebSearch } from '../search';
 import { parseModelJson } from '@/lib/ai/parse';
 
@@ -245,17 +240,23 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   }
 
   // ── Step 1: Extract events via LLM ──────────────────────
-  const searchQuery = "European process safety HSE news latest OR offshore wind safety OR chemical industry regulations";
+  const searchQuery =
+    'European process safety HSE news latest OR offshore wind safety OR chemical industry regulations';
   const scrapedData = await performWebSearch(searchQuery);
-  
-  let userContent = 'Generate a fresh batch of market intelligence events for the current period. Today\'s date is ' + new Date().toISOString().slice(0, 10) + '.';
-  
+
+  let userContent =
+    "Generate a fresh batch of market intelligence events for the current period. Today's date is " +
+    new Date().toISOString().slice(0, 10) +
+    '.';
+
   if (scrapedData) {
     userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this data as the sole factual basis for the events you extract. Return only the events the data actually supports, even if that is fewer than 8. DO NOT invent or fabricate events, entities, dates or URLs to reach a target count.`;
   } else {
     // Search returned nothing. Without grounding there is no factual basis for
     // any event, so return empty rather than letting the model supply one.
-    console.warn('[Market Intelligence] Web search returned no results; skipping extraction rather than generating ungrounded events.');
+    console.warn(
+      '[Market Intelligence] Web search returned no results; skipping extraction rather than generating ungrounded events.',
+    );
     return {
       events: [],
       themes: [],
@@ -316,9 +317,9 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   const filteredEvents = scoredEvents.filter(shouldFilter);
 
   if (filteredEvents.length === 0) {
-    return { 
-      events: [], 
-      themes: [], 
+    return {
+      events: [],
+      themes: [],
       metrics: { trendVelocity: [], competitorPositioning: [], budgetAllocation: [] },
       landscape: null,
     };
@@ -358,20 +359,98 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   // Fallback metrics with realistic sample data if LLM fails to generate them
   const fallbackMetrics = {
     trendVelocity: [
-      { day: 'Mon', sociocultural: 3, technological: 7, economic: 5, environmental: 8, political: 2, legal: 6, ethical: 1 },
-      { day: 'Tue', sociocultural: 4, technological: 9, economic: 6, environmental: 7, political: 3, legal: 8, ethical: 2 },
-      { day: 'Wed', sociocultural: 2, technological: 8, economic: 4, environmental: 10, political: 5, legal: 7, ethical: 3 },
-      { day: 'Thu', sociocultural: 5, technological: 6, economic: 8, environmental: 9, political: 4, legal: 9, ethical: 2 },
-      { day: 'Fri', sociocultural: 3, technological: 10, economic: 7, environmental: 6, political: 6, legal: 5, ethical: 4 },
-      { day: 'Sat', sociocultural: 6, technological: 8, economic: 5, environmental: 11, political: 3, legal: 10, ethical: 1 },
-      { day: 'Sun', sociocultural: 4, technological: 7, economic: 9, environmental: 8, political: 7, legal: 6, ethical: 3 },
+      {
+        day: 'Mon',
+        sociocultural: 3,
+        technological: 7,
+        economic: 5,
+        environmental: 8,
+        political: 2,
+        legal: 6,
+        ethical: 1,
+      },
+      {
+        day: 'Tue',
+        sociocultural: 4,
+        technological: 9,
+        economic: 6,
+        environmental: 7,
+        political: 3,
+        legal: 8,
+        ethical: 2,
+      },
+      {
+        day: 'Wed',
+        sociocultural: 2,
+        technological: 8,
+        economic: 4,
+        environmental: 10,
+        political: 5,
+        legal: 7,
+        ethical: 3,
+      },
+      {
+        day: 'Thu',
+        sociocultural: 5,
+        technological: 6,
+        economic: 8,
+        environmental: 9,
+        political: 4,
+        legal: 9,
+        ethical: 2,
+      },
+      {
+        day: 'Fri',
+        sociocultural: 3,
+        technological: 10,
+        economic: 7,
+        environmental: 6,
+        political: 6,
+        legal: 5,
+        ethical: 4,
+      },
+      {
+        day: 'Sat',
+        sociocultural: 6,
+        technological: 8,
+        economic: 5,
+        environmental: 11,
+        political: 3,
+        legal: 10,
+        ethical: 1,
+      },
+      {
+        day: 'Sun',
+        sociocultural: 4,
+        technological: 7,
+        economic: 9,
+        environmental: 8,
+        political: 7,
+        legal: 6,
+        ethical: 3,
+      },
     ],
     competitorPositioning: [
-      { competitorName: 'Empirisys', innovationScore: 82, marketShareScore: 35, threatLevel: 'Low' },
+      {
+        competitorName: 'Empirisys',
+        innovationScore: 82,
+        marketShareScore: 35,
+        threatLevel: 'Low',
+      },
       { competitorName: 'Sphera', innovationScore: 68, marketShareScore: 55, threatLevel: 'High' },
       { competitorName: 'Enablon', innovationScore: 72, marketShareScore: 48, threatLevel: 'High' },
-      { competitorName: 'Intelex', innovationScore: 60, marketShareScore: 40, threatLevel: 'Medium' },
-      { competitorName: 'Cority', innovationScore: 55, marketShareScore: 30, threatLevel: 'Medium' },
+      {
+        competitorName: 'Intelex',
+        innovationScore: 60,
+        marketShareScore: 40,
+        threatLevel: 'Medium',
+      },
+      {
+        competitorName: 'Cority',
+        innovationScore: 55,
+        marketShareScore: 30,
+        threatLevel: 'Medium',
+      },
     ],
     budgetAllocation: [
       { category: 'Software & AI', allocationPercentage: 35, trend: 'Increasing' },
@@ -383,9 +462,18 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
 
   const rawMetrics = parsedAggregation.metrics || {};
   const metrics = {
-    trendVelocity: (rawMetrics.trendVelocity && rawMetrics.trendVelocity.length > 0) ? rawMetrics.trendVelocity : fallbackMetrics.trendVelocity,
-    competitorPositioning: (rawMetrics.competitorPositioning && rawMetrics.competitorPositioning.length > 0) ? rawMetrics.competitorPositioning : fallbackMetrics.competitorPositioning,
-    budgetAllocation: (rawMetrics.budgetAllocation && rawMetrics.budgetAllocation.length > 0) ? rawMetrics.budgetAllocation : fallbackMetrics.budgetAllocation,
+    trendVelocity:
+      rawMetrics.trendVelocity && rawMetrics.trendVelocity.length > 0
+        ? rawMetrics.trendVelocity
+        : fallbackMetrics.trendVelocity,
+    competitorPositioning:
+      rawMetrics.competitorPositioning && rawMetrics.competitorPositioning.length > 0
+        ? rawMetrics.competitorPositioning
+        : fallbackMetrics.competitorPositioning,
+    budgetAllocation:
+      rawMetrics.budgetAllocation && rawMetrics.budgetAllocation.length > 0
+        ? rawMetrics.budgetAllocation
+        : fallbackMetrics.budgetAllocation,
   };
 
   // ── Step 6 & 7: Link events, compute theme scores ─────
@@ -399,8 +487,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     const themeRelevance =
       linkedEvents.length > 0
         ? Math.round(
-            linkedEvents.reduce((sum, e) => sum + e.relevanceScore, 0) /
-              linkedEvents.length,
+            linkedEvents.reduce((sum, e) => sum + e.relevanceScore, 0) / linkedEvents.length,
           )
         : 0;
 
@@ -440,7 +527,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     const landscapeText = await complete({
       system: LANDSCAPE_SYSTEM_PROMPT,
       prompt:
-        'Here are the market events and strategic themes extracted from the current intelligence cycle. Use them as your evidence base to build the market landscape and growth strategy.\n\nToday\'s date is ' +
+        "Here are the market events and strategic themes extracted from the current intelligence cycle. Use them as your evidence base to build the market landscape and growth strategy.\n\nToday's date is " +
         new Date().toISOString().slice(0, 10) +
         '.\n\nEmpirisys Products:\n- SENSE: Real-time AI anomaly detection for process safety\n- BOOST: AI-powered safety performance improvement platform\n- Insight360: Comprehensive HSE analytics and reporting\n- Leadership360: Leadership safety culture assessment\n\n' +
         JSON.stringify(landscapeContext, null, 2),
@@ -458,7 +545,10 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
       };
     }
 
-    console.log('[MARKET_ANALYST] Landscape analysis completed. Segments:', landscape?.segments?.length || 0);
+    console.log(
+      '[MARKET_ANALYST] Landscape analysis completed. Segments:',
+      landscape?.segments?.length || 0,
+    );
   } catch (landscapeError) {
     console.error('[MARKET_ANALYST] Landscape analysis failed (non-fatal):', landscapeError);
     // Landscape is optional — pipeline still returns events, themes, metrics

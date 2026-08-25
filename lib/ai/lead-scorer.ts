@@ -4,7 +4,7 @@ import { complete } from '@/lib/ai/client';
 
 /**
  * HSE Lead-Scoring Agent Engine
- * 
+ *
  * Implements the exact workflow specified:
  * 1. Data Ingestion Layer (Interface)
  * 2. Trigger Event Filter (LLM-powered extraction)
@@ -13,17 +13,23 @@ import { complete } from '@/lib/ai/client';
  */
 export class LeadScoringAgent {
   async processIncomingSignal(signal: RawSignal): Promise<ExecutiveOutput | null> {
-    console.log(`[Data Ingestion Layer] Processing signal from ${signal.sourceType}: ${signal.sourceUrl}`);
+    console.log(
+      `[Data Ingestion Layer] Processing signal from ${signal.sourceType}: ${signal.sourceUrl}`,
+    );
 
     // Step 1: Trigger Event Filter
     const triggerEvent = await this.triggerEventFilter(signal.rawText);
-    
+
     if (!triggerEvent) {
-      console.log(`[Trigger Event Filter] No operational vulnerabilities found. Discarding signal.`);
+      console.log(
+        `[Trigger Event Filter] No operational vulnerabilities found. Discarding signal.`,
+      );
       return null;
     }
 
-    console.log(`[Trigger Event Filter] Identified: ${triggerEvent.type} at ${triggerEvent.companyName}`);
+    console.log(
+      `[Trigger Event Filter] Identified: ${triggerEvent.type} at ${triggerEvent.companyName}`,
+    );
 
     // Step 2: Matrix Scoring Engine
     const score = await this.matrixScoringEngine(triggerEvent);
@@ -31,7 +37,11 @@ export class LeadScoringAgent {
 
     // Step 3: Automated Executive Output
     if (score.totalScore >= 70) {
-      const executiveBrief = await this.generateExecutiveOutput(triggerEvent, score, signal.rawText);
+      const executiveBrief = await this.generateExecutiveOutput(
+        triggerEvent,
+        score,
+        signal.rawText,
+      );
       return executiveBrief;
     }
 
@@ -39,10 +49,9 @@ export class LeadScoringAgent {
   }
 
   private async triggerEventFilter(rawText: string): Promise<TriggerEvent | null> {
-    
-
-    const textContent = await complete({
-      system: `You are the Empirisys Lead Qualification Filter.
+    const textContent =
+      (await complete({
+        system: `You are the Empirisys Lead Qualification Filter.
 Analyze the following market signal and identify if it contains a high-value trigger event.
 Valid types: 'safety_near_miss', 'environmental_fine', 'plant_modernization', 'new_head_of_process_safety'.
 
@@ -56,18 +65,18 @@ If a valid trigger event is found, output JSON:
 }
 If no valid trigger is found, output: { "isValid": false }
 Output ONLY JSON, with no markdown formatting.`,
-      prompt: rawText,
-      maxTokens: 1000,
-      json: true,
-    }) || '{"isValid": false}';
+        prompt: rawText,
+        maxTokens: 1000,
+        json: true,
+      })) || '{"isValid": false}';
     const parsed = parseModelJson<{ isValid?: boolean } & Partial<TriggerEvent>>(textContent);
-    
+
     if (parsed.isValid && parsed.type) {
       return {
         type: parsed.type,
         description: parsed.description ?? '',
         companyName: parsed.companyName ?? '',
-        location: parsed.location ?? ''
+        location: parsed.location ?? '',
       };
     }
     return null;
@@ -80,9 +89,14 @@ Output ONLY JSON, with no markdown formatting.`,
     let familiarityAlignmentScore = 50;
 
     const companyLower = trigger.companyName.toLowerCase();
-    
+
     // High Asset Value Targets
-    if (companyLower.includes('rotterdam') || companyLower.includes('basf') || companyLower.includes('shell') || companyLower.includes('bp')) {
+    if (
+      companyLower.includes('rotterdam') ||
+      companyLower.includes('basf') ||
+      companyLower.includes('shell') ||
+      companyLower.includes('bp')
+    ) {
       marketSizeScore = 95;
     }
 
@@ -92,27 +106,36 @@ Output ONLY JSON, with no markdown formatting.`,
     }
 
     // Familiarity Alignment (similarity to Empirisys's UK/European energy baseline)
-    if (trigger.location.toLowerCase().includes('uk') || trigger.location.toLowerCase().includes('germany') || trigger.location.toLowerCase().includes('netherlands')) {
+    if (
+      trigger.location.toLowerCase().includes('uk') ||
+      trigger.location.toLowerCase().includes('germany') ||
+      trigger.location.toLowerCase().includes('netherlands')
+    ) {
       familiarityAlignmentScore = 90;
     }
 
-    const totalScore = Math.round((marketSizeScore * 0.4) + (regulatoryPressureScore * 0.4) + (familiarityAlignmentScore * 0.2));
+    const totalScore = Math.round(
+      marketSizeScore * 0.4 + regulatoryPressureScore * 0.4 + familiarityAlignmentScore * 0.2,
+    );
 
     return {
       marketSizeScore,
       regulatoryPressureScore,
       familiarityAlignmentScore,
-      totalScore
+      totalScore,
     };
   }
 
-  private async generateExecutiveOutput(trigger: TriggerEvent, score: MatrixScore, rawText: string): Promise<ExecutiveOutput> {
+  private async generateExecutiveOutput(
+    trigger: TriggerEvent,
+    score: MatrixScore,
+    rawText: string,
+  ): Promise<ExecutiveOutput> {
     const productRecommendation = trigger.type === 'plant_modernization' ? 'BOOST' : 'DETECT';
 
-    
-
-    const textContent = await complete({
-      system: `You are an elite Enterprise B2B Sales Partner with decades of experience closing high-ticket deals at top global management consulting firms (e.g., McKinsey, Big Four). Your logic must reflect the absolute highest echelon of elite corporate deal structuring and strategic client acquisition.
+    const textContent =
+      (await complete({
+        system: `You are an elite Enterprise B2B Sales Partner with decades of experience closing high-ticket deals at top global management consulting firms (e.g., McKinsey, Big Four). Your logic must reflect the absolute highest echelon of elite corporate deal structuring and strategic client acquisition.
 You are preparing an executive pitch brief based on a new trigger event.
 Empirisys sells two main products: 
 - DETECT (predictive AI safety monitoring, best for preventing fines/accidents)
@@ -148,10 +171,10 @@ Output JSON matching exactly this schema:
   }
 }
 Output ONLY JSON, with no markdown formatting.`,
-      prompt: `Trigger Event: ${JSON.stringify(trigger)}\nRaw Signal Context: ${rawText}`,
-      maxTokens: 1500,
-      json: true,
-    }) || '{}';
+        prompt: `Trigger Event: ${JSON.stringify(trigger)}\nRaw Signal Context: ${rawText}`,
+        maxTokens: 1500,
+        json: true,
+      })) || '{}';
     return parseModelJson<ExecutiveOutput>(textContent);
   }
 }

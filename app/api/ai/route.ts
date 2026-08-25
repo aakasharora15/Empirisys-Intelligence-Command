@@ -78,7 +78,10 @@ export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
     if (!checkRateLimit(ip)) {
-      return NextResponse.json({ error: 'Rate limit exceeded. Please wait a moment.' }, { status: 429 });
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Please wait a moment.' },
+        { status: 429 },
+      );
     }
 
     const body = await req.json();
@@ -89,7 +92,8 @@ export async function POST(req: Request) {
     }
 
     const { prompt, moduleType } = result.data;
-    const systemPrompt = SYSTEM_PROMPTS[moduleType as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.general;
+    const systemPrompt =
+      SYSTEM_PROMPTS[moduleType as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.general;
 
     if (!aiEnabled()) {
       return NextResponse.json({ error: 'No AI provider configured' }, { status: 503 });
@@ -109,7 +113,9 @@ export async function POST(req: Request) {
         } catch (err) {
           controller.error(err);
         } finally {
-          try { controller.close(); } catch (e) {}
+          try {
+            controller.close();
+          } catch (e) {}
         }
       },
     });
@@ -118,7 +124,7 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'text/plain',
         'Cache-Control': 'no-cache, no-transform',
-        'Connection': 'keep-alive',
+        Connection: 'keep-alive',
       },
     });
   } catch (err) {

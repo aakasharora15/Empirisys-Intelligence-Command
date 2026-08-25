@@ -1,38 +1,36 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
+import React from 'react';
+import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 
 export interface FilterChipProps {
   label: string;
   value: string;
   onDismiss: () => void;
-  color?: "blue" | "green" | "amber" | "red" | "zinc";
+  color?: 'blue' | 'green' | 'amber' | 'red' | 'zinc';
   className?: string;
 }
 
 const colorMap = {
-  blue: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
-  green:
-    "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300",
-  amber:
-    "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
-  red: "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
-  zinc: "bg-panel text-text-primary  ",
+  blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+  green: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300',
+  amber: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300',
+  red: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
+  zinc: 'bg-panel text-text-primary  ',
 };
 
 export function FilterChip({
   label,
   value,
   onDismiss,
-  color = "blue",
+  color = 'blue',
   className,
 }: FilterChipProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium",
+        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium',
         colorMap[color],
-        className
+        className,
       )}
     >
       <span className="text-current/60">{label}:</span>
