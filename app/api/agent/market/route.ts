@@ -56,7 +56,7 @@ Output ONLY JSON, with no markdown formatting.`,
     const textContent = completion.content.find(c => c.type === 'text')?.text || '{"themes": []}';
         let parsedContent = { themes: [] };
     try {
-      const jsonMatch = textContent.match(/\{.*\}/s);
+      const jsonMatch = textContent.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         parsedContent = JSON.parse(jsonMatch[0]);
       } else {

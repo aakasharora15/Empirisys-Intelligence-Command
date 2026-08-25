@@ -120,7 +120,7 @@ Output format must be:
   const textContent = completion.content.find(c => c.type === 'text')?.text || '{"threats": []}';
     let parsed = { threats: [] };
   try {
-    const jsonMatch = textContent.match(/\{.*\}/s);
+    const jsonMatch = textContent.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       parsed = JSON.parse(jsonMatch[0]);
     } else {
