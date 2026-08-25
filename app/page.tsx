@@ -3,6 +3,7 @@ import {
 } from '@/lib/db';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DeepResearchEngine from '@/components/dashboard/DeepResearchEngine';
+import MarketingOverview from '@/components/dashboard/MarketingOverview';
 import PortersFiveForces from '@/components/dashboard/frameworks/PortersFiveForces';
 import BlueOceanCanvas from '@/components/dashboard/frameworks/BlueOceanCanvas';
 import VrioAnalysis from '@/components/dashboard/frameworks/VrioAnalysis';
@@ -35,6 +36,11 @@ export default async function DashboardPage() {
       {/* Automated Deep Research Engine (Phase 2 Feature) */}
       <div className="mt-8 border-t border-card-border/50 pt-10">
         <DeepResearchEngine />
+      </div>
+
+      {/* Marketing Intelligence Overview */}
+      <div className="mt-8 pt-10">
+        <MarketingOverview />
       </div>
 
       {/* Advanced Competitor Analysis Frameworks */}
