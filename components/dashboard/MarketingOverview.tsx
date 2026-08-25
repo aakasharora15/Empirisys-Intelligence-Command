@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Shield, Eye, Radio, ArrowRight, Zap, Target } from 'lucide-react';
+import { Eye, Radio, ArrowRight, Zap, Target } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MarketingOverview() {

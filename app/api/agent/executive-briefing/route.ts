@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { scrapeLiveThreats } from '@/lib/ai/threat-monitor/scraper';
@@ -47,7 +48,7 @@ export async function GET(req: Request) {
     }
 
     const completion = await anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: CLAUDE_OPUS,
       max_tokens: 1500,
       system: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
 Review the following live threat feed detected in the last 24 hours:

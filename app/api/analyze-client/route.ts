@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { mockClientAnalyses, ClientAnalysis } from '@/lib/db';
 
@@ -168,7 +169,7 @@ export async function POST(req: Request) {
     Provide realistic, detailed, high fidelity text and do not use dashes.`;
 
     const stream = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
+      model: CLAUDE_OPUS,
       max_tokens: 3000,
       system: "You are a sales intelligence analyst for Empirisys. Do not output any dashes in your response.",
       messages: [{ role: 'user', content: prompt }],

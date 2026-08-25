@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { getCompetitors, getCompetitorContent, getQueries, getDiscoveryLogs } from '@/lib/db';
 import { z } from 'zod';
@@ -71,7 +72,7 @@ export async function POST(req: Request) {
     Data: ${JSON.stringify(competitorsData, null, 2)}`;
 
     const stream = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
+      model: CLAUDE_OPUS,
       max_tokens: 4000,
       system: systemPrompt,
       messages: [{ role: 'user', content: query }],

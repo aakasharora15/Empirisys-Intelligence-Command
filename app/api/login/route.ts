@@ -1,15 +1,21 @@
 import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-for-development-do-not-use-in-prod'
-);
-
 export async function POST(req: Request) {
   try {
     const { password } = await req.json();
 
-    if (password === 'Empirisys1' || password === process.env.ADMIN_PASSWORD) {
+    if (!process.env.JWT_SECRET) {
+      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+    }
+
+    if (!process.env.ADMIN_PASSWORD) {
+      return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+    }
+
+    const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+    if (password && password === process.env.ADMIN_PASSWORD) {
       // Create a secure JWT payload
       const token = await new SignJWT({ auth: true })
         .setProtectedHeader({ alg: 'HS256' })

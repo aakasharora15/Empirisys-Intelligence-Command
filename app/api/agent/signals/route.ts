@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
@@ -35,7 +36,7 @@ export async function GET(req: Request) {
     }
 
     const completion = await anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: CLAUDE_OPUS,
       max_tokens: 1500,
       system: `You are an elite HSE (Health, Safety, and Environment) Market Intelligence AI. 
 Your job is to scrape simulated real-time data and generate 5 highly realistic, up-to-the-minute market signals relevant to process safety, industrial risk, and HSE consulting in Europe (especially UK/Netherlands).

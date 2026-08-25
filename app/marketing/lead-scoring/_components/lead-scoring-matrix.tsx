@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Loader2, Search, Target, Zap, CheckCircle2, ShieldAlert, AlertTriangle, Briefcase, Lightbulb, Clock, Activity, Building2, X, Network } from "lucide-react";
+import { Loader2, Search, Target, Zap, CheckCircle2, ShieldAlert, AlertTriangle, Briefcase, Lightbulb, Clock, Activity, Building2, X } from "lucide-react";
 import { IncidentIntelligence } from "@/types/domain";
 import { LeadScoreProfile } from "@/lib/ai/lead-scoring/types";
 import HeroSection from "@/components/ui/HeroSection";
@@ -12,10 +12,7 @@ export function LeadScoringMatrix() {
   const [profile, setProfile] = useState<LeadScoreProfile | null>(null);
   const [liveIncidents, setLiveIncidents] = useState<IncidentIntelligence[]>([]);
   const [priorityTargets, setPriorityTargets] = useState<string[]>([]);
-
-  useEffect(() => {
-    fetchLiveIncidents();
-  }, []);
+  const [now] = useState(() => now);
 
   const fetchLiveIncidents = async () => {
     try {
@@ -40,6 +37,10 @@ export function LeadScoringMatrix() {
       console.error(e);
     }
   };
+
+  useEffect(() => {
+    fetchLiveIncidents();
+  }, []);
 
   const handleAnalyze = async (overrideCompanyName?: string) => {
     const targetCompany = overrideCompanyName || companyName;
@@ -149,7 +150,7 @@ export function LeadScoringMatrix() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {liveIncidents.map((incident) => {
-              const hoursAgo = Math.floor((Date.now() - new Date(incident.dateTime).getTime()) / (1000 * 60 * 60));
+              const hoursAgo = Math.floor((now - new Date(incident.dateTime).getTime()) / (1000 * 60 * 60));
               const timeString = hoursAgo < 24 ? `${Math.max(1, hoursAgo)}h ago` : `${Math.floor(hoursAgo / 24)}d ago`;
               const baseCompany = incident.clientDetails.split('-')[0].trim();
 

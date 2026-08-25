@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { IncidentIntelligence } from '@/types/domain';
@@ -47,7 +48,7 @@ export async function GET(req: Request) {
     }
 
     const completion = await anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: CLAUDE_OPUS,
       max_tokens: 1500,
       system: `You are a real-time web-scraping and intelligence aggregation AI for Empirisys Ltd. 
 Your task is to surface 4 recent, highly plausible, or authentic industrial/process safety incidents from major European players (e.g. Shell, BP, Balfour Beatty, TotalEnergies, National Grid, Equinor).

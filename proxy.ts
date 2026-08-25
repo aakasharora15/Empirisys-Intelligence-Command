@@ -1,11 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { jwtVerify } from 'jose';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-for-development-do-not-use-in-prod'
-);
 
 // Fallback in-memory rate limiter (used when Upstash Redis is not configured)
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
@@ -31,17 +26,6 @@ function checkMemoryRateLimit(ip: string): boolean {
   return true;
 }
 
-async function isAuthenticated(request: NextRequest): Promise<boolean> {
-  const authCookie = request.cookies.get('eih_auth');
-  if (!authCookie?.value) return false;
-  try {
-    await jwtVerify(authCookie.value, JWT_SECRET);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -51,20 +35,16 @@ export async function proxy(request: NextRequest) {
     // Cron-only route: requires dedicated secret, not user JWT
     if (pathname === '/api/discover-competitors') {
       const cronSecret = request.headers.get('Authorization');
-      const expected = process.env.CRON_SECRET
-        ? `Bearer ${process.env.CRON_SECRET}`
-        : 'Bearer empirisys-cron-secret';
-      if (cronSecret !== expected) {
+      const expected = process.env.CRON_SECRET ? `Bearer ${process.env.CRON_SECRET}` : undefined;
+      if (!expected || cronSecret !== expected) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
     } else {
-      // All other API routes require a valid user JWT
-      if (!(await isAuthenticated(request))) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+      // Demo Mode: We've removed JWT auth for API routes because this is an open wireframe demo.
+      // If we wanted to re-enable auth, we'd add jwtVerify here.
     }
 
-    // Global rate limit applied after auth passes
+    // Global rate limit applied
     const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
 
     if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
@@ -98,9 +78,6 @@ export async function proxy(request: NextRequest) {
   ];
   if (protectedPages.includes(pathname)) {
     // Auth redirect disabled for presentation/screenshot mode
-    // if (!(await isAuthenticated(request))) {
-    //   return NextResponse.redirect(new URL('/login', request.url));
-    // }
   }
 
   // ── Security headers on every response ───────────────────────────────────

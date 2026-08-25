@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -9,7 +10,7 @@ export async function GET() {
   return NextResponse.json({
     anthropic: !!anthropicKey,
     supabase: !!supabaseUrl,
-    model: 'claude-opus-4-6',
+    model: CLAUDE_OPUS,
     webSearch: !!anthropicKey // we'll tie web search to anthropic key presence
   });
 }

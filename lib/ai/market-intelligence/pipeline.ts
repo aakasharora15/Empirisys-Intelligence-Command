@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import type {
   MarketEvent,
@@ -255,7 +256,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   }
 
   const extractionResponse = await anthropic.messages.create({
-    model: 'claude-3-opus-20240229',
+    model: CLAUDE_OPUS,
     max_tokens: 2000,
     temperature: 0.4,
     system: EXTRACTION_SYSTEM_PROMPT,
@@ -335,7 +336,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   }));
 
   const aggregationResponse = await anthropic.messages.create({
-    model: 'claude-3-opus-20240229',
+    model: CLAUDE_OPUS,
     max_tokens: 2500,
     temperature: 0.3,
     system: AGGREGATION_SYSTEM_PROMPT,
@@ -442,7 +443,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     };
 
     const landscapeResponse = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
+      model: CLAUDE_OPUS,
       max_tokens: 1500,
       temperature: 0.3,
       system: LANDSCAPE_SYSTEM_PROMPT,

@@ -1,3 +1,4 @@
+import { CLAUDE_SONNET } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { z } from 'zod';
@@ -96,7 +97,7 @@ export async function POST(req: Request) {
     const systemPrompt = SYSTEM_PROMPTS[moduleType as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.general;
 
     const stream = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: CLAUDE_SONNET,
       max_tokens: 1024,
       system: systemPrompt,
       messages: [{ role: 'user', content: prompt }],
@@ -114,14 +115,14 @@ export async function POST(req: Request) {
         } catch (err) {
           controller.error(err);
         } finally {
-          controller.close();
+          try { controller.close(); } catch (e) {}
         }
       },
     });
 
     return new Response(readableStream, {
       headers: {
-        'Content-Type': 'text/event-stream',
+        'Content-Type': 'text/plain',
         'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
       },

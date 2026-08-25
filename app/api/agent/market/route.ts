@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { AggregatedTheme } from '@/lib/ai/market-intelligence/types';
@@ -22,7 +23,7 @@ export async function GET(req: Request) {
     }
 
     const completion = await anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: CLAUDE_OPUS,
       max_tokens: 1500,
       system: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
 Your task is to analyze current European (UK/Netherlands) process safety trends and generate 4 highly relevant "AggregatedThemes" based on current events.
@@ -47,13 +48,23 @@ Output ONLY JSON, with no markdown formatting.`,
       messages: [
         {
           role: "user",
-          content: "Generate the latest 2 aggregated market themes."
+          content: "Generate the 4 aggregated market themes as instructed."
         }
       ]
     });
 
     const textContent = completion.content.find(c => c.type === 'text')?.text || '{"themes": []}';
-    const parsedContent = JSON.parse(textContent);
+        let parsedContent = { themes: [] };
+    try {
+      const jsonMatch = textContent.match(/\{.*\}/s);
+      if (jsonMatch) {
+        parsedContent = JSON.parse(jsonMatch[0]);
+      } else {
+        parsedContent = JSON.parse(textContent);
+      }
+    } catch (e) {
+      console.error('Failed to parse themes JSON', e);
+    }
     const themes: AggregatedTheme[] = parsedContent.themes;
 
     return NextResponse.json({

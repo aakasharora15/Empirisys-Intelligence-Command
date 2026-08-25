@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import { RawSignal, TriggerEvent, MatrixScore, ExecutiveOutput } from './types';
 
@@ -45,7 +46,7 @@ export class LeadScoringAgent {
 
   private async triggerEventFilter(rawText: string): Promise<TriggerEvent | null> {
     const response = await this.anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: CLAUDE_OPUS,
       max_tokens: 1000,
       system: `You are the Empirisys Lead Qualification Filter.
 Analyze the following market signal and identify if it contains a high-value trigger event.
@@ -117,7 +118,7 @@ Output ONLY JSON, with no markdown formatting.`,
     const productRecommendation = trigger.type === 'plant_modernization' ? 'BOOST' : 'DETECT';
 
     const response = await this.anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: CLAUDE_OPUS,
       max_tokens: 1500,
       system: `You are an elite Enterprise B2B Sales Partner with decades of experience closing high-ticket deals at top global management consulting firms (e.g., McKinsey, Big Four). Your logic must reflect the absolute highest echelon of elite corporate deal structuring and strategic client acquisition.
 You are preparing an executive pitch brief based on a new trigger event.

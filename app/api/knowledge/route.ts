@@ -1,3 +1,4 @@
+import { CLAUDE_SONNET } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { z } from 'zod';
@@ -136,7 +137,7 @@ When answering:
 - Be specific — reference actual clients, actual products and actual price ranges where available`;
 
     const stream = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: CLAUDE_SONNET,
       max_tokens: 1024,
       system: systemPrompt,
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
@@ -156,7 +157,7 @@ When answering:
 
     return new Response(readable, {
       headers: {
-        'Content-Type': 'text/event-stream',
+        'Content-Type': 'text/plain',
         'Cache-Control': 'no-cache, no-transform',
         'Connection': 'keep-alive',
       },

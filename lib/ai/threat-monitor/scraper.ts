@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import { performWebSearch } from '../search';
 
@@ -26,8 +27,8 @@ export interface VerifiedThreat {
 
 export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
   // If no real API key is present, provide a high-quality deterministic fallback
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'dummy_key' || process.env.OPENAI_API_KEY.includes('your-openai-api-key')) {
-    console.log('[Threat Scraper] No OpenAI API Key found, using fallback simulated regulatory data.');
+  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key' || process.env.ANTHROPIC_API_KEY.includes('your-openai-api-key')) {
+    console.log('[Threat Scraper] No Anthropic API Key found, using fallback simulated regulatory data.');
     return [
       {
         id: `thr-${Date.now()}-1`,
@@ -102,13 +103,13 @@ Output format must be:
 `;
 
   if (scrapedData) {
-    prompt += `\n\n--- LIVE INTERNET DATA ---\nUse the following real-time internet search results to base your generated threats on true events:\n${scrapedData}\nIf the data is insufficient to generate 3 events, invent the rest as highly realistic simulations.`;
+    prompt += `\n\n--- LIVE INTERNET DATA ---\nUse the following real-time internet search results to base your generated threats on true events:\n${scrapedData}\nIf the data is insufficient to generate 3 events, just return the ones you found. DO NOT invent or fabricate any events.`;
   } else {
-    prompt += `\n\nScan simulated European regulatory enforcement feeds (UK HSE, EEA, BAuA) and extract highly realistic simulated threats.`;
+    prompt += `\n\nSince no internet data is available, do not fabricate data. Return an empty list of threats.`;
   }
 
   const completion = await anthropic.messages.create({
-    model: "claude-3-opus-20240229",
+    model: CLAUDE_OPUS,
     max_tokens: 1500,
     system: "You are an elite European HSE Regulatory Scraping AI with deep knowledge of the BowTie methodology.\nOutput ONLY JSON, with no markdown formatting.",
     messages: [
@@ -117,6 +118,16 @@ Output format must be:
   });
 
   const textContent = completion.content.find(c => c.type === 'text')?.text || '{"threats": []}';
-  const parsed = JSON.parse(textContent);
+    let parsed = { threats: [] };
+  try {
+    const jsonMatch = textContent.match(/\{.*\}/s);
+    if (jsonMatch) {
+      parsed = JSON.parse(jsonMatch[0]);
+    } else {
+      parsed = JSON.parse(textContent);
+    }
+  } catch (e) {
+    console.error('Failed to parse threat JSON', e);
+  }
   return parsed.threats as VerifiedThreat[];
 }

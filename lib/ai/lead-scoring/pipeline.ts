@@ -1,3 +1,4 @@
+import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import { LeadScoreProfile, BantScore } from './types';
 import { performWebSearch } from '../search';
@@ -139,7 +140,7 @@ Note: The incident block is optional if no real incident applies.
     prompt += `\n\n--- LIVE INTERNET DATA ---\nUse the following real-time internet search results to ground your tactical sales dossier in actual recent events for this company:\n${scrapedData}\nIf the data is insufficient, use your deep industry knowledge to generate a realistic simulated dossier.`;
   }
   const completion = await anthropic.messages.create({
-    model: "claude-3-opus-20240229",
+    model: CLAUDE_OPUS,
     max_tokens: 1500,
     system: "You are an elite HSE B2B Sales Intelligence AI with deep knowledge of MEDDIC, CCPS RBPS, and Challenger Sale methodologies.\nOutput ONLY JSON, with no markdown formatting.",
     messages: [

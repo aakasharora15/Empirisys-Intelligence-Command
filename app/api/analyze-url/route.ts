@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import * as cheerio from 'cheerio';
 import { z } from 'zod';
+import dns from 'dns/promises';
 
 const RequestSchema = z.object({
   url: z.string().url()
@@ -22,7 +23,27 @@ export async function POST(req: Request) {
 
     const { url } = result.data;
 
-    // 1. Fetch live HTML
+    // 1. Validate against SSRF
+    const targetUrl = new URL(url);
+    if (targetUrl.protocol !== 'http:' && targetUrl.protocol !== 'https:') {
+      return NextResponse.json({ error: 'Only HTTP/HTTPS allowed' }, { status: 400 });
+    }
+    const hostname = targetUrl.hostname;
+    const addresses = await dns.resolve(hostname).catch(() => []);
+    const isPrivate = addresses.some(ip => {
+      // Very basic private IP checks (RFC1918, loopback, link-local)
+      return ip.startsWith('10.') || 
+             ip.startsWith('127.') || 
+             ip.startsWith('169.254.') || 
+             ip.startsWith('192.168.') || 
+             ip.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./);
+    });
+    
+    if (isPrivate || hostname === 'localhost') {
+      return NextResponse.json({ error: 'Private network addresses are not allowed' }, { status: 400 });
+    }
+
+    // 2. Fetch live HTML
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
     let html = '';

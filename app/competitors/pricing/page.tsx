@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import HeroSection from '@/components/ui/HeroSection';
-import { SFCreditcard as CreditCard } from 'sf-symbols-lib/monochrome';
 
 const pricingData = [
   { vendor: 'Sphera', basePlatform: '£42,500/yr', perUser: '£85/yr', implementation: '£95,000+', dataMigration: '£12k Add-on', aiCapabilities: 'Separate SKU (£24k)' },
