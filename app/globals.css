@@ -104,9 +104,9 @@
   /* --- CUSTOM COLOR THEMES --- */
   
   [data-theme="blue"] {
-    --accent: #3B82F6;
-    --accent-hover: #2563EB;
-    --highlight: #3B82F6;
+    --accent: #2563EB;
+    --accent-hover: #1D4ED8;
+    --highlight: #2563EB;
     --bg: #F0F4F8;
     --card: #FFFFFF;
     --panel: #F8FAFC;
@@ -137,9 +137,9 @@
   }
 
   [data-theme="orange"] {
-    --accent: #F97316;
-    --accent-hover: #EA580C;
-    --highlight: #F97316;
+    --accent: #C2410C;
+    --accent-hover: #9A3412;
+    --highlight: #C2410C;
     --bg: #FFF7ED;
     --card: #FFFFFF;
     --panel: #FFFAF5;
@@ -170,9 +170,9 @@
   }
 
   [data-theme="purple"] {
-    --accent: #8B5CF6;
-    --accent-hover: #7C3AED;
-    --highlight: #8B5CF6;
+    --accent: #7C3AED;
+    --accent-hover: #6D28D9;
+    --highlight: #7C3AED;
     --bg: #F5F3FF;
     --card: #FFFFFF;
     --panel: #FAF5FF;
@@ -203,9 +203,9 @@
   }
 
   [data-theme="yellow"] {
-    --accent: #EAB308;
-    --accent-hover: #CA8A04;
-    --highlight: #EAB308;
+    --accent: #A16207;
+    --accent-hover: #854D0E;
+    --highlight: #A16207;
     --bg: #FEFCE8;
     --card: #FFFFFF;
     --panel: #FFFDF0;

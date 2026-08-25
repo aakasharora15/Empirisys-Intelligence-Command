@@ -1,6 +1,7 @@
 import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import { RawSignal, TriggerEvent, MatrixScore, ExecutiveOutput } from './types';
+import { parseModelJson } from '@/lib/ai/parse';
 
 /**
  * HSE Lead-Scoring Agent Engine
@@ -68,14 +69,14 @@ Output ONLY JSON, with no markdown formatting.`,
     });
 
     const textContent = response.content.find(c => c.type === 'text')?.text || '{"isValid": false}';
-    const parsed = JSON.parse(textContent);
+    const parsed = parseModelJson<{ isValid?: boolean } & Partial<TriggerEvent>>(textContent);
     
     if (parsed.isValid && parsed.type) {
       return {
         type: parsed.type,
-        description: parsed.description,
-        companyName: parsed.companyName,
-        location: parsed.location
+        description: parsed.description ?? '',
+        companyName: parsed.companyName ?? '',
+        location: parsed.location ?? ''
       };
     }
     return null;
@@ -162,7 +163,6 @@ Output ONLY JSON, with no markdown formatting.`,
     });
 
     const textContent = response.content.find(c => c.type === 'text')?.text || '{}';
-    const parsed = JSON.parse(textContent);
-    return parsed as ExecutiveOutput;
+    return parseModelJson<ExecutiveOutput>(textContent);
   }
 }
