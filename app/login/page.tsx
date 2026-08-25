@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, Shield, Loader2 } from 'lucide-react';
+import { Lock, Loader2 } from 'lucide-react';
 import HeroSection from '@/components/ui/HeroSection';
+import { Logo } from '@/components/ui/Logo';
 
 export default function LoginPage() {
   const [password, setPassword] = useState('');
@@ -30,7 +31,7 @@ export default function LoginPage() {
         const data = await res.json();
         setError(data.error || 'Invalid password');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -40,21 +41,21 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col relative overflow-hidden">
       <HeroSection 
-        title="Command Center" 
-        subtitle="Empirisys Intelligence Hub" 
+        title="Empirisys Intelligence Hub" 
+        subtitle="Secure system access required" 
       />
       
       <div className="flex-1 flex items-center justify-center relative z-10 px-4 -mt-32">
         <div className="w-full max-w-md bg-card/40 backdrop-blur-md rounded-[24px] p-8 border border-white/10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--color-primary)] to-transparent opacity-50"></div>
           
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center border border-[var(--color-primary)]/20">
-              <Shield className="w-8 h-8 text-[var(--color-primary)]" />
+          <div className="flex flex-col items-center justify-center mb-6">
+            <div className="mb-4">
+              <Logo className="h-10 w-auto text-text-primary" />
             </div>
           </div>
           
-          <h2 className="text-2xl font-bold text-center mb-2">Secure Access</h2>
+          <h2 className="text-2xl font-bold text-center mb-2">Command Center</h2>
           <p className="text-white/50 text-center mb-8 text-sm">Please authenticate to access the Intelligence Command</p>
           
           <form onSubmit={handleLogin} className="space-y-6">
