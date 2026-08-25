@@ -11,7 +11,6 @@ const RequestSchema = z.object({
   messages: z.array(MessageSchema).max(50),
 });
 
-// Simulated Rate Limiter State
 const rateLimitMap = new Map<string, { tokens: number; lastRefill: number }>();
 const MAX_TOKENS = 10;
 const REFILL_RATE_MS = 60000;
@@ -33,7 +32,6 @@ function checkRateLimit(ip: string): boolean {
   return false;
 }
 
-// Real Empirisys knowledge base — grounded in actual company intelligence
 const EMPIRISYS_KNOWLEDGE_BASE = [
   {
     id: 'k1',

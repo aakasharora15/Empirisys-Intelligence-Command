@@ -6,13 +6,11 @@ if (!aiEnabled()) {
   console.warn('CRITICAL: no AI provider key configured (OPENAI_API_KEY or ANTHROPIC_API_KEY).');
 }
 
-// Strict Zod schema for input validation
 const RequestSchema = z.object({
   prompt: z.string().min(1).max(20000),
   moduleType: z.enum(['competitors', 'assistant', 'general']).default('general'),
 });
 
-// In-memory rate limiter — no external Redis dependency required
 const rateLimitMap = new Map<string, { tokens: number; lastRefill: number }>();
 const MAX_TOKENS = 15;
 const REFILL_RATE_MS = 60000;

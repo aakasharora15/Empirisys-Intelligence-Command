@@ -34,8 +34,6 @@ export async function POST(req: Request) {
     }
 
     const agent = new LeadScoringAgent();
-
-    // Simulate a signal received from the ingestion layer
     const signal: RawSignal = {
       id: Math.random().toString(36).substring(7),
       sourceUrl: sourceUrl || 'https://euosha.europa.eu/incidents',
@@ -44,7 +42,6 @@ export async function POST(req: Request) {
       publishedAt: new Date().toISOString(),
     };
 
-    // Process the signal through the AI Agent Workflow
     const executiveOutput = await agent.processIncomingSignal(signal);
 
     if (!executiveOutput) {

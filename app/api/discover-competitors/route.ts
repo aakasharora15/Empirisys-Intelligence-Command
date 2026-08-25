@@ -2,9 +2,6 @@ import { NextResponse } from 'next/server';
 
 export const maxDuration = 300; // Allow 5 mins for AI discovery scan
 
-// Vercel Cron configuration (requires vercel.json in root for actual triggering, but defined here for reference)
-// "crons": [{ "path": "/api/discover-competitors", "schedule": "0 6 * * 1" }]
-
 const DISCOVERY_PROMPT = `
 You are a competitor intelligence AI agent for Empirisys. 
 Your task is to scan live web sources (Google News, G2, Crunchbase, etc.) and identify emerging threats in the process safety, HSE analytics, and safety culture software space.
@@ -28,7 +25,8 @@ Output your findings as a JSON array where each object matches this interface:
 
 export async function GET(request: Request) {
   try {
-    // Check for cron authorization or API key in a production environment
+    // Vercel Cron supplies CRON_SECRET as a bearer token. The check is
+    // production-only so the route stays callable by hand in development.
     const authHeader = request.headers.get('authorization');
     if (
       process.env.NODE_ENV === 'production' &&
@@ -38,15 +36,14 @@ export async function GET(request: Request) {
     }
 
     console.log('Triggering AI Competitor Discovery...');
-    console.log('System Prompt: ', DISCOVERY_PROMPT);
 
-    // TODO: Wire up actual fetch to Anthropic Claude using process.env.ANTHROPIC_API_KEY
-    // For now, return a placeholder indicating successful cron execution
+    // TODO: this route does not call a model. It returns a fixed payload, so the
+    // success response below does not mean a scan ran. Wire it to complete() in
+    // lib/ai/client.ts before anything depends on its output.
 
     return NextResponse.json({
       success: true,
       message: 'Discovery scan triggered successfully.',
-      prompt_used: DISCOVERY_PROMPT,
       simulated_result: [
         {
           id: 'dl_sim1',
