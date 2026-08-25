@@ -33,6 +33,9 @@ export async function POST(req: Request) {
     }, { headers: rateLimit.headers });
   } catch (error) {
     console.error('[MARKET_ANALYST_PIPELINE_ERROR]', error);
+    if (error instanceof Error && error.message === 'ANTHROPIC_API_KEY_MISSING') {
+      return NextResponse.json({ error: 'ANTHROPIC_API_KEY_MISSING' }, { status: 500 });
+    }
     return new NextResponse('Pipeline execution failed', { status: 500 });
   }
 }

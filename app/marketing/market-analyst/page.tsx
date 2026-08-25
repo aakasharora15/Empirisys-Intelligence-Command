@@ -215,7 +215,10 @@ export default function MarketAnalystPage() {
         title: "Pipeline Complete",
         description: `Extracted ${data.meta.totalEventsExtracted} events → ${data.meta.totalThemes} themes`,
       });
-    } catch (e) {
+    } catch (e: any) {
+      if (e.message?.includes('ANTHROPIC_API_KEY_MISSING') || (e.response && e.response.status === 500)) {
+        alert("Anthropic API Key is missing. The engine cannot run the real-time pipeline. Please set ANTHROPIC_API_KEY in your Vercel environment variables.");
+      }
       console.error(e);
       toast({
         title: "Pipeline Error",

@@ -22,7 +22,7 @@ export default function HeroSection({
 }: HeroSectionProps) {
   return (
     <div className={cn(
-      "w-full -mt-[84px] pt-[116px] pb-32 md:pb-36 relative overflow-x-clip",
+      "w-full -mt-[84px] pt-[140px] pb-32 md:pb-36 relative overflow-x-clip",
       "bg-gradient-to-b from-[var(--hero-from)] via-[var(--hero-via)] to-transparent",
       className
     )}>

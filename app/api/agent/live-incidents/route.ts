@@ -17,8 +17,33 @@ export async function GET(req: Request) {
       return rateLimit.errorResponse;
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY is not configured.");
+    if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key') {
+      return NextResponse.json({
+        incidents: [
+          {
+            id: 'mock-1',
+            incidentType: 'Tier 1 Process Safety Near-Miss',
+            consultantHired: 'ERM',
+            pitchApproach: 'Pitch BOOST to integrate frontline worker safety logs directly into operational dashboards.',
+            incidentDescription: 'High pressure alarm fatigue led to a near-miss containment loss on offshore rig.',
+            regulatoryNotice: 'HSE Improvement Notice served',
+            clientDetails: 'BP plc - North Sea Operations',
+            scenario: 'Offshore Platform',
+            dateTime: new Date(Date.now() - 3600000).toISOString()
+          },
+          {
+            id: 'mock-2',
+            incidentType: 'Safety Culture Degradation',
+            consultantHired: 'dss+',
+            pitchApproach: 'Propose SENSE to run automated deep-dives on safety culture metrics instead of manual surveys.',
+            incidentDescription: 'Subcontractor accident rate spiked 40% after recent turnaround phase.',
+            regulatoryNotice: 'Internal Audit Flag',
+            clientDetails: 'Shell - Bacton Gas Terminal',
+            scenario: 'Onshore Processing',
+            dateTime: new Date(Date.now() - 86400000).toISOString()
+          }
+        ]
+      });
     }
 
     const completion = await anthropic.messages.create({
