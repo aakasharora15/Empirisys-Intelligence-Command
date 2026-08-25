@@ -3,6 +3,7 @@ import { LeadScoringAgent } from '@/lib/ai/lead-scorer';
 import { RawSignal, IncidentSource } from '@/lib/ai/types';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 import { TriggerSignalSchema } from '@/lib/security/validation';
+import { aiEnabled } from '@/lib/ai/client';
 
 export async function POST(req: Request) {
   try {
@@ -22,6 +23,15 @@ export async function POST(req: Request) {
     }
 
     const { rawText, sourceUrl, sourceType } = validation.data;
+
+    if (!aiEnabled()) {
+      return NextResponse.json({
+        message: 'Demo mode: no AI provider configured, so the signal was not scored.',
+        processed: true,
+        output: null,
+        demo: true,
+      });
+    }
 
     const agent = new LeadScoringAgent();
     
