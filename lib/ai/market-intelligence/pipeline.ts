@@ -1,3 +1,4 @@
+import { AI_ENABLED } from '@/lib/ai/models';
 import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import type {
@@ -240,7 +241,7 @@ export interface PipelineResult {
 }
 
 export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
-  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key') {
+  if (!AI_ENABLED) {
     throw new Error("ANTHROPIC_API_KEY_MISSING");
   }
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

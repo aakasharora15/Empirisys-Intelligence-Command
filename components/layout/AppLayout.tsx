@@ -2,7 +2,7 @@
 
 import { ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useUIStore } from '@/store/ui-store';
+
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   SFSquareGrid2x2 as Grid, 
@@ -35,11 +35,11 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
-  const { toggleAssistant } = useUIStore();
+  const { toggleAssistant } = useStore();
   const router = useRouter();
   const { user, searchQuery, setSearchQuery } = useStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [searchVal, setSearchVal] = useState(searchQuery);
+  const searchVal = searchQuery;
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -59,24 +59,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     }, 1000);
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchVal.trim()) return;
-    setSearchQuery(searchVal);
-    const query = searchVal.toLowerCase();
-    if (query.includes('competitor') || query.includes('dnv') || query.includes('sphera') || query.includes('intelex') || query.includes('vs')) {
-      router.push('/competitors');
-    } else if (query.includes('train') || query.includes('upload') || query.includes('data') || query.includes('document')) {
-      router.push('/training-data');
-    } else if (query.includes('ask') || query.includes('what is') || query.includes('how does') || query.includes('assistant')) {
-      toggleAssistant();
-    } else if (query.includes('setting') || query.includes('config') || query.includes('api')) {
-      router.push('/settings');
-    } else {
-      router.push('/');
-    }
-  };
-
+  
   const navItems = [
     {
       group: 'COMMAND CENTER',

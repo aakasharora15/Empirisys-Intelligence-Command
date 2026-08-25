@@ -1,3 +1,4 @@
+import { AI_ENABLED } from '@/lib/ai/models';
 import { CLAUDE_OPUS } from '@/lib/ai/models';
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
@@ -8,7 +9,7 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy_key',
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export async function GET(req: Request) {
@@ -21,7 +22,7 @@ export async function GET(req: Request) {
     const liveThreats = await scrapeLiveThreats();
     
     // Provide a robust fallback if API key is missing
-    if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key') {
+    if (!AI_ENABLED) {
         return NextResponse.json({
             kpis: { totalSignalsProcessed: 1452, activeThreats: liveThreats.length, actionableSegments: 4, highConfidenceSignals: 89 },
             sectorActivity: [

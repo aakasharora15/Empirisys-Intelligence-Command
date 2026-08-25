@@ -1,15 +1,13 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { usePathname } from 'next/navigation';
 import AppLayout from "@/components/layout/AppLayout";
 import { useStore } from "@/lib/store";
 import SplashScreen from "@/components/ui/SplashScreen";
 
 export default function AppLayoutWrapper({ children }: { children: ReactNode }) {
   const { colorTheme } = useStore();
-  const pathname = usePathname();
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
+    const [isSplashVisible, setIsSplashVisible] = useState(true);
 
   // Handle global color theme changes
   useEffect(() => {

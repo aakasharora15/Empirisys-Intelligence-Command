@@ -1,9 +1,10 @@
+import { AI_ENABLED } from '@/lib/ai/models';
 import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import { performWebSearch } from '../search';
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy_key',
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export interface VerifiedThreat {
@@ -27,7 +28,7 @@ export interface VerifiedThreat {
 
 export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
   // If no real API key is present, provide a high-quality deterministic fallback
-  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'dummy_key' || process.env.ANTHROPIC_API_KEY.includes('your-openai-api-key')) {
+  if (!AI_ENABLED) {
     console.log('[Threat Scraper] No Anthropic API Key found, using fallback simulated regulatory data.');
     return [
       {

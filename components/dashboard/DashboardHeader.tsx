@@ -2,9 +2,8 @@
 import Image from "next/image";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useUIStore } from '@/store/ui-store';
+import { useStore } from '@/lib/store';
 import {
   SFShield as Shield,
   SFExclamationmarkTriangle as AlertTriangle,
@@ -157,43 +156,8 @@ function getActivityStyle(source: ActivitySourceType) {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-function CapDot({ val }: { val: 'yes' | 'partial' | 'no' }) {
-  return (
-    <span className={cn(
-      'inline-block h-2 w-2 rounded-full',
-      val === 'yes' ? 'bg-accent' : val === 'partial' ? 'bg-amber-400' : 'bg-[#EF4444]',
-    )} />
-  );
-}
 
-function FlagPill({ label, variant }: CompetitorFlag) {
-  return (
-    <span className={cn(
-      'inline-flex items-center px-1.5 py-0.5 rounded text-sm font-bold uppercase tracking-wide border leading-none whitespace-nowrap',
-      variant === 'red'   ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/20' :
-      variant === 'amber' ? 'bg-amber-400/10 text-amber-400 border-amber-400/20' :
-      variant === 'blue'  ? 'bg-blue-400/10 text-blue-400 border-blue-400/20' :
-                            'bg-accent/10 text-accent border-accent/20',
-    )}>
-      {label}
-    </span>
-  );
-}
 
-function MetricBar({ label, value, sublabel, color }: { label: string; value: number; sublabel: string; color: string }) {
-  return (
-    <div className="space-y-3.5">
-      <div className="flex justify-between items-center text-base">
-        <span className="font-bold text-text-secondary uppercase tracking-wider font-mono">{label}</span>
-        <span className="font-black text-text-primary">{value} / 100</span>
-      </div>
-      <div className="h-1.5 w-full bg-background rounded-full overflow-hidden">
-        <div className="h-full rounded-full transition-all" style={{ width: `${value}%`, backgroundColor: color }} />
-      </div>
-      <p className="text-sm text-text-secondary italic leading-snug">{sublabel}</p>
-    </div>
-  );
-}
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function DashboardHeader({
@@ -202,8 +166,7 @@ export default function DashboardHeader({
   triggerEvents,
   
 }: DashboardHeaderProps) {
-  const router = useRouter();
-  const { toggleAssistant } = useUIStore();
+    const { toggleAssistant } = useStore();
   const [dismissedAlert, setDismissedAlert] = useState(false);
 
   const hour = new Date().getHours();

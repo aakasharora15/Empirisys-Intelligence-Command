@@ -8,7 +8,7 @@ export const maxDuration = 60; // Prevent Vercel timeouts for LLM calls
 export const dynamic = 'force-dynamic';
 
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy_key',
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export async function GET(req: Request) {

@@ -49,7 +49,7 @@ export function Header({
   className,
 }: HeaderProps) {
   const [notifOpen, setNotifOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  
   const notifRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -61,7 +61,6 @@ export function Header({
         setNotifOpen(false);
       }
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
-        setUserMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
