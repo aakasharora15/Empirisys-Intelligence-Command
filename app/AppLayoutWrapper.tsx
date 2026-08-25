@@ -29,10 +29,6 @@ export default function AppLayoutWrapper({ children }: { children: ReactNode }) 
     return () => clearTimeout(timer);
   }, []);
 
-  if (pathname === '/login') {
-    return <>{children}</>;
-  }
-
   return (
     <>
       <SplashScreen isVisible={isSplashVisible} />
