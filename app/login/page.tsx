@@ -1,48 +1,24 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, Loader2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import HeroSection from '@/components/ui/HeroSection';
 import { Logo } from '@/components/ui/Logo';
 
 export default function LoginPage() {
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleEnter = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-
-      if (res.ok) {
-        router.push('/');
-        router.refresh();
-      } else {
-        const data = await res.json();
-        setError(data.error || 'Invalid password');
-      }
-    } catch {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    router.push('/');
   };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col relative overflow-hidden">
       <HeroSection 
         title="Empirisys Intelligence Hub" 
-        subtitle="Secure system access required" 
+        subtitle="Authentication integration in progress" 
       />
       
       <div className="flex-1 flex items-center justify-center relative z-10 px-4 -mt-32">
@@ -56,30 +32,17 @@ export default function LoginPage() {
           </div>
           
           <h2 className="text-2xl font-bold text-center mb-2">Command Center</h2>
-          <p className="text-white/50 text-center mb-8 text-sm">Please authenticate to access the Intelligence Command</p>
+          <p className="text-white/50 text-center mb-8 text-sm">
+            Google OAuth and Supabase authentication modules are currently being integrated.
+          </p>
           
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter system password"
-                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-[var(--color-primary)]/50 focus:ring-1 focus:ring-[var(--color-primary)]/50 transition-all"
-                  required
-                />
-              </div>
-              {error && <p className="text-red-400 text-sm pl-1">{error}</p>}
-            </div>
-            
+          <form onSubmit={handleEnter} className="space-y-6">
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Authenticate'}
+              <span>Enter Demo Mode</span>
+              <ArrowRight className="w-5 h-5" />
             </button>
           </form>
         </div>
