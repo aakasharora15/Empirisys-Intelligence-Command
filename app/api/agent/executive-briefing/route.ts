@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { scrapeLiveThreats } from '@/lib/ai/threat-monitor/scraper';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
+import { parseModelJson } from '@/lib/ai/parse';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
@@ -84,7 +85,7 @@ Output ONLY JSON, with no markdown formatting.`,
     });
 
     const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
-    const parsedContent = JSON.parse(textContent);
+    const parsedContent = parseModelJson<Record<string, unknown>>(textContent);
     
     // We attach the targets directly from the scraped threats to save API calls downstream
     parsedContent.targets = liveThreats.map(t => ({

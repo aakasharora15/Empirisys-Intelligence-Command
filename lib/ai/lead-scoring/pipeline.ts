@@ -3,6 +3,7 @@ import { CLAUDE_OPUS } from '@/lib/ai/models';
 import Anthropic from '@anthropic-ai/sdk';
 import { LeadScoreProfile, BantScore } from './types';
 import { performWebSearch } from '../search';
+import { parseModelJson } from '@/lib/ai/parse';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -150,6 +151,6 @@ Note: The incident block is optional if no real incident applies.
   });
 
   const textContent = completion.content.find(c => c.type === 'text')?.text || '{}';
-  const profile: LeadScoreProfile = JSON.parse(textContent);
+  const profile = parseModelJson<LeadScoreProfile>(textContent);
   return profile;
 }

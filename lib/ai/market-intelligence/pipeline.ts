@@ -17,6 +17,7 @@ import {
   shouldFilter,
 } from './scoring';
 import { performWebSearch } from '../search';
+import { parseModelJson } from '@/lib/ai/parse';
 
 // ────────────────────────────────────────────────────────────
 // Prompts
@@ -274,7 +275,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     throw new Error('LLM returned empty extraction response');
   }
 
-  const parsed: { events: LLMExtractedEvent[] } = JSON.parse(extractionText);
+  const parsed = parseModelJson<{ events: LLMExtractedEvent[] }>(extractionText);
   if (!Array.isArray(parsed.events)) {
     throw new Error('LLM extraction response missing "events" array');
   }
@@ -356,7 +357,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
     throw new Error('LLM returned empty aggregation response');
   }
 
-  const parsedAggregation: RawAggregation = JSON.parse(aggregationText);
+  const parsedAggregation = parseModelJson<RawAggregation>(aggregationText);
   if (!parsedAggregation.themes || !Array.isArray(parsedAggregation.themes)) {
     throw new Error('LLM aggregation response missing "themes" array');
   }
@@ -462,7 +463,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
 
     const landscapeText = landscapeResponse.content.find(c => c.type === 'text')?.text;
     if (landscapeText) {
-      const parsedLandscape = JSON.parse(landscapeText);
+      const parsedLandscape = parseModelJson<MarketLandscape>(landscapeText);
       landscape = {
         landscapeSummary: parsedLandscape.landscapeSummary || '',
         strategicPrecondition: parsedLandscape.strategicPrecondition || '',
