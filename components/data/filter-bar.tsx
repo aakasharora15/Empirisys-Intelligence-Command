@@ -58,18 +58,18 @@ export function FilterBar({
         {/* Search input */}
         {onSearchChange && (
           <div className="relative min-w-[200px] flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary" />
             <input
               type="text"
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full rounded-md border border-zinc-300 bg-white py-1.5 pl-9 pr-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              className="w-full rounded-md border border-card-border bg-card py-1.5 pl-9 pr-3 text-sm text-text-primary placeholder:text-text-secondary focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-card-border  "
             />
             {searchValue && (
               <button
                 onClick={() => onSearchChange("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-zinc-400 hover:text-zinc-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-text-secondary hover:text-text-primary"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -79,7 +79,7 @@ export function FilterBar({
 
         {/* Filter dropdowns */}
         <div className="flex items-center gap-1.5">
-          <SlidersHorizontal className="h-4 w-4 text-zinc-400" />
+          <SlidersHorizontal className="h-4 w-4 text-text-secondary" />
           {filters.map((filter) => (
             <div key={filter.id} className="relative">
               <button
@@ -90,7 +90,7 @@ export function FilterBar({
                   "flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors",
                   openFilter === filter.id
                     ? "border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-600 dark:bg-blue-950 dark:text-blue-400"
-                    : "border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    : "border-card-border bg-card text-text-primary hover:bg-panel dark:border-card-border   "
                 )}
               >
                 {filter.label}
@@ -98,13 +98,13 @@ export function FilterBar({
               </button>
 
               {openFilter === filter.id && (
-                <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded-lg border border-card-border bg-card py-1 shadow-lg dark:border-card-border ">
                   {filter.type === "text" && (
                     <div className="px-3 py-2">
                       <input
                         type="text"
                         placeholder={filter.placeholder || `Filter by ${filter.label}...`}
-                        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                        className="w-full rounded-md border border-card-border bg-card px-3 py-1.5 text-sm dark:border-card-border  "
                         autoFocus
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
@@ -128,13 +128,13 @@ export function FilterBar({
                           if (filter.type === "select") setOpenFilter(null);
                         }}
                         className={cn(
-                          "flex w-full items-center px-4 py-2 text-left text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800",
+                          "flex w-full items-center px-4 py-2 text-left text-sm transition-colors hover:bg-panel ",
                           activeFilters.some(
                             (af) =>
                               af.id === filter.id && af.value === opt.value
                           )
                             ? "text-blue-700 font-medium dark:text-blue-400"
-                            : "text-zinc-700 dark:text-zinc-300"
+                            : "text-text-primary "
                         )}
                       >
                         {opt.label}
@@ -144,7 +144,7 @@ export function FilterBar({
                     <div className="px-3 py-2">
                       <input
                         type="date"
-                        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                        className="w-full rounded-md border border-card-border bg-card px-3 py-1.5 text-sm dark:border-card-border  "
                         onChange={(e) => {
                           if (e.target.value) {
                             onFilterChange(filter.id, e.target.value);
@@ -159,13 +159,13 @@ export function FilterBar({
                       <input
                         type="date"
                         placeholder="Start date"
-                        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                        className="w-full rounded-md border border-card-border bg-card px-3 py-1.5 text-sm dark:border-card-border  "
                         id={`${filter.id}-start`}
                       />
                       <input
                         type="date"
                         placeholder="End date"
-                        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+                        className="w-full rounded-md border border-card-border bg-card px-3 py-1.5 text-sm dark:border-card-border  "
                         id={`${filter.id}-end`}
                       />
                       <button
@@ -210,7 +210,7 @@ export function FilterBar({
           ))}
           <button
             onClick={onClearAll}
-            className="text-xs font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+            className="text-xs font-medium text-text-secondary hover:text-text-primary "
           >
             Clear all
           </button>

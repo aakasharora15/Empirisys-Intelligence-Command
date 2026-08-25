@@ -153,7 +153,7 @@ export function GlobalAssistantDrawer() {
                   >
                     <div className={cn(
                       "h-8 w-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm",
-                      msg.role === 'user' ? "bg-zinc-800" : "bg-[var(--color-primary)]"
+                      msg.role === 'user' ? "bg-panel-sec" : "bg-[var(--color-primary)]"
                     )}>
                       {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                     </div>

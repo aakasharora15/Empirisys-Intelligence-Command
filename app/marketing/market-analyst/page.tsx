@@ -166,13 +166,13 @@ const tierColors: Record<string, { bg: string; text: string; label: string }> = 
   A: { bg: "bg-emerald-500/10 border-emerald-500/20", text: "text-emerald-600 dark:text-emerald-400", label: "Tier A · Regulatory" },
   B: { bg: "bg-blue-500/10 border-blue-500/20", text: "text-blue-600 dark:text-blue-400", label: "Tier B · Procurement" },
   C: { bg: "bg-amber-500/10 border-amber-500/20", text: "text-amber-600 dark:text-amber-400", label: "Tier C · Trade Press" },
-  D: { bg: "bg-zinc-500/10 border-zinc-500/20", text: "text-zinc-400", label: "Tier D · Business Press" },
+  D: { bg: "bg-panel0/10 border-zinc-500/20", text: "text-text-secondary", label: "Tier D · Business Press" },
 };
 
 const deltaLabels: Record<string, { color: string; icon: React.ReactNode }> = {
   new: { color: "text-emerald-500 bg-emerald-500/10", icon: <Zap className="h-3 w-3" /> },
   intensified: { color: "text-red-500 bg-red-500/10", icon: <AlertTriangle className="h-3 w-3" /> },
-  faded: { color: "text-zinc-500 bg-zinc-400/10", icon: <ChevronDown className="h-3 w-3" /> },
+  faded: { color: "text-text-secondary bg-card-border/50", icon: <ChevronDown className="h-3 w-3" /> },
   stable: { color: "text-blue-500 bg-blue-500/10", icon: <Activity className="h-3 w-3" /> },
 };
 
@@ -256,7 +256,7 @@ export default function MarketAnalystPage() {
             <Button
               onClick={handleRunPipeline}
               disabled={isLoading}
-              className="rounded-full bg-accent text-white hover:bg-accent/80 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] transition-all duration-300 px-6 h-11"
+              className="rounded-full bg-accent text-text-primary hover:bg-accent/80 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] transition-all duration-300 px-6 h-11"
             >
               {isLoading ? (
                 <>
@@ -296,21 +296,21 @@ export default function MarketAnalystPage() {
           {/* KPI Strip */}
           <motion.div variants={containerVariants} className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {[
-              { label: "Events Extracted", value: result.meta.totalEventsExtracted, bg: "bg-[var(--color-primary)]/10", border: "border-[var(--color-primary)]/20", color: "text-white" },
-              { label: "Themes Identified", value: result.meta.totalThemes, bg: "bg-[var(--color-primary)]/10", border: "border-[var(--color-primary)]/20", color: "text-white" },
+              { label: "Events Extracted", value: result.meta.totalEventsExtracted, bg: "bg-[var(--color-primary)]/10", border: "border-[var(--color-primary)]/20", color: "text-text-primary" },
+              { label: "Themes Identified", value: result.meta.totalThemes, bg: "bg-[var(--color-primary)]/10", border: "border-[var(--color-primary)]/20", color: "text-text-primary" },
               { label: "Segments Found", value: result.meta.totalSegments, bg: "bg-emerald-500/10", border: "border-emerald-500/20", color: "text-emerald-500" },
               { label: "Pending Review", value: pendingThemes.length, bg: "bg-amber-500/10", border: "border-amber-500/20", color: "text-amber-500" },
-              { label: "Pipeline Run", value: new Date(result.meta.generatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), bg: "bg-zinc-500/10", border: "border-zinc-500/20", color: "text-white", textClass: "text-sm mt-2" }
+              { label: "Pipeline Run", value: new Date(result.meta.generatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), bg: "bg-panel0/10", border: "border-zinc-500/20", color: "text-text-primary", textClass: "text-sm mt-2" }
             ].map((kpi, i) => (
               <motion.div 
                 variants={itemVariants}
                 whileHover={{ y: -5, scale: 1.02 }}
                 key={i} 
-                className={`bg-card/40 backdrop-blur-md/80 backdrop-blur-md rounded-2xl p-5 border ${kpi.border} shadow-lg shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden group`}
+                className={`bg-card/40 backdrop-blur-md/80 backdrop-blur-md rounded-2xl p-5 border ${kpi.border} shadow-lg shadow-sm relative overflow-hidden group`}
               >
                 <div className={`absolute top-0 right-0 w-24 h-24 ${kpi.bg} rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 group-hover:scale-150 transition-transform duration-700`}></div>
                 <div className="relative z-10">
-                  <span className="text-[10px] font-bold tracking-widest text-zinc-600 dark:text-zinc-500 uppercase">{kpi.label}</span>
+                  <span className="text-[10px] font-bold tracking-widest text-text-secondary  uppercase">{kpi.label}</span>
                   <div className={`${kpi.textClass || 'text-3xl mt-1'} font-bold ${kpi.color}`}>{kpi.value}</div>
                 </div>
               </motion.div>
@@ -318,13 +318,13 @@ export default function MarketAnalystPage() {
           </motion.div>
 
           {/* View Toggle */}
-          <div className="flex bg-zinc-100 dark:bg-[#110D17] p-1.5 rounded-full border border-zinc-200 dark:border-white/5 w-fit">
+          <div className="flex bg-panel p-1.5 rounded-full border border-card-border w-fit">
             <button
               onClick={() => setActiveView("dashboard")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "dashboard"
-                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
-                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-text-alert text-text-primary shadow-lg"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               <Activity className="h-3.5 w-3.5 inline mr-1.5" />
@@ -334,8 +334,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("themes")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "themes"
-                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
-                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-text-alert text-text-primary shadow-lg"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               <Shield className="h-3.5 w-3.5 inline mr-1.5" />
@@ -345,8 +345,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("events")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "events"
-                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
-                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-text-alert text-text-primary shadow-lg"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               <Network className="h-3.5 w-3.5 inline mr-1.5" />
@@ -356,8 +356,8 @@ export default function MarketAnalystPage() {
               onClick={() => setActiveView("landscape")}
               className={`px-5 py-2 rounded-full text-[13px] font-bold transition-all duration-300 ${
                 activeView === "landscape"
-                  ? "bg-[var(--color-primary)] text-black text-white shadow-lg"
-                  : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  ? "bg-[var(--color-primary)] text-text-alert text-text-primary shadow-lg"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               <Map className="h-3.5 w-3.5 inline mr-1.5" />
@@ -371,9 +371,9 @@ export default function MarketAnalystPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Budget Allocation (Donut) */}
-                <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
+                <motion.div variants={itemVariants} className="bg-card backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-card-border shadow-xl shadow-sm relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                  <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
+                  <h3 className="text-lg font-bold text-text-primary mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
                     <Network className="h-5 w-5 text-emerald-500" /> Budget CapEx Allocation
                   </h3>
                   <div className="h-[300px] w-full relative z-10">
@@ -407,9 +407,9 @@ export default function MarketAnalystPage() {
                 </motion.div>
 
                 {/* Competitor Positioning Matrix */}
-                <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
+                <motion.div variants={itemVariants} className="bg-card backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-card-border shadow-xl shadow-sm relative overflow-hidden">
                   <div className="absolute bottom-0 left-0 w-64 h-64 bg-[var(--color-primary)]/5 rounded-full blur-3xl pointer-events-none"></div>
-                  <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
+                  <h3 className="text-lg font-bold text-text-primary mb-6 uppercase tracking-wider flex items-center gap-2 relative z-10">
                     <Shield className="h-5 w-5 text-[var(--color-primary)]" /> Competitive Positioning Matrix
                   </h3>
                   <div className="h-[300px] w-full relative z-10">
@@ -435,9 +435,9 @@ export default function MarketAnalystPage() {
               </div>
               
               {/* STEEPLE Trend Velocity (Full Width, Below) */}
-              <motion.div variants={itemVariants} className="bg-white/60 dark:bg-[#1A1525]/60 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-zinc-200 border-white/10 shadow-xl shadow-zinc-200/20 dark:shadow-black/20 relative overflow-hidden">
+              <motion.div variants={itemVariants} className="bg-card backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-card-border shadow-xl shadow-sm relative overflow-hidden">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-[var(--color-primary)]/5 rounded-full blur-3xl pointer-events-none"></div>
-                <h3 className="text-lg font-bold text-white mb-8 uppercase tracking-wider flex items-center gap-2 relative z-10">
+                <h3 className="text-lg font-bold text-text-primary mb-8 uppercase tracking-wider flex items-center gap-2 relative z-10">
                   <Activity className="h-5 w-5 text-[var(--color-primary)]" /> STEEPLE Trend Velocity (7 Days)
                 </h3>
                 <div className="h-[400px] w-full relative z-10">
@@ -520,7 +520,7 @@ export default function MarketAnalystPage() {
               {/* Processed Themes */}
               {processedThemes.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-zinc-600 dark:text-zinc-500 uppercase tracking-wider mt-6">
+                  <h3 className="text-sm font-bold text-text-secondary  uppercase tracking-wider mt-6">
                     Processed Themes ({processedThemes.length})
                   </h3>
                   {processedThemes.map((theme) => (
@@ -544,7 +544,7 @@ export default function MarketAnalystPage() {
               {result.events.map((event, idx) => (
                 <div
                   key={event.id}
-                  className="bg-card/40 backdrop-blur-md rounded-2xl p-5 border border-zinc-100 dark:border-white/5 flex gap-4 animate-in fade-in duration-300"
+                  className="bg-card/40 backdrop-blur-md rounded-2xl p-5 border border-card-border flex gap-4 animate-in fade-in duration-300"
                   style={{ animationDelay: `${idx * 50}ms`, animationFillMode: "both" }}
                 >
                   {/* Tier Badge */}
@@ -557,27 +557,27 @@ export default function MarketAnalystPage() {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-3 mb-1">
-                      <h4 className="text-[14px] font-bold text-white leading-tight">
+                      <h4 className="text-[14px] font-bold text-text-primary leading-tight">
                         {event.title}
                       </h4>
-                      <span className="text-[10px] text-zinc-500 shrink-0 whitespace-nowrap">
+                      <span className="text-[10px] text-text-secondary shrink-0 whitespace-nowrap">
                         {eventTypeLabels[event.eventType] || event.eventType}
                       </span>
                     </div>
-                    <p className="text-[12px] text-zinc-400 mb-3 line-clamp-2">
+                    <p className="text-[12px] text-text-secondary mb-3 line-clamp-2">
                       {event.summary}
                     </p>
                     <div className="flex flex-wrap items-center gap-3 text-[11px]">
-                      <span className="text-zinc-500">
+                      <span className="text-text-secondary">
                         📍 {event.geography} · {event.sector}
                       </span>
-                      <span className="text-zinc-500">
+                      <span className="text-text-secondary">
                         🏢 {event.entityName}
                       </span>
-                      <span className="text-zinc-500">
+                      <span className="text-text-secondary">
                         📰 {event.sourceName}
                       </span>
-                      <span className="px-2 py-0.5 rounded border border-zinc-200 border-white/10 bg-zinc-50 dark:bg-white/5 text-zinc-600 dark:text-zinc-500 font-medium">
+                      <span className="px-2 py-0.5 rounded border border-card-border bg-panel text-text-secondary  font-medium">
                         {event.steepleCategory}
                       </span>
                       <div className="flex gap-2 ml-auto">
@@ -600,11 +600,11 @@ export default function MarketAnalystPage() {
             <div className="space-y-6">
 
               {/* Landscape Summary */}
-              <div className="bg-card/60 border border-white/5 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+              <div className="bg-card/60 border border-card-border rounded-2xl p-8 text-text-primary shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-card-border rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold tracking-widest uppercase flex items-center">
+                    <span className="px-3 py-1 rounded-full bg-card/50 backdrop-blur-md text-[11px] font-bold tracking-widest uppercase flex items-center">
                       <Map className="h-3 w-3 mr-1.5" /> Market Landscape
                     </span>
                   </div>
@@ -624,7 +624,7 @@ export default function MarketAnalystPage() {
                     <span className="text-[10px] font-bold tracking-widest text-amber-600 dark:text-amber-400 uppercase block mb-1">
                       Strategic Precondition — Must Solve First
                     </span>
-                    <p className="text-[14px] text-zinc-800  font-medium leading-relaxed">
+                    <p className="text-[14px] text-text-primary  font-medium leading-relaxed">
                       {result.landscape.strategicPrecondition}
                     </p>
                   </div>
@@ -633,7 +633,7 @@ export default function MarketAnalystPage() {
 
               {/* Market Segments — Dynamically Discovered */}
               <div>
-                <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider flex items-center gap-2">
                   <Target className="h-4 w-4 text-emerald-500" /> Discovered Market Segments ({result.landscape.segments.length})
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -648,16 +648,16 @@ export default function MarketAnalystPage() {
                     return (
                       <div
                         key={segment.id || idx}
-                        className="bg-card/40 backdrop-blur-md rounded-2xl p-6 border border-zinc-100 dark:border-white/5 hover:shadow-xl transition-shadow duration-300 animate-in fade-in duration-300 relative overflow-hidden"
+                        className="bg-card/40 backdrop-blur-md rounded-2xl p-6 border border-card-border hover:shadow-xl transition-shadow duration-300 animate-in fade-in duration-300 relative overflow-hidden"
                         style={{ animationDelay: `${idx * 100}ms`, animationFillMode: "both" }}
                       >
                         {/* Header */}
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h4 className="text-[16px] font-bold text-white mb-1">
+                            <h4 className="text-[16px] font-bold text-text-primary mb-1">
                               {segment.name}
                             </h4>
-                            <span className="text-[12px] text-zinc-500">📍 {segment.geography}</span>
+                            <span className="text-[12px] text-text-secondary">📍 {segment.geography}</span>
                           </div>
                           <span className={`px-2.5 py-1 rounded-lg border text-[10px] font-bold ${config.bg} ${config.text}`}>
                             {config.label}
@@ -665,12 +665,12 @@ export default function MarketAnalystPage() {
                         </div>
 
                         {/* Trigger */}
-                        <div className="bg-card/20 rounded-xl p-3 mb-3 border border-zinc-100 dark:border-white/5">
+                        <div className="bg-card/20 rounded-xl p-3 mb-3 border border-card-border">
                           <span className="text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-1">
                             Commercial Trigger
                           </span>
-                          <p className="text-[13px] font-semibold text-white">{segment.trigger?.name}</p>
-                          <div className="flex items-center gap-3 mt-1 text-[11px] text-zinc-600 dark:text-zinc-500">
+                          <p className="text-[13px] font-semibold text-text-primary">{segment.trigger?.name}</p>
+                          <div className="flex items-center gap-3 mt-1 text-[11px] text-text-secondary ">
                             <span>💰 {segment.trigger?.value}</span>
                             <span>📅 {segment.trigger?.deadline}</span>
                           </div>
@@ -679,24 +679,24 @@ export default function MarketAnalystPage() {
                         {/* Mechanism */}
                         <div className="mb-3">
                           <span className="text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-1">Why This Creates a Buyer</span>
-                          <p className="text-[12px] text-zinc-400 leading-relaxed">{segment.mechanism}</p>
+                          <p className="text-[12px] text-text-secondary leading-relaxed">{segment.mechanism}</p>
                         </div>
 
                         {/* Entry Barriers */}
                         <div className="mb-3">
                           <span className="text-[9px] font-bold text-amber-500 uppercase tracking-wider block mb-1">Entry Barriers</span>
-                          <p className="text-[12px] text-zinc-400">{segment.entryBarriers}</p>
+                          <p className="text-[12px] text-text-secondary">{segment.entryBarriers}</p>
                         </div>
 
                         {/* Squeeze Opportunity */}
                         <div className="bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary)]/10 rounded-xl p-3 border border-[var(--color-primary)]/10 mb-3">
                           <span className="text-[9px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-1">🎯 Squeeze Opportunity</span>
-                          <p className="text-[13px] font-semibold text-white leading-relaxed">{segment.squeezeOpportunity}</p>
+                          <p className="text-[13px] font-semibold text-text-primary leading-relaxed">{segment.squeezeOpportunity}</p>
                         </div>
 
                         {/* Product Pill */}
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-zinc-500">Best Fit:</span>
+                          <span className="text-[10px] text-text-secondary">Best Fit:</span>
                           <span className="px-3 py-1 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-[11px] font-bold border border-[var(--color-primary)]/20">
                             {segment.bestFitProduct}
                           </span>
@@ -709,25 +709,25 @@ export default function MarketAnalystPage() {
 
               {/* Growth Horizons Timeline */}
               <div>
-                <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-sm font-bold text-text-primary mb-4 uppercase tracking-wider flex items-center gap-2">
                   <Clock className="h-4 w-4 text-[var(--color-primary)]" /> Growth Strategy Horizons
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {result.landscape.horizons.map((horizon) => {
                     const horizonConfig = {
-                      now: { accent: "from-emerald-500 to-emerald-600", glow: "shadow-emerald-500/10", badge: "bg-emerald-500 text-white", icon: "🚀" },
-                      next: { accent: "from-amber-500 to-orange-500", glow: "shadow-amber-500/10", badge: "bg-amber-500 text-white", icon: "⚙️" },
-                      later: { accent: "from-zinc-400 to-zinc-500", glow: "shadow-zinc-500/10", badge: "bg-zinc-500 text-white", icon: "⏸️" },
+                      now: { accent: "from-emerald-500 to-emerald-600", glow: "shadow-emerald-500/10", badge: "bg-emerald-500 text-text-primary", icon: "🚀" },
+                      next: { accent: "from-amber-500 to-orange-500", glow: "shadow-amber-500/10", badge: "bg-amber-500 text-text-primary", icon: "⚙️" },
+                      later: { accent: "from-zinc-400 to-zinc-500", glow: "shadow-sm", badge: "bg-panel0 text-text-primary", icon: "⏸️" },
                     };
                     const config = horizonConfig[horizon.id] || horizonConfig.later;
 
                     return (
                       <div
                         key={horizon.id}
-                        className={`bg-card/40 backdrop-blur-md rounded-2xl border border-zinc-100 dark:border-white/5 overflow-hidden hover:shadow-xl ${config.glow} transition-shadow duration-300`}
+                        className={`bg-card/40 backdrop-blur-md rounded-2xl border border-card-border overflow-hidden hover:shadow-xl ${config.glow} transition-shadow duration-300`}
                       >
                         {/* Horizon Header */}
-                        <div className={`bg-gradient-to-r ${config.accent} p-4 text-white`}>
+                        <div className={`bg-gradient-to-r ${config.accent} p-4 text-text-primary`}>
                           <div className="flex items-center justify-between">
                             <div>
                               <span className="text-[20px] mr-2">{config.icon}</span>
@@ -740,16 +740,16 @@ export default function MarketAnalystPage() {
                         {/* Actions */}
                         <div className="p-4 space-y-3">
                           {horizon.actions?.map((action, aIdx) => (
-                            <div key={aIdx} className="bg-card/20 rounded-xl p-3 border border-zinc-100 dark:border-white/5">
-                              <p className="text-[13px] font-semibold text-white mb-1.5">{action.action}</p>
-                              <div className="flex items-center gap-2 text-[11px] text-zinc-600 dark:text-zinc-500 mb-1">
+                            <div key={aIdx} className="bg-card/20 rounded-xl p-3 border border-card-border">
+                              <p className="text-[13px] font-semibold text-text-primary mb-1.5">{action.action}</p>
+                              <div className="flex items-center gap-2 text-[11px] text-text-secondary  mb-1">
                                 <span className="px-2 py-0.5 rounded bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold">{action.segment}</span>
                               </div>
-                              <p className="text-[11px] text-zinc-500 italic">{action.rationale}</p>
+                              <p className="text-[11px] text-text-secondary italic">{action.rationale}</p>
                             </div>
                           ))}
                           {(!horizon.actions || horizon.actions.length === 0) && (
-                            <p className="text-[12px] text-zinc-500 italic text-center py-4">No actions identified for this horizon.</p>
+                            <p className="text-[12px] text-text-secondary italic text-center py-4">No actions identified for this horizon.</p>
                           )}
                         </div>
                       </div>
@@ -763,10 +763,10 @@ export default function MarketAnalystPage() {
 
           {/* Landscape Not Available */}
           {activeView === "landscape" && !result.landscape && (
-            <div className="bg-card/40 backdrop-blur-md rounded-2xl p-12 border border-zinc-100 dark:border-white/5 text-center">
-              <Map className="h-10 w-10 text-zinc-500 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-white mb-2">Landscape Analysis Unavailable</h3>
-              <p className="text-sm text-zinc-400 max-w-md mx-auto">
+            <div className="bg-card/40 backdrop-blur-md rounded-2xl p-12 border border-card-border text-center">
+              <Map className="h-10 w-10 text-text-secondary mx-auto mb-3" />
+              <h3 className="text-lg font-bold text-text-primary mb-2">Landscape Analysis Unavailable</h3>
+              <p className="text-sm text-text-secondary max-w-md mx-auto">
                 The market landscape analysis could not be generated in this pipeline run. Try running the pipeline again.
               </p>
             </div>
@@ -776,20 +776,20 @@ export default function MarketAnalystPage() {
 
       {/* Empty State */}
       {!result && !isLoading && (
-        <div className="bg-card/40 backdrop-blur-md rounded-3xl p-16 border border-zinc-100 dark:border-white/5 text-center">
+        <div className="bg-card/40 backdrop-blur-md rounded-3xl p-16 border border-card-border text-center">
           <div className="inline-flex items-center justify-center p-5 rounded-full bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-primary)]/10 mb-5">
             <Network className="h-10 w-10 text-[var(--color-primary)]" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-2">
+          <h3 className="text-xl font-bold text-text-primary mb-2">
             Market Intelligence Pipeline
           </h3>
-          <p className="text-sm text-zinc-400 max-w-md mx-auto mb-8">
+          <p className="text-sm text-text-secondary max-w-md mx-auto mb-8">
             Run the pipeline to extract structured events from tiered sources, apply deterministic scoring, 
             aggregate into strategic themes, and generate actionable intelligence.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 text-[11px] text-zinc-500">
+          <div className="flex flex-wrap justify-center gap-3 text-[11px] text-text-secondary">
             {["Tier A: Regulatory", "Tier B: Procurement", "Tier C: Trade Press", "Tier D: Business Press"].map((t) => (
-              <span key={t} className="px-3 py-1.5 rounded-full border border-zinc-200 border-white/10 bg-zinc-50 dark:bg-white/5">
+              <span key={t} className="px-3 py-1.5 rounded-full border border-card-border bg-panel">
                 {t}
               </span>
             ))}
@@ -830,7 +830,7 @@ function ThemeCard({
           ? "border-emerald-500/20"
           : status === "rejected"
           ? "border-red-500/20 opacity-60"
-          : "border-zinc-100 dark:border-white/5"
+          : "border-card-border"
       }`}
     >
       {/* Header */}
@@ -843,7 +843,7 @@ function ThemeCard({
         
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3 mb-1.5">
-            <h4 className="text-[15px] font-bold text-white leading-tight">
+            <h4 className="text-[15px] font-bold text-text-primary leading-tight">
               {theme.title}
             </h4>
             <div className="flex items-center gap-2 shrink-0">
@@ -862,10 +862,10 @@ function ThemeCard({
               )}
             </div>
           </div>
-          <p className="text-[13px] text-zinc-400 line-clamp-2">
+          <p className="text-[13px] text-text-secondary line-clamp-2">
             {theme.description}
           </p>
-          <div className="flex items-center gap-4 mt-2 text-[11px] text-zinc-500">
+          <div className="flex items-center gap-4 mt-2 text-[11px] text-text-secondary">
             <span>📊 Relevance: <strong className="text-[var(--color-primary)]">{theme.relevanceScore}</strong></span>
             <span>🧩 {theme.events?.length || 0} supporting events</span>
             <span>🎯 Module: <strong className="text-[var(--color-primary)]">{theme.interpretation?.relevantProduct}</strong></span>
@@ -874,29 +874,29 @@ function ThemeCard({
 
         <div className="shrink-0 mt-1">
           {expanded ? (
-            <ChevronUp className="h-4 w-4 text-zinc-500" />
+            <ChevronUp className="h-4 w-4 text-text-secondary" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-zinc-500" />
+            <ChevronDown className="h-4 w-4 text-text-secondary" />
           )}
         </div>
       </button>
 
       {/* Expanded Content */}
       {expanded && (
-        <div className="px-5 pb-5 space-y-4 border-t border-zinc-100 dark:border-white/5 pt-4 animate-in fade-in duration-200">
+        <div className="px-5 pb-5 space-y-4 border-t border-card-border pt-4 animate-in fade-in duration-200">
           {/* Strategic Interpretation */}
-          <div className="bg-card/20 rounded-xl p-4 border border-zinc-100 dark:border-white/5">
+          <div className="bg-card/20 rounded-xl p-4 border border-card-border">
             <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-2">
               Strategic Interpretation
             </span>
             {/* Stakeholder View Toggle */}
-            <div className="flex bg-zinc-100 dark:bg-[#110D17] p-1 rounded-full w-fit mb-4 border border-zinc-200 dark:border-white/5">
+            <div className="flex bg-panel p-1 rounded-full w-fit mb-4 border border-card-border">
               <button
                 onClick={(e) => { e.stopPropagation(); setStakeholderView("ceo"); }}
                 className={`px-4 py-1.5 rounded-full text-[11px] font-bold transition-all ${
                   stakeholderView === "ceo"
-                    ? "bg-[var(--color-primary)] text-black text-white shadow"
-                    : "text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+                    ? "bg-[var(--color-primary)] text-text-alert text-text-primary shadow"
+                    : "text-text-secondary  hover:text-text-primary"
                 }`}
               >
                 CEO View
@@ -905,67 +905,67 @@ function ThemeCard({
                 onClick={(e) => { e.stopPropagation(); setStakeholderView("cto"); }}
                 className={`px-4 py-1.5 rounded-full text-[11px] font-bold transition-all ${
                   stakeholderView === "cto"
-                    ? "bg-[var(--color-primary)] text-black text-white shadow"
-                    : "text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+                    ? "bg-[var(--color-primary)] text-text-alert text-text-primary shadow"
+                    : "text-text-secondary  hover:text-text-primary"
                 }`}
               >
                 CTO View
               </button>
             </div>
 
-            <p className="text-[13px] text-zinc-700  mb-3 font-medium bg-white/5 p-3 rounded-lg border border-white/5 border-l-4 border-l-[var(--color-primary)]">
+            <p className="text-[13px] text-text-secondary  mb-3 font-medium bg-card-border/50 p-3 rounded-lg border border-card-border border-l-4 border-l-[var(--color-primary)]">
               {stakeholderView === "ceo" 
                 ? theme.interpretation?.stakeholderViews?.ceoSummary 
                 : theme.interpretation?.stakeholderViews?.ctoSummary}
             </p>
 
             <div className="flex items-center gap-4 text-[11px] mb-4">
-              <span className="text-zinc-600 dark:text-zinc-500">
+              <span className="text-text-secondary ">
                 Strategic Match: <strong className="text-[var(--color-primary)]">{theme.interpretation?.relevantProduct}</strong>
               </span>
             </div>
             
             {/* Scenarios & Action */}
             <div className="grid grid-cols-1 gap-3 mb-4">
-              <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-zinc-100 dark:border-white/5">
+              <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-card-border">
                 <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-2">
                   18-Month Scenario Forecasts
                 </span>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div className="bg-red-500/5 p-2 rounded border border-red-500/10">
                     <span className="text-[9px] font-bold text-red-500 block mb-1">BEAR CASE</span>
-                    <p className="text-[11px] text-zinc-400">{theme.interpretation?.scenarioForecasts?.bearCase}</p>
+                    <p className="text-[11px] text-text-secondary">{theme.interpretation?.scenarioForecasts?.bearCase}</p>
                   </div>
                   <div className="bg-blue-500/5 p-2 rounded border border-blue-500/10">
                     <span className="text-[9px] font-bold text-blue-500 block mb-1">BASE CASE</span>
-                    <p className="text-[11px] text-zinc-400">{theme.interpretation?.scenarioForecasts?.baseCase}</p>
+                    <p className="text-[11px] text-text-secondary">{theme.interpretation?.scenarioForecasts?.baseCase}</p>
                   </div>
                   <div className="bg-emerald-500/5 p-2 rounded border border-emerald-500/10">
                     <span className="text-[9px] font-bold text-emerald-500 block mb-1">BULL CASE</span>
-                    <p className="text-[11px] text-zinc-400">{theme.interpretation?.scenarioForecasts?.bullCase}</p>
+                    <p className="text-[11px] text-text-secondary">{theme.interpretation?.scenarioForecasts?.bullCase}</p>
                   </div>
                 </div>
               </div>
               
-              <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-zinc-100 dark:border-white/5">
+              <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-card-border">
                 <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider block mb-1">
                   Suggested Action
                 </span>
-                <p className="text-[12px] text-zinc-700 ">
+                <p className="text-[12px] text-text-secondary ">
                   {theme.interpretation?.suggestedAction}
                 </p>
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-zinc-100 dark:border-white/5">
+            <div className="p-3 rounded-lg bg-card/40 backdrop-blur-md border border-card-border">
               <span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider block mb-2">
                 VRIO Competitive Analysis ({theme.interpretation?.vrioAnalysis?.competitiveImplication})
               </span>
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-zinc-400">
-                <div><strong className="text-zinc-900 ">V:</strong> {theme.interpretation?.vrioAnalysis?.valuable}</div>
-                <div><strong className="text-zinc-900 ">R:</strong> {theme.interpretation?.vrioAnalysis?.rare}</div>
-                <div><strong className="text-zinc-900 ">I:</strong> {theme.interpretation?.vrioAnalysis?.inimitable}</div>
-                <div><strong className="text-zinc-900 ">O:</strong> {theme.interpretation?.vrioAnalysis?.organization}</div>
+              <div className="grid grid-cols-2 gap-2 text-[11px] text-text-secondary">
+                <div><strong className="text-text-primary ">V:</strong> {theme.interpretation?.vrioAnalysis?.valuable}</div>
+                <div><strong className="text-text-primary ">R:</strong> {theme.interpretation?.vrioAnalysis?.rare}</div>
+                <div><strong className="text-text-primary ">I:</strong> {theme.interpretation?.vrioAnalysis?.inimitable}</div>
+                <div><strong className="text-text-primary ">O:</strong> {theme.interpretation?.vrioAnalysis?.organization}</div>
               </div>
             </div>
           </div>
@@ -973,23 +973,23 @@ function ThemeCard({
           {/* Supporting Events */}
           {theme.events && theme.events.length > 0 && (
             <div>
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block mb-2">
+              <span className="text-[10px] font-bold text-text-secondary uppercase tracking-wider block mb-2">
                 Evidence Chain ({theme.events.length} events)
               </span>
               <div className="space-y-2">
                 {theme.events.map((evt) => (
                   <div
                     key={evt.id}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-card/20 border border-zinc-100 dark:border-white/5"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-card/20 border border-card-border"
                   >
                     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase border mt-0.5 ${tierColors[evt.sourceTier]?.bg} ${tierColors[evt.sourceTier]?.text}`}>
                       {evt.sourceTier}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[12px] font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
+                      <p className="text-[12px] font-semibold text-text-primary text-text-primary leading-tight">
                         {evt.title}
                       </p>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">
+                      <p className="text-[11px] text-text-secondary mt-0.5">
                         {evt.sourceName} · {evt.geography} · Rel: {evt.relevanceScore}
                       </p>
                     </div>
