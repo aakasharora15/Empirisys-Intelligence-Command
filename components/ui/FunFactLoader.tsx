@@ -69,7 +69,7 @@ export default function FunFactLoader({
               transition={{ duration: 0.3 }}
               className="text-sm md:text-base text-text-secondary text-center leading-relaxed font-medium"
             >
-              "{FUN_FACTS[factIndex]}"
+              &quot;{FUN_FACTS[factIndex]}&quot;
             </motion.p>
           </AnimatePresence>
         </div>

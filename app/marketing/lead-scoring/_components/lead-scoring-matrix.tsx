@@ -12,7 +12,7 @@ export function LeadScoringMatrix() {
   const [profile, setProfile] = useState<LeadScoreProfile | null>(null);
   const [liveIncidents, setLiveIncidents] = useState<IncidentIntelligence[]>([]);
   const [priorityTargets, setPriorityTargets] = useState<string[]>([]);
-  const [now] = useState(() => now);
+  const [now] = useState(() => Date.now());
 
   const fetchLiveIncidents = async () => {
     try {
