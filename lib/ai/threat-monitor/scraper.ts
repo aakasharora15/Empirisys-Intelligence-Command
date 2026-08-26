@@ -111,7 +111,7 @@ Output format must be:
 
   const completion = await anthropic.messages.create({
     model: CLAUDE_OPUS,
-    max_tokens: 1500,
+    max_tokens: 8000,
     system: "You are an elite European HSE Regulatory Scraping AI with deep knowledge of the BowTie methodology.\nOutput ONLY JSON, with no markdown formatting.",
     messages: [
       { role: "user", content: prompt }

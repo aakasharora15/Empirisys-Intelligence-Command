@@ -24,7 +24,7 @@ export async function GET(req: Request) {
 
     const completion = await anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1500,
+      max_tokens: 8000,
       system: `You are an elite HSE Market Intelligence AI for Empirisys Ltd. 
 Your task is to analyze current European (UK/Netherlands) process safety trends and generate 4 highly relevant "AggregatedThemes" based on current events.
 Output strictly in JSON format as an object with a "themes" array containing exactly 4 objects.

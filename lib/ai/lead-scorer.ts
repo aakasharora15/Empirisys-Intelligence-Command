@@ -48,7 +48,7 @@ export class LeadScoringAgent {
   private async triggerEventFilter(rawText: string): Promise<TriggerEvent | null> {
     const response = await this.anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1000,
+      max_tokens: 8000,
       system: `You are the Empirisys Lead Qualification Filter.
 Analyze the following market signal and identify if it contains a high-value trigger event.
 Valid types: 'safety_near_miss', 'environmental_fine', 'plant_modernization', 'new_head_of_process_safety'.
@@ -120,7 +120,7 @@ Output ONLY JSON, with no markdown formatting.`,
 
     const response = await this.anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1500,
+      max_tokens: 8000,
       system: `You are an elite Enterprise B2B Sales Partner with decades of experience closing high-ticket deals at top global management consulting firms (e.g., McKinsey, Big Four). Your logic must reflect the absolute highest echelon of elite corporate deal structuring and strategic client acquisition.
 You are preparing an executive pitch brief based on a new trigger event.
 Empirisys sells two main products: 
