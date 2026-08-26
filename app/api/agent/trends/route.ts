@@ -51,7 +51,7 @@ export async function GET(req: Request) {
 
     const completion = await anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1500,
+      max_tokens: 8000,
       system: `You are the Empirisys Internal Intelligence Analytics Engine.
 Your job is to look at the recent verified live threats below, and generate realistic INTERNAL analytics data representing what the Empirisys platform has processed over the last 30 days.
 Do NOT generate fake macro-economic data (like Total Addressable Market). Generate metrics about the SIGNALS, THREATS, and SOURCES the platform has processed.

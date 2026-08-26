@@ -35,7 +35,7 @@ For each event, extract:
 - steepleCategory: Analyze the event and strictly categorize it as 'Socio-cultural', 'Technological', 'Economic', 'Environmental', 'Political', 'Legal', or 'Ethical'
 - title: A concise event title (max 15 words)
 - summary: 2-3 sentence description of the event and its significance
-- sourceUrl: A realistic URL for the source
+- sourceUrl: The exact URL as it appears in the supplied search results. Never construct, guess or complete a URL. Omit this field entirely if the search results do not contain one.
 - sourceName: Name of the publication/body
 - sourceTier: 'A', 'B', 'C', or 'D'
 - geography: Country or region (e.g., 'UK', 'Netherlands', 'Germany')
@@ -254,12 +254,15 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   let userContent = 'Generate a fresh batch of market intelligence events for the current period. Today\'s date is ' + new Date().toISOString().slice(0, 10) + '.';
   
   if (scrapedData) {
-    userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this real-world data as the factual basis for your generated events. If the live data is insufficient to generate exactly 8 events, invent the remaining ones as highly realistic simulations.`;
+    userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this real-world data as the factual basis for your generated events. If the live data is insufficient to generate exactly 5 events, invent the remaining ones as highly realistic simulations.`;
   }
 
   const extractionResponse = await anthropic.messages.create({
     model: CLAUDE_OPUS,
-    max_tokens: 2000,
+    // Thinking is on by default on this model and its tokens count against
+    // max_tokens, so the ceiling has to cover reasoning *and* the JSON body.
+    max_tokens: 8000,
+    output_config: { effort: 'medium' },
     system: EXTRACTION_SYSTEM_PROMPT,
     messages: [
       {
@@ -271,7 +274,14 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
 
   const extractionText = extractionResponse.content.find(c => c.type === 'text')?.text;
   if (!extractionText) {
-    throw new Error('LLM returned empty extraction response');
+    throw new Error(
+      extractionResponse.stop_reason === 'max_tokens'
+        ? 'LLM extraction hit the max_tokens ceiling before emitting any JSON'
+        : 'LLM returned empty extraction response',
+    );
+  }
+  if (extractionResponse.stop_reason === 'max_tokens') {
+    throw new Error('LLM extraction response was truncated at max_tokens');
   }
 
   const parsed = parseModelJson<{ events: LLMExtractedEvent[] }>(extractionText);
@@ -297,7 +307,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
       steepleCategory: raw.steepleCategory,
       title: raw.title,
       summary: raw.summary,
-      sourceUrl: raw.sourceUrl,
+      sourceUrl: raw.sourceUrl ?? '',
       sourceName: raw.sourceName,
       sourceTier: raw.sourceTier,
       geography: raw.geography,
@@ -338,7 +348,10 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
 
   const aggregationResponse = await anthropic.messages.create({
     model: CLAUDE_OPUS,
-    max_tokens: 2500,
+    // 3-5 themes, each with a full interpretation object, plus the metrics
+    // block: several thousand tokens of JSON before any thinking is counted.
+    max_tokens: 16000,
+    output_config: { effort: 'medium' },
     system: AGGREGATION_SYSTEM_PROMPT,
     messages: [
       {
@@ -352,7 +365,14 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
 
   const aggregationText = aggregationResponse.content.find(c => c.type === 'text')?.text;
   if (!aggregationText) {
-    throw new Error('LLM returned empty aggregation response');
+    throw new Error(
+      aggregationResponse.stop_reason === 'max_tokens'
+        ? 'LLM aggregation hit the max_tokens ceiling before emitting any JSON'
+        : 'LLM returned empty aggregation response',
+    );
+  }
+  if (aggregationResponse.stop_reason === 'max_tokens') {
+    throw new Error('LLM aggregation response was truncated at max_tokens');
   }
 
   const parsedAggregation = parseModelJson<RawAggregation>(aggregationText);
@@ -444,7 +464,8 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
 
     const landscapeResponse = await anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1500,
+      max_tokens: 16000,
+      output_config: { effort: 'medium' },
       system: LANDSCAPE_SYSTEM_PROMPT,
       messages: [
         {

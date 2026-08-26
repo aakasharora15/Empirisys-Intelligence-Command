@@ -51,7 +51,7 @@ export async function GET(req: Request) {
 
     const completion = await anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1500,
+      max_tokens: 8000,
       system: `You are a real-time web-scraping and intelligence aggregation AI for Empirisys Ltd. 
 Your task is to surface 4 recent, highly plausible, or authentic industrial/process safety incidents from major European players (e.g. Shell, BP, Balfour Beatty, TotalEnergies, National Grid, Equinor).
 Base these strictly on recent real-world events, news patterns, or highly probable near-misses from your most recent training data.

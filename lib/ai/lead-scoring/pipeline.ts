@@ -143,7 +143,7 @@ Note: The incident block is optional if no real incident applies.
   }
   const completion = await anthropic.messages.create({
     model: CLAUDE_OPUS,
-    max_tokens: 1500,
+    max_tokens: 8000,
     system: "You are an elite HSE B2B Sales Intelligence AI with deep knowledge of MEDDIC, CCPS RBPS, and Challenger Sale methodologies.\nOutput ONLY JSON, with no markdown formatting.",
     messages: [
       { role: "user", content: prompt }

@@ -6,9 +6,11 @@ import { parseModelJson } from '@/lib/ai/parse';
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazily constructed: instantiating the SDK at module scope throws when
+// OPENAI_API_KEY is absent, which breaks `next build` page-data collection.
+function getOpenAI(): OpenAI {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+}
 
 export interface IntelligenceSignal {
   id: string;
@@ -35,6 +37,8 @@ export async function GET(req: Request) {
       throw new Error("OPENAI_API_KEY is not configured.");
     }
 
+    const openai = getOpenAI();
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       response_format: { type: "json_object" },
@@ -56,7 +60,7 @@ Each object must perfectly match this TypeScript interface:
   status: 'discovered' | 'reviewed' | 'actionable';
   confidence: number; (0-100)
   strategicTags: string[]; (2-3 short tags like "Lead Gen", "Compliance", "Competitor Threat")
-  url: string; (A realistic URL pointing to the source material, e.g., "https://www.hse.gov.uk/news" or "https://reuters.com/...")
+  url: string; (The exact source URL as it appears in the supplied search results. Never construct, guess or complete a URL. Omit this field if the results do not contain one.)
 }`
         },
         {

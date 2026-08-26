@@ -140,7 +140,8 @@ export interface LLMExtractedEvent {
   steepleCategory: SteepleCategory;
   title: string;
   summary: string;
-  sourceUrl: string;
+  /** Omitted when the search results carry no URL for the event. */
+  sourceUrl?: string;
   sourceName: string;
   sourceTier: SourceTier;
   geography: string;

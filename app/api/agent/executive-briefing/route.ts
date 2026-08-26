@@ -51,7 +51,7 @@ export async function GET(req: Request) {
 
     const completion = await anthropic.messages.create({
       model: CLAUDE_OPUS,
-      max_tokens: 1500,
+      max_tokens: 8000,
       system: `You are the Empirisys CEO's Chief of Staff and Head of Strategy.
 Review the following live threat feed detected in the last 24 hours:
 ${JSON.stringify(liveThreats, null, 2)}
