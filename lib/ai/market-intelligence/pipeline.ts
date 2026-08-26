@@ -35,7 +35,7 @@ For each event, extract:
 - steepleCategory: Analyze the event and strictly categorize it as 'Socio-cultural', 'Technological', 'Economic', 'Environmental', 'Political', 'Legal', or 'Ethical'
 - title: A concise event title (max 15 words)
 - summary: 2-3 sentence description of the event and its significance
-- sourceUrl: A realistic URL for the source
+- sourceUrl: The exact URL as it appears in the supplied search results. Never construct, guess or complete a URL. Omit this field entirely if the search results do not contain one.
 - sourceName: Name of the publication/body
 - sourceTier: 'A', 'B', 'C', or 'D'
 - geography: Country or region (e.g., 'UK', 'Netherlands', 'Germany')
@@ -254,7 +254,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
   let userContent = 'Generate a fresh batch of market intelligence events for the current period. Today\'s date is ' + new Date().toISOString().slice(0, 10) + '.';
   
   if (scrapedData) {
-    userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this real-world data as the factual basis for your generated events. If the live data is insufficient to generate exactly 8 events, invent the remaining ones as highly realistic simulations.`;
+    userContent += `\n\n--- LIVE INTERNET DATA ---\nHere are real-time search results related to European process safety markets:\n${scrapedData}\n\nUse this real-world data as the factual basis for your generated events. If the live data is insufficient to generate exactly 5 events, invent the remaining ones as highly realistic simulations.`;
   }
 
   const extractionResponse = await anthropic.messages.create({
@@ -307,7 +307,7 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
       steepleCategory: raw.steepleCategory,
       title: raw.title,
       summary: raw.summary,
-      sourceUrl: raw.sourceUrl,
+      sourceUrl: raw.sourceUrl ?? '',
       sourceName: raw.sourceName,
       sourceTier: raw.sourceTier,
       geography: raw.geography,
