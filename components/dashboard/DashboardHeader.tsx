@@ -285,9 +285,9 @@ export default function DashboardHeader({
       
       {/* ── BENTO BOX GRID ──────────────────────────────────────────────── */}
       <div className="w-full px-4 md:px-8 pb-12 max-w-[1800px] mx-auto">
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 md:gap-5">
+        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-2 2xl:grid-cols-6 gap-4 md:gap-5">
           
-          {/* 1. KPIs (1 column each) */}
+          {/* 1. KPIs */}
           {[
             {
               title: 'Direct Rival Threat',
@@ -309,7 +309,7 @@ export default function DashboardHeader({
               <motion.div
                 key={i}
                 variants={itemVariants}
-                className="col-span-1 glass-card p-6 rounded-3xl border border-white/5 hover:bg-white/[0.02] transition-colors flex flex-col justify-between min-h-[160px]"
+                className="col-span-1 2xl:col-span-2 glass-card p-6 rounded-3xl border border-white/5 hover:bg-white/[0.02] transition-colors flex flex-col justify-between min-h-[160px]"
               >
                 <div className="flex justify-between items-start mb-4">
                   <p className="text-xs font-bold text-text-secondary uppercase tracking-widest leading-tight">{card.title}</p>
@@ -325,8 +325,46 @@ export default function DashboardHeader({
             );
           })}
 
-          {/* 2. Direct Rivals (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          {/* 2. Substitute Threats — completes the top threat row */}
+          <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 2xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col lg:max-h-[300px] lg:self-start">
+             <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-[#EF4444]" />
+                  <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Substitute Threats</h3>
+                  <div className="ml-2"><ChartInfoButton title="Substitute Threats" description="DIY AI initiatives, internal toolings, or generic copilots that pose high security risks and lack auditability." /></div>
+                </div>
+                <span className="text-xs font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/20 px-2 py-1 rounded-md uppercase">{substitutes.length} tracked</span>
+             </div>
+             <div className="space-y-4 overflow-y-auto max-h-[320px] lg:max-h-none lg:flex-1 lg:min-h-0 pr-2 custom-scrollbar">
+               {substitutes.map((comp) => {
+                 const threat = getThreatConfig(comp.threat_score);
+                 return (
+                   <div key={comp.id} className="bg-background/40 border border-white/5 rounded-2xl p-5 hover:bg-white/[0.02] transition-colors">
+                     <div className="flex items-center justify-between mb-4">
+                       <div className="flex items-center gap-4">
+                         <div className="h-10 w-10 rounded-full bg-[#EF4444]/10 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 relative">
+                           <span className="absolute inset-0 flex items-center justify-center text-[#EF4444] text-sm font-black z-0">
+                             {comp.name.slice(0, 2).toUpperCase()}
+                           </span>
+                         </div>
+                         <div>
+                           <p className="text-base font-bold text-text-primary leading-tight">{comp.name}</p>
+                           <p className="text-xs text-[#EF4444] mt-0.5 font-bold uppercase tracking-wider">{threat.label} RISK</p>
+                         </div>
+                       </div>
+                       <div className="text-right">
+                         <span className="text-2xl font-black text-[#EF4444]">{comp.threat_score}</span>
+                       </div>
+                     </div>
+                     <p className="text-xs text-text-secondary font-mono leading-relaxed">{comp.description}</p>
+                   </div>
+                 );
+               })}
+             </div>
+          </motion.div>
+
+          {/* 3. Direct Rivals */}
+          <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 2xl:col-span-3 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col lg:max-h-[440px] lg:self-start">
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-amber-400" />
@@ -335,7 +373,7 @@ export default function DashboardHeader({
                 </div>
                 <span className="text-xs font-bold tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-1 rounded-md uppercase">{directRivals.length} tracked</span>
              </div>
-             <div className="space-y-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="space-y-4 overflow-y-auto max-h-[320px] lg:max-h-none lg:flex-1 lg:min-h-0 pr-2 custom-scrollbar">
                {directRivals.map((comp) => {
                  const threat = getThreatConfig(comp.threat_score);
                  return (
@@ -372,8 +410,8 @@ export default function DashboardHeader({
              </div>
           </motion.div>
 
-          {/* 3. Activity Feed (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[500px]">
+          {/* 4. Activity Feed */}
+          <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 2xl:col-span-3 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[440px]">
             <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <Eye className="h-4 w-4 text-amber-400" />
@@ -404,8 +442,8 @@ export default function DashboardHeader({
             </div>
           </motion.div>
 
-          {/* 4. Incumbents (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          {/* 5. Incumbents */}
+          <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 2xl:col-span-3 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col lg:max-h-[400px]">
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-blue-400" />
@@ -414,7 +452,7 @@ export default function DashboardHeader({
                 </div>
                 <span className="text-xs font-bold tracking-widest text-blue-400 bg-blue-400/10 border border-blue-400/20 px-2 py-1 rounded-md uppercase">{incumbents.length} tracked</span>
              </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 overflow-y-auto max-h-[320px] lg:max-h-none lg:flex-1 lg:min-h-0 pr-2 custom-scrollbar">
                {incumbents.map((comp) => {
                  const threat = getThreatConfig(comp.threat_score);
                  return (
@@ -433,8 +471,8 @@ export default function DashboardHeader({
              </div>
           </motion.div>
 
-          {/* 5. Pain Points (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[400px]">
+          {/* 6. Pain Points */}
+          <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 2xl:col-span-3 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[400px]">
             <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <Zap className="h-4 w-4 text-amber-400" />
@@ -463,52 +501,14 @@ export default function DashboardHeader({
             </div>
           </motion.div>
 
-          {/* 6. Substitutes (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
-             <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-2 w-2 rounded-full bg-[#EF4444]" />
-                  <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Substitute Threats</h3>
-                  <div className="ml-2"><ChartInfoButton title="Substitute Threats" description="DIY AI initiatives, internal toolings, or generic copilots that pose high security risks and lack auditability." /></div>
-                </div>
-                <span className="text-xs font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/20 px-2 py-1 rounded-md uppercase">{substitutes.length} tracked</span>
-             </div>
-             <div className="space-y-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
-               {substitutes.map((comp) => {
-                 const threat = getThreatConfig(comp.threat_score);
-                 return (
-                   <div key={comp.id} className="bg-background/40 border border-white/5 rounded-2xl p-5 hover:bg-white/[0.02] transition-colors">
-                     <div className="flex items-center justify-between mb-4">
-                       <div className="flex items-center gap-4">
-                         <div className="h-10 w-10 rounded-full bg-[#EF4444]/10 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 relative">
-                           <span className="absolute inset-0 flex items-center justify-center text-[#EF4444] text-sm font-black z-0">
-                             {comp.name.slice(0, 2).toUpperCase()}
-                           </span>
-                         </div>
-                         <div>
-                           <p className="text-base font-bold text-text-primary leading-tight">{comp.name}</p>
-                           <p className="text-xs text-[#EF4444] mt-0.5 font-bold uppercase tracking-wider">{threat.label} RISK</p>
-                         </div>
-                       </div>
-                       <div className="text-right">
-                         <span className="text-2xl font-black text-[#EF4444]">{comp.threat_score}</span>
-                       </div>
-                     </div>
-                     <p className="text-xs text-text-secondary font-mono leading-relaxed">{comp.description}</p>
-                   </div>
-                 );
-               })}
-             </div>
-          </motion.div>
-
-          {/* 7. Battlecards (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          {/* 7. Battlecards — full width closing strip */}
+          <motion.div variants={itemVariants} className="col-span-2 lg:col-span-1 2xl:col-span-6 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
              <div className="flex items-center gap-3 mb-6">
                 <div className="h-2 w-2 rounded-full bg-accent" />
                 <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Sales Battlecards</h3>
                 <div className="ml-2"><ChartInfoButton title="Sales Battlecards" description="Instant tactical kill-sheets outlining specific weaknesses and counter-arguments against major competitors to help sales win deals." /></div>
              </div>
-             <div className="grid grid-cols-1 gap-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="grid grid-cols-1 2xl:grid-cols-3 gap-4 overflow-y-auto max-h-[320px] 2xl:max-h-none pr-2 custom-scrollbar">
                {[
                  { comp: 'FENNEX', counter: 'Emphasize our consulting advisory layer and complain about their UI complexity.', model: 'Complex SaaS Modules' },
                  { comp: 'ENABLON', counter: 'Highlight predictive AI. Enablon is a legacy system of record.', model: 'Legacy Enterprise License' },
