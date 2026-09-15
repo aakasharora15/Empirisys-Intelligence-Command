@@ -1,6 +1,6 @@
 # Empirisys Intelligence Hub: Exhaustive System Manifest
 
-This document serves as the absolute, ground-truth reference for the Empirisys Intelligence Hub. It is designed to be ingested by developers, stakeholders, or AI systems (like Claude Code) to achieve a 100% complete understanding of the platform's architecture, UX/UI design system, specific page functionalities, AI logic, and data state as built by Antigravity.
+This document serves as the absolute, ground-truth reference for the Empirisys Intelligence Hub. It is designed to be ingested by developers and stakeholders to achieve a 100% complete understanding of the platform's architecture, UX/UI design system, specific page functionalities, AI logic, and data state.
 
 ---
 
