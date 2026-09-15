@@ -13,7 +13,6 @@ import {
   SFBolt as Zap,
   SFEye as Eye,
 } from 'sf-symbols-lib/monochrome';
-import { motion } from 'framer-motion';
 import HeroSection from '@/components/ui/HeroSection';
 import { cn } from '@/lib/utils';
 import {
@@ -21,16 +20,6 @@ import {
   DiscoveryLog, TriggerEvent,
 } from '@/lib/db';
 import { ChartInfoButton } from '@/components/ui/ChartInfoButton';
-
-// ── Animation variants ───────────────────────────────────────────────────────
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.06 } },
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 320, damping: 26 } },
-};
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface DashboardHeaderProps {
@@ -40,8 +29,8 @@ interface DashboardHeaderProps {
   
 }
 
-type FlagVariant = 'red' | 'amber' | 'blue' | 'green';
-interface CompetitorFlag { label: string; variant: FlagVariant }
+
+
 
 type CompCluster = 'direct' | 'incumbent' | 'substitute';
 type ActivitySourceType = 'FENNEX' | 'ENABLON' | 'INTERNAL' | 'DNV';
@@ -85,25 +74,6 @@ const COMP_ACTIVITY_FEED: Array<{
 ];
 
 // ── Direct Rivals extra metrics ───────────────────────────────────────────────
-interface RivalMetrics { sprawl: number; sprawlLabel: string; gap: number; gapLabel: string }
-
-function getDirectRivalMetrics(name: string): RivalMetrics | null {
-  const n = name.toLowerCase();
-  if (n.includes('fennex') || n.includes('fenx')) return {
-    sprawl: 72,
-    sprawlLabel: 'High — scattered feature set, poor UX coherence',
-    gap: 18,
-    gapLabel: 'Low — no dedicated advisory layer',
-  };
-  if (n.includes('dnv') || n.includes('synergi')) return {
-    sprawl: 55,
-    sprawlLabel: 'Medium — legacy module sprawl across Synergi Life',
-    gap: 88,
-    gapLabel: 'High — consulting-led with weak SaaS transition',
-  };
-  return null;
-}
-
 // ── Cluster assignment ────────────────────────────────────────────────────────
 function clusterForCompetitor(comp: Competitor): CompCluster {
   const n = comp.name.toLowerCase();
@@ -112,33 +82,6 @@ function clusterForCompetitor(comp: Competitor): CompCluster {
   return 'incumbent';
 }
 
-// ── Competitor Intel Flags ────────────────────────────────────────────────────
-function getCompetitorFlags(name: string): CompetitorFlag[] {
-  const n = name.toLowerCase();
-  if (n.includes('fennex') || n.includes('fenx')) return [
-    { label: 'Product Sprawl Risk', variant: 'amber' },
-    { label: 'Unverified LLM Depth', variant: 'amber' },
-    { label: 'High Eng Churn (Sentiment)', variant: 'red' },
-  ];
-  if (n.includes('dnv') || n.includes('synergi')) return [
-    { label: 'Consulting Gap', variant: 'amber' },
-    { label: 'SaaS Transition Risk', variant: 'amber' },
-  ];
-  if (n.includes('enablon')) return [
-    { label: 'Retrospective Only', variant: 'blue' },
-    { label: 'No Predictive AI', variant: 'blue' },
-    { label: 'Poor Glassdoor Reviews', variant: 'amber' },
-  ];
-  if (n.includes('eobs')) return [
-    { label: 'Partner / Adjacent Route', variant: 'green' },
-  ];
-  if (n.includes('copilot') || n.includes('internal') || n.includes('diy')) return [
-    { label: 'High Security Risk', variant: 'red' },
-    { label: 'Unauditable', variant: 'red' },
-    { label: 'One-Off Prompting', variant: 'red' },
-  ];
-  return [{ label: 'Retrospective Only', variant: 'blue' }];
-}
 
 // ── Threat gradient config ────────────────────────────────────────────────────
 function getThreatConfig(score: number) {
@@ -188,16 +131,7 @@ export default function DashboardHeader({
 
   return (
     <>
-      <style>{`
-        @keyframes ticker-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes feed-in {
-          from { opacity: 0; transform: translateX(10px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-      `}</style>
+
 
       {/* ── Live Trigger Events Ticker ──────────────────────────────────── */}
       <div className="w-full bg-background/95 backdrop-blur-md border-b border-card-border">
@@ -208,8 +142,7 @@ export default function DashboardHeader({
           </div>
           <div className="flex-1 overflow-hidden">
             <div
-              className="flex items-center gap-10 py-2 w-max"
-              style={{ animation: 'ticker-scroll 55s linear infinite' }}
+              className="flex items-center gap-10 py-2 w-max overflow-x-auto"
             >
               {[...triggerEvents, ...triggerEvents].map((event, i) => (
                 <div key={i} className="flex items-center gap-4.5 whitespace-nowrap">
@@ -285,7 +218,7 @@ export default function DashboardHeader({
       
       {/* ── BENTO BOX GRID ──────────────────────────────────────────────── */}
       <div className="w-full px-4 md:px-8 pb-12 max-w-[1800px] mx-auto">
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 md:gap-5">
           
           {/* 1. KPIs (1 column each) */}
           {[
@@ -306,9 +239,9 @@ export default function DashboardHeader({
           ].map((card, i) => {
             const Icon = card.icon;
             return (
-              <motion.div
+              <div
                 key={i}
-                variants={itemVariants}
+               
                 className="col-span-1 glass-card p-6 rounded-3xl border border-white/5 hover:bg-white/[0.02] transition-colors flex flex-col justify-between min-h-[160px]"
               >
                 <div className="flex justify-between items-start mb-4">
@@ -321,12 +254,12 @@ export default function DashboardHeader({
                   <p className="text-5xl font-black text-text-primary leading-none tracking-tight font-sans mb-2">{card.val}</p>
                   <p className="text-xs text-text-secondary font-medium leading-relaxed">{card.sub}</p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
 
           {/* 2. Direct Rivals (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          <div className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-amber-400" />
@@ -335,7 +268,7 @@ export default function DashboardHeader({
                 </div>
                 <span className="text-xs font-bold tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-1 rounded-md uppercase">{directRivals.length} tracked</span>
              </div>
-             <div className="space-y-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="space-y-4 overflow-y-auto max-h-[320px] pr-2">
                {directRivals.map((comp) => {
                  const threat = getThreatConfig(comp.threat_score);
                  return (
@@ -343,9 +276,11 @@ export default function DashboardHeader({
                      <div className="flex items-center justify-between mb-4">
                        <div className="flex items-center gap-4">
                          <div className="h-10 w-10 rounded-full bg-accent/10 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 relative">
-                           <img
+                           <Image
                              src={comp.logoUrl ?? `https://www.google.com/s2/favicons?domain=${(comp.website || '').replace('https://', '').split('/')[0]}&sz=64`}
                              alt={comp.name}
+                             fill
+                             sizes="40px"
                              className="w-full h-full object-contain absolute inset-0 z-10"
                              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                            />
@@ -370,10 +305,10 @@ export default function DashboardHeader({
                  );
                })}
              </div>
-          </motion.div>
+          </div>
 
           {/* 3. Activity Feed (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[500px]">
+          <div className="col-span-1 md:col-span-2 xl:col-span-2 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[500px]">
             <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <Eye className="h-4 w-4 text-amber-400" />
@@ -385,7 +320,7 @@ export default function DashboardHeader({
                 LIVE
               </span>
             </div>
-            <div className="divide-y divide-white/5 overflow-y-auto flex-1 custom-scrollbar">
+            <div className="divide-y divide-white/5 overflow-y-auto flex-1">
               {COMP_ACTIVITY_FEED.map((item) => {
                 const style = getActivityStyle(item.source);
                 return (
@@ -402,10 +337,10 @@ export default function DashboardHeader({
                 );
               })}
             </div>
-          </motion.div>
+          </div>
 
           {/* 4. Incumbents (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          <div className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-blue-400" />
@@ -414,9 +349,9 @@ export default function DashboardHeader({
                 </div>
                 <span className="text-xs font-bold tracking-widest text-blue-400 bg-blue-400/10 border border-blue-400/20 px-2 py-1 rounded-md uppercase">{incumbents.length} tracked</span>
              </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto max-h-[320px] pr-2">
                {incumbents.map((comp) => {
-                 const threat = getThreatConfig(comp.threat_score);
+
                  return (
                    <div key={comp.id} className="bg-background/40 border border-white/5 rounded-2xl p-4 hover:bg-white/[0.02] transition-colors flex items-center justify-between">
                      <div className="flex items-center gap-3">
@@ -431,10 +366,10 @@ export default function DashboardHeader({
                  );
                })}
              </div>
-          </motion.div>
+          </div>
 
           {/* 5. Pain Points (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[400px]">
+          <div className="col-span-1 md:col-span-2 xl:col-span-2 glass-card rounded-3xl border border-white/5 flex flex-col overflow-hidden max-h-[400px]">
             <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <Zap className="h-4 w-4 text-amber-400" />
@@ -443,7 +378,7 @@ export default function DashboardHeader({
               </div>
               <span className="text-xs font-bold text-text-secondary">{triggerEvents.length} active</span>
             </div>
-            <div className="divide-y divide-white/5 overflow-y-auto flex-1 custom-scrollbar">
+            <div className="divide-y divide-white/5 overflow-y-auto flex-1">
               {triggerEvents.map((event) => (
                 <div key={event.id} className="p-6 flex items-start gap-4 hover:bg-white/[0.02] transition-colors">
                   <span className={cn(
@@ -461,10 +396,10 @@ export default function DashboardHeader({
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* 6. Substitutes (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          <div className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
              <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-[#EF4444]" />
@@ -473,7 +408,7 @@ export default function DashboardHeader({
                 </div>
                 <span className="text-xs font-bold tracking-widest text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/20 px-2 py-1 rounded-md uppercase">{substitutes.length} tracked</span>
              </div>
-             <div className="space-y-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="space-y-4 overflow-y-auto max-h-[320px] pr-2">
                {substitutes.map((comp) => {
                  const threat = getThreatConfig(comp.threat_score);
                  return (
@@ -499,16 +434,16 @@ export default function DashboardHeader({
                  );
                })}
              </div>
-          </motion.div>
+          </div>
 
           {/* 7. Battlecards (Span 2) */}
-          <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
+          <div className="col-span-1 md:col-span-2 xl:col-span-2 glass-card p-6 md:p-8 rounded-3xl border border-white/5 flex flex-col">
              <div className="flex items-center gap-3 mb-6">
                 <div className="h-2 w-2 rounded-full bg-accent" />
                 <h3 className="text-xs font-bold text-text-secondary/80 uppercase tracking-widest">Sales Battlecards</h3>
                 <div className="ml-2"><ChartInfoButton title="Sales Battlecards" description="Instant tactical kill-sheets outlining specific weaknesses and counter-arguments against major competitors to help sales win deals." /></div>
              </div>
-             <div className="grid grid-cols-1 gap-4 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+             <div className="grid grid-cols-1 gap-4 overflow-y-auto max-h-[320px] pr-2">
                {[
                  { comp: 'FENNEX', counter: 'Emphasize our consulting advisory layer and complain about their UI complexity.', model: 'Complex SaaS Modules' },
                  { comp: 'ENABLON', counter: 'Highlight predictive AI. Enablon is a legacy system of record.', model: 'Legacy Enterprise License' },
@@ -520,9 +455,9 @@ export default function DashboardHeader({
                  </div>
                ))}
              </div>
-          </motion.div>
+          </div>
 
-        </motion.div>
+        </div>
       </div>
     </>
   );

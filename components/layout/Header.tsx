@@ -36,14 +36,10 @@ export interface HeaderProps {
 }
 
 export function Header({
-  user,
   notifications = [],
   onMenuClick,
   onSearchClick,
   onNotificationClick,
-  onProfileClick,
-  onSettingsClick,
-  onLogout,
   onThemeToggle,
   isDarkMode = true,
   className,

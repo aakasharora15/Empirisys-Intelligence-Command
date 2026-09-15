@@ -20,21 +20,17 @@ export class LeadScoringAgent {
   }
 
   async processIncomingSignal(signal: RawSignal): Promise<ExecutiveOutput | null> {
-    console.log(`[Data Ingestion Layer] Processing signal from ${signal.sourceType}: ${signal.sourceUrl}`);
 
     // Step 1: Trigger Event Filter
     const triggerEvent = await this.triggerEventFilter(signal.rawText);
     
     if (!triggerEvent) {
-      console.log(`[Trigger Event Filter] No operational vulnerabilities found. Discarding signal.`);
       return null;
     }
 
-    console.log(`[Trigger Event Filter] Identified: ${triggerEvent.type} at ${triggerEvent.companyName}`);
 
     // Step 2: Matrix Scoring Engine
     const score = await this.matrixScoringEngine(triggerEvent);
-    console.log(`[Matrix Scoring Engine] Total Score: ${score.totalScore}/100`);
 
     // Step 3: Automated Executive Output
     if (score.totalScore >= 70) {

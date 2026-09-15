@@ -3,7 +3,7 @@
 import { ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { 
   SFSquareGrid2x2 as Grid, 
   SFShield as Shield, 
@@ -35,11 +35,8 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const pathname = usePathname();
-  const { toggleAssistant } = useStore();
-  const router = useRouter();
-  const { user, searchQuery, setSearchQuery } = useStore();
+  const { toggleAssistant, user } = useStore();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const searchVal = searchQuery;
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
   const [mounted, setMounted] = useState(false);

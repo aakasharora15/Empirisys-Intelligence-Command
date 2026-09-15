@@ -490,7 +490,6 @@ export async function runMarketIntelligencePipeline(): Promise<PipelineResult> {
       };
     }
 
-    console.log('[MARKET_ANALYST] Landscape analysis completed. Segments:', landscape?.segments?.length || 0);
   } catch (landscapeError) {
     console.error('[MARKET_ANALYST] Landscape analysis failed (non-fatal):', landscapeError);
     // Landscape is optional — pipeline still returns events, themes, metrics

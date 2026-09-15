@@ -139,8 +139,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Could not extract enough readable content from website' }, { status: 422 });
     }
 
-    const companyDomain = new URL(url).hostname.replace('www.', '');
-    const companyName = companyDomain.split('.')[0];
+
 
     const systemPrompt = `You are the Empirisys AI Threat Intelligence engine.
 Analyze the following website text scraped from a potential competitor. 

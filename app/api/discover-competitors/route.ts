@@ -32,8 +32,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log("Triggering AI Competitor Discovery...");
-    console.log("System Prompt: ", DISCOVERY_PROMPT);
 
     // TODO: wire up anthropic
     

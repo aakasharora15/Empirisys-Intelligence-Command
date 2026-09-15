@@ -153,7 +153,7 @@ When answering:
         } catch (err) {
           controller.error(err);
         } finally {
-          try { controller.close(); } catch (e) {}
+          try { controller.close(); } catch {}
         }
       }
     });

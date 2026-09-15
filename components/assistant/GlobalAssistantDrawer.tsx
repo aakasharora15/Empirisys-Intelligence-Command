@@ -87,7 +87,7 @@ export function GlobalAssistantDrawer() {
         }
       }, 20);
 
-    } catch (err) {
+    } catch {
       setIsTyping(false);
       setChatMessages((prev) => [...prev, { role: 'assistant', content: "An error occurred." }]);
     }

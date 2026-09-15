@@ -625,9 +625,13 @@ export async function getTriggerEvents(): Promise<TriggerEvent[]> {
 
 export async function getCompetitors(): Promise<Competitor[]> {
   if (supabase) {
-    const { data, error } = await supabase.from('competitors').select('*').order('threat_score', { ascending: false });
-    if (!error && data && data.length > 0) {
-      return data as Competitor[];
+    try {
+      const { data, error } = await supabase.from('competitors').select('*').order('threat_score', { ascending: false });
+      if (!error && data && data.length > 0) {
+        return data as Competitor[];
+      }
+    } catch (e) {
+      console.error('Failed to fetch competitors from Supabase:', e);
     }
   }
   return mockCompetitors;
@@ -635,9 +639,13 @@ export async function getCompetitors(): Promise<Competitor[]> {
 
 export async function getCompetitorContent(): Promise<CompetitorContent[]> {
   if (supabase) {
-    const { data, error } = await supabase.from('competitor_content').select('*');
-    if (!error && data && data.length > 0) {
-      return data as unknown as CompetitorContent[];
+    try {
+      const { data, error } = await supabase.from('competitor_content').select('*');
+      if (!error && data && data.length > 0) {
+        return data as unknown as CompetitorContent[];
+      }
+    } catch (e) {
+      console.error('Failed to fetch competitor content from Supabase:', e);
     }
   }
   return mockCompetitorContent;
@@ -647,9 +655,13 @@ export async function getCompetitorContent(): Promise<CompetitorContent[]> {
 
 export async function getKnowledge(): Promise<EmpirisysKnowledge[]> {
   if (supabase) {
-    const { data, error } = await supabase.from('empirisys_knowledge').select('*');
-    if (!error && data && data.length > 0) {
-      return data as EmpirisysKnowledge[];
+    try {
+      const { data, error } = await supabase.from('empirisys_knowledge').select('*');
+      if (!error && data && data.length > 0) {
+        return data as EmpirisysKnowledge[];
+      }
+    } catch (e) {
+      console.error('Failed to fetch knowledge from Supabase:', e);
     }
   }
   return mockKnowledge;
@@ -658,9 +670,13 @@ export async function getKnowledge(): Promise<EmpirisysKnowledge[]> {
 
 export async function getQueries(): Promise<QueryLog[]> {
   if (supabase) {
-    const { data, error } = await supabase.from('queries').select('*').order('created_at', { ascending: false });
-    if (!error && data && data.length > 0) {
-      return data as unknown as QueryLog[];
+    try {
+      const { data, error } = await supabase.from('queries').select('*').order('created_at', { ascending: false });
+      if (!error && data && data.length > 0) {
+        return data as unknown as QueryLog[];
+      }
+    } catch (e) {
+      console.error('Failed to fetch queries from Supabase:', e);
     }
   }
   return mockQueries;
@@ -676,11 +692,15 @@ export async function addQuery(question: string, module_type: string, results_js
   };
   mockQueries.unshift(newQuery);
   if (supabase) {
-    await supabase.from('queries').insert({
-      question,
-      module_type,
-      results_json
-    });
+    try {
+      await supabase.from('queries').insert({
+        question,
+        module_type,
+        results_json
+      });
+    } catch (e) {
+      console.error('Failed to insert query to Supabase:', e);
+    }
   }
 }
 

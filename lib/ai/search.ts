@@ -60,9 +60,7 @@ export async function performWebSearch(query: string): Promise<string> {
     const combinedResults = results.join("\n\n");
     
     if (combinedResults.length > 0) {
-      console.log(`[performWebSearch] Successfully extracted ${results.length} snippets for query: "${sanitizedQuery}"`);
     } else {
-      console.log(`[performWebSearch] No snippets found for query: "${sanitizedQuery}"`);
     }
 
     return combinedResults;

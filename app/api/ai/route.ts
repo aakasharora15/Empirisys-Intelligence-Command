@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         } catch (err) {
           controller.error(err);
         } finally {
-          try { controller.close(); } catch (e) {}
+          try { controller.close(); } catch {}
         }
       },
     });

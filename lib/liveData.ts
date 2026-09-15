@@ -32,8 +32,7 @@ export async function scrapeHSEAndCompetitorNews(): Promise<{ competitorContent:
         topic_tags: ['Energy', 'Market Update']
       });
     });
-  } catch (err) {
-    console.log('Failed to fetch Energy news RSS:', err);
+  } catch {
   }
 
   return { competitorContent };

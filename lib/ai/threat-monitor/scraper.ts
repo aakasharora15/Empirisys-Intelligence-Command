@@ -29,7 +29,6 @@ export interface VerifiedThreat {
 export async function scrapeLiveThreats(): Promise<VerifiedThreat[]> {
   // If no real API key is present, provide a high-quality deterministic fallback
   if (!AI_ENABLED) {
-    console.log('[Threat Scraper] No Anthropic API Key found, using fallback simulated regulatory data.');
     return [
       {
         id: `thr-${Date.now()}-1`,
