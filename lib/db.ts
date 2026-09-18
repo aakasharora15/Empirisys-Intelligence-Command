@@ -489,6 +489,55 @@ export const mockCompetitorContent: CompetitorContent[] = [
 // Knowledge base index
 export const mockKnowledge: EmpirisysKnowledge[] = [
   {
+    id: 'k13',
+    title: 'Improving Observation Data Analysis Through Boost Analytics',
+    content: `Bumi Armada Case Study on BOOST Analytics:
+The Goal: Uncover hidden trends by enriching observation data. BOOST predicts appropriate labels where hazards or Life-Saving Rules are missing.
+Key Results: +27% Missing categories identified (AI models found more applicable Life-Saving Rules and Step Change in Safety hazards than workforce identified). 94% Prediction accuracy across categories.
+The Challenge: Observation data collected in huge volumes but low quality/incompleteness leads to rare usage.
+The Outcome: Automated observation analysis using topic modelling algorithm to identify weak signals. Topics plotted on Safe-Unsafe and Act-Condition splits.`,
+    source: 'Internal Documents',
+    tags: ['Marketing', 'Case Study']
+  },
+  {
+    id: 'k14',
+    title: 'Empirisys Brand Guidelines v2',
+    content: `Updated brand architecture and visual identity guidelines for Empirisys and BOOST. Reinforces the positioning of BOOST as the Independent Intelligence Layer that sits across operations, providing Continuous Risk Intelligence.`,
+    source: 'Internal Documents',
+    tags: ['Marketing', 'Case Study']
+  },
+  {
+    id: 'k10',
+    title: 'BOOST Brand Guidelines & Message Architecture',
+    content: `BOOST Brand Cheat Sheet: BOOST transforms fragmented operational information into Continuous Risk Intelligence, helping organisations make stronger safety-critical decisions.
+Product Proposition: The Independent Intelligence Layer. BOOST sits across operational, safety, technical and assurance systems, connecting information, revealing emerging risks and supporting prioritised action.
+Four Strategic Outcomes: Detect Earlier, Prioritise Better, Strengthen Controls, Prove Improvement.
+Primary Audience: HSE Director (Sponsor/Champion), COO / Asset Manager (Economic Buyer).
+Build-vs-Buy Messaging: BOOST complements existing investments by providing an independent intelligence layer. Independence Creates Confidence. Expertise Matters More Than Technology.`,
+    source: 'Internal Documents',
+    tags: ['Marketing', 'Case Study']
+  },
+  {
+    id: 'k11',
+    title: 'INEOS FPS Barrier Model Project',
+    content: `Empirisys appointed by INEOS FPS to deliver Barrier Model Project following successful pilot.
+New project strengthens safety-critical barrier management by bringing operational and process safety information together.
+The INEOS FPS project builds on Empirisys’ experience developing similar Barrier Model approaches elsewhere in the offshore sector, such as the solution delivered for Anasuria Operating Company (AOC).
+Tom Downie, Process Safety & Risk Lead, INEOS FPS: "This project with Empirisys will enable us to bring together information from across our operations helping our experienced teams gain a clearer picture of barrier performance."`,
+    source: 'Internal Documents',
+    tags: ['Marketing', 'Case Study']
+  },
+  {
+    id: 'k12',
+    title: 'Bumi Armada BOOST Adoption',
+    content: `Global offshore energy services provider Bumi Armada Berhad has adopted BOOST, a new AI-enhanced module developed by Empirisys to work alongside Step Change in Safety’s E-Observations (E-Obs) tool on the Kraken FPSO.
+BOOST tackles observation tool challenges directly: streamlines collation, reduces manual burden, ensures data travels quickly up the chain of command.
+It uses advanced contextual analysis to interpret free text and provide prompts for appropriate hazards, life-saving rules, and follow-up actions.
+BOOST is available as an add-on to Step Change in Safety’s E-Obs tool or as a standalone observation and insight platform.`,
+    source: 'Internal Documents',
+    tags: ['Marketing', 'Case Study']
+  },
+  {
     id: 'k1',
     title: 'About Empirisys',
     content: 'Empirisys is a Cardiff based industrial safety software company. We specialize in process safety human factors HSE data analytics and cultural diagnostics. We build technologies that help asset intensive operations predict and prevent high risk industrial accidents.',

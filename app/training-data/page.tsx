@@ -7,10 +7,11 @@ import { cn } from '@/lib/utils';
 
 
 const INITIAL_LIBRARY = [
-  { id: 'doc_1', name: 'Empirisys_Q3_Strategic_Playbook.pdf', type: 'PDF', date: '2026-06-15', size: '4.2 MB', status: 'ACTIVE' },
-  { id: 'doc_2', name: 'Competitor_Battlecards_2026.pptx', type: 'PPTX', date: '2026-06-12', size: '12.8 MB', status: 'ACTIVE' },
-  { id: 'doc_3', name: 'HSE_Software_Market_Analysis.docx', type: 'DOCX', date: '2026-06-10', size: '2.1 MB', status: 'ACTIVE' },
-  { id: 'doc_4', name: 'DNV_vs_Sphera_Pricing_Matrix.xlsx', type: 'XLSX', date: '2026-06-05', size: '840 KB', status: 'ACTIVE' },
+  { id: 'doc_1', name: 'Empirisys Brand Guidelines v2 UPDATED 130323.pdf', type: 'PDF', date: new Date().toISOString().split('T')[0], size: '2.4 MB', status: 'ACTIVE' },
+  { id: 'doc_2', name: '[WEB] Improving Observation Data Analysis Through Boost Analytics.pdf', type: 'PDF', date: new Date().toISOString().split('T')[0], size: '1.8 MB', status: 'ACTIVE' },
+  { id: 'doc_3', name: '260824 Ineos FPS Barrier Model Solution V9.pdf', type: 'PDF', date: new Date().toISOString().split('T')[0], size: '3.1 MB', status: 'ACTIVE' },
+  { id: 'doc_4', name: 'Bumi Armada - Boost Adoption .pdf', type: 'PDF', date: new Date().toISOString().split('T')[0], size: '1.2 MB', status: 'ACTIVE' },
+  { id: 'doc_5', name: '[WEB] Exploiting the Potential of Data to Enhance Process Safety Planning - Case Study.pdf', type: 'PDF', date: new Date().toISOString().split('T')[0], size: '4.5 MB', status: 'ACTIVE' },
 ];
 
 export default function TrainingDataPage() {
