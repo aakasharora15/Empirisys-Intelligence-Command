@@ -77,8 +77,10 @@ export interface EmpirisysKnowledge {
   id: string;
   title: string;
   content: string;
-  type: string;
-  section: 'About' | 'BOOST' | 'SENSE' | 'Empirisys 360' | 'Clients' | 'Differentiators' | 'Target Industries';
+  type?: string;
+  section?: 'About' | 'BOOST' | 'SENSE' | 'Empirisys 360' | 'Clients' | 'Differentiators' | 'Target Industries';
+  source?: string;
+  tags?: string[];
 }
 
 export interface QueryLog {
